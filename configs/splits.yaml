@@ -1,0 +1,30 @@
+splits:
+  train_id:
+    description: "In-distribution training layouts."
+    source: ["sim"]
+    object_shapes: ["T"]
+    layout_families: ["open_space", "mild_offset"]
+
+  val_id:
+    description: "In-distribution validation layouts."
+    source: ["sim"]
+    object_shapes: ["T"]
+    layout_families: ["open_space", "mild_offset"]
+
+  test_layout_ood_blocking:
+    description: "Held-out layout OOD: obstacle blocks direct path."
+    source: ["sim", "real"]
+    object_shapes: ["T"]
+    layout_families: ["blocking"]
+
+  test_layout_ood_narrow_passage:
+    description: "Held-out layout OOD: narrow passage."
+    source: ["sim", "real"]
+    object_shapes: ["T"]
+    layout_families: ["narrow_passage"]
+
+  test_shape_ood_L:
+    description: "Held-out shape OOD: train on T, test on L."
+    source: ["sim", "real"]
+    object_shapes: ["L"]
+    layout_families: ["open_space", "blocking"]

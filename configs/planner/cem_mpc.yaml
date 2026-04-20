@@ -1,0 +1,15 @@
+planner:
+  name: "cem_mpc"
+
+cem:
+  horizon: 10
+  num_candidates: 512
+  num_elites: 64
+  num_iterations: 5
+  replan_every: 1
+
+action:
+  dim: 2
+  max_delta_xy: 0.02
+
+seed: 42

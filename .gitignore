@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Data
+data/**/*.npz
+data/**/*.mp4
+data/**/*.avi
+data/**/*.mov
+data/**/*.zarr
+data/**/*.hdf5
+data/**/*.h5
+
+# Runs and checkpoints
+runs/*
+!runs/.gitkeep
+*.ckpt
+*.pt
+*.pth
+
+# Logs
+*.log
+stdout.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# LaTeX build files
+papers/**/*.aux
+papers/**/*.log
+papers/**/*.out
+papers/**/*.toc
+papers/**/*.bbl
+papers/**/*.blg
+papers/**/*.fls
+papers/**/*.fdb_latexmk
+papers/**/*.synctex.gz

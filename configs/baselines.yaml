@@ -1,0 +1,12 @@
+methods:
+  flat_high_level:
+    train_config: "configs/train/flat_high_level.yaml"
+    planner_config: "configs/planner/cem_mpc.yaml"
+
+  object_centric_noncausal:
+    train_config: "configs/train/object_centric_noncausal.yaml"
+    planner_config: "configs/planner/cem_mpc.yaml"
+
+  causality_aware:
+    train_config: "configs/train/causality_aware.yaml"
+    planner_config: "configs/planner/cem_mpc.yaml"
