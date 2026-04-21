@@ -1,0 +1,18 @@
+version: "0.1"
+
+cost_weights:
+  goal_position: 1.0
+  goal_rotation: 0.5
+  collision: 10.0
+  out_of_bounds: 20.0
+  action_smoothness: 0.1
+  contact_affordance: 0.0
+
+normalization:
+  position_scale: 0.10
+  rotation_scale_deg: 30.0
+  action_scale: 0.02
+
+notes:
+  - "These cost weights are shared across all high-level representation methods."
+  - "Changing these weights should be treated as a planner ablation, not as part of the main method comparison."
