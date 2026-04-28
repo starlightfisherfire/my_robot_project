@@ -19,8 +19,10 @@ planner:
   num_samples: 1024
   num_elites: 64
   num_iterations: 5
+
   action_low: [-1.0, -1.0]
   action_high: [1.0, 1.0]
+
   smoothing: 0.2
   warm_start: true
 
@@ -30,14 +32,21 @@ rollout:
   restore_state_after_rollout: true
 
 cost:
+  # Object-to-goal task cost
   w_pos: 10.0
   w_theta: 2.0
+
+  # Contact shaping for sparse-contact pushing
   w_reach: 5.0
   w_contact: 2.0
   w_push_alignment: 1.0
+
+  # Safety and regularization
   w_collision: 20.0
   w_action: 0.05
   w_smooth: 0.1
+
+  # Disabled in pure planner-capacity check v0
   w_subgoal: 0.0
 
 success:
