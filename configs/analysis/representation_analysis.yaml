@@ -1,0 +1,81 @@
+analysis_name: representation_diagnostics_v0
+
+models:
+  - flat
+  - object_centric
+  - causality_aware
+
+splits:
+  id:
+    - train_sim_id
+    - test_sim_id
+  layout_ood:
+    - test_sim_layout_ood_blocking
+    - test_sim_layout_ood_narrow_passage
+    - test_sim_layout_ood_edge_goal
+  shape_ood:
+    - test_sim_shape_ood_L
+
+embedding:
+  batch_size: 256
+  save_slots_for_causal: true
+  normalize_embeddings_before_analysis: true
+
+visualization:
+  methods:
+    - pca
+    - umap
+  color_by:
+    - split
+    - layout_family
+    - shape_family
+    - contact_side
+    - push_direction
+    - success
+    - failure_code
+
+probes:
+  probe_type: logistic_regression
+  regression_probe_type: ridge
+  train_split: train_sim_id
+  test_splits:
+    - test_sim_id
+    - test_sim_layout_ood_blocking
+    - test_sim_layout_ood_narrow_passage
+    - test_sim_layout_ood_edge_goal
+    - test_sim_shape_ood_L
+  classification_targets:
+    - contact_side
+    - push_direction_bin
+    - layout_family
+    - shape_family
+    - success
+    - failure_code
+  regression_targets:
+    - future_delta_x
+    - future_delta_y
+    - future_delta_theta
+
+geometry_shift:
+  metrics:
+    - centroid_distance
+    - mmd_rbf
+    - nearest_neighbor_split_accuracy
+
+intrinsic_dimension:
+  enabled: false
+  estimators:
+    - twonn
+    - mle
+  subsample_size: 2000
+  n_bootstrap: 20
+
+topology:
+  enabled: false
+  package: ripser
+  maxdim: 1
+  subsample_size: 1000
+  n_bootstrap: 20
+  diagram_distances:
+    - wasserstein
+    - bottleneck

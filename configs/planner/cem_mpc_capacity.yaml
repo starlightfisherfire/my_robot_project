@@ -1,0 +1,67 @@
+experiment_name: cem_mpc_capacity_check_v0_2
+
+env:
+  name: mujoco_push_to_pose
+  max_steps: 80
+  control_dt: 0.1
+
+action_space:
+  type: planar_ee_velocity
+  dim: 2
+  command: [vx, vy]
+  frame: world
+  normalized: true
+  max_speed_mps: 0.05
+
+planner:
+  type: cem_mpc
+  horizon: 15
+  num_samples: 1024
+  num_elites: 64
+  num_iterations: 5
+  action_low: [-1.0, -1.0]
+  action_high: [1.0, 1.0]
+  smoothing: 0.2
+  warm_start: true
+
+rollout:
+  mode: oracle_dynamics
+  use_mujoco_clone: true
+  restore_state_after_rollout: true
+
+cost:
+  w_pos: 10.0
+  w_theta: 2.0
+  w_reach: 5.0
+  w_contact: 2.0
+  w_push_alignment: 1.0
+  w_collision: 20.0
+  w_action: 0.05
+  w_smooth: 0.1
+  w_subgoal: 0.0
+
+success:
+  pos_threshold: 0.03
+  theta_threshold_deg: 10
+  require_no_collision: true
+
+evaluation:
+  num_trials_debug: 5
+  num_trials_main: 20
+  num_trials_final: 50
+  seed: 42
+  save_video: true
+  save_trajectory: true
+  save_failure_code: true
+
+sweeps:
+  enabled: false
+  horizon: [10, 15, 20]
+  num_samples: [512, 1024, 2048]
+  num_iterations: [3, 5, 7]
+
+debug:
+  render_rollouts: false
+  print_best_cost: true
+  print_contact_rate: true
+  save_top_k_sequences: 5
