@@ -38,7 +38,7 @@ cost:
 
   # Contact shaping for sparse-contact pushing
   w_reach: 5.0
-  w_contact: 2.0
+  w_no_contact: 2.0
   w_push_alignment: 1.0
 
   # Safety and regularization
