@@ -233,3 +233,154 @@ class ObjectCentricEncoder(nn.Module):
         z = h_last[-1]  # [B, gru_hidden]
 
         return z
+
+class CausalityAwareEncoder(nn.Module):
+    """
+    Causality-aware encoder for Paper 1 v0.1.
+
+    This is a mechanism-aware / causality-aware representation variant.
+    It reuses an object-centric backbone, then factorizes the representation
+    into four 32-dim slots:
+
+        z_stable
+        z_dynamics
+        z_affordance
+        z_nuisance
+
+    The four slots are concatenated and projected back to a 256-dim
+    planner-facing representation.
+
+    Important:
+        v0.1 is only a runnable factorized representation structure.
+        It is not yet strong causal learning and should not be claimed as
+        discovering true causal variables.
+
+    Input:
+        x: [B, H, N, D_raw]
+
+    Output by default:
+        z: [B, 256]
+
+    Optional diagnostic output:
+        {
+            "z": z,
+            "z_stable": z_stable,
+            "z_dynamics": z_dynamics,
+            "z_affordance": z_affordance,
+            "z_nuisance": z_nuisance,
+        }
+    """
+
+    def __init__(
+        self,
+        history_len: int = 6,
+        num_tokens: int = 6,
+        raw_token_dim: int = 16,
+        d_model: int = 128,
+        transformer_layers: int = 2,
+        nhead: int = 4,
+        ffn_dim: int = 256,
+        gru_hidden: int = 256,
+        slot_dim: int = 32,
+        valid_flag_index: int = 15,
+        dropout: float = 0.1,
+    ):
+        super().__init__()
+
+        self.gru_hidden = gru_hidden
+        self.slot_dim = slot_dim
+        self.num_slots = 4
+
+        self.object_backbone = ObjectCentricEncoder(
+            history_len=history_len,
+            num_tokens=num_tokens,
+            raw_token_dim=raw_token_dim,
+            d_model=d_model,
+            transformer_layers=transformer_layers,
+            nhead=nhead,
+            ffn_dim=ffn_dim,
+            gru_hidden=gru_hidden,
+            valid_flag_index=valid_flag_index,
+            dropout=dropout,
+        )
+
+        self.z_stable_head = nn.Sequential(
+            nn.Linear(gru_hidden, gru_hidden),
+            nn.ReLU(),
+            nn.Linear(gru_hidden, slot_dim),
+        )
+
+        self.z_dynamics_head = nn.Sequential(
+            nn.Linear(gru_hidden, gru_hidden),
+            nn.ReLU(),
+            nn.Linear(gru_hidden, slot_dim),
+        )
+
+        self.z_affordance_head = nn.Sequential(
+            nn.Linear(gru_hidden, gru_hidden),
+            nn.ReLU(),
+            nn.Linear(gru_hidden, slot_dim),
+        )
+
+        self.z_nuisance_head = nn.Sequential(
+            nn.Linear(gru_hidden, gru_hidden),
+            nn.ReLU(),
+            nn.Linear(gru_hidden, slot_dim),
+        )
+
+        self.slot_projector = nn.Sequential(
+            nn.Linear(slot_dim * self.num_slots, gru_hidden),
+            nn.ReLU(),
+            nn.Linear(gru_hidden, gru_hidden),
+        )
+
+    def forward(self, x, mask=None, return_slots: bool = False):
+        """
+        Args:
+            x:
+                Structured state tensor with shape [B, H, N, D_raw].
+
+            mask:
+                Optional valid-token mask with shape [B, H, N].
+                1 / True = valid token.
+                0 / False = invalid padding token.
+
+            return_slots:
+                If True, return z plus the four diagnostic slots.
+
+        Returns:
+            If return_slots is False:
+                z: [B, 256]
+
+            If return_slots is True:
+                dict containing:
+                    z:             [B, 256]
+                    z_stable:      [B, slot_dim]
+                    z_dynamics:    [B, slot_dim]
+                    z_affordance:  [B, slot_dim]
+                    z_nuisance:    [B, slot_dim]
+        """
+        z_base = self.object_backbone(x, mask=mask)
+
+        z_stable = self.z_stable_head(z_base)
+        z_dynamics = self.z_dynamics_head(z_base)
+        z_affordance = self.z_affordance_head(z_base)
+        z_nuisance = self.z_nuisance_head(z_base)
+
+        z_slots = torch.cat(
+            [z_stable, z_dynamics, z_affordance, z_nuisance],
+            dim=-1,
+        )
+
+        z = self.slot_projector(z_slots)
+
+        if return_slots:
+            return {
+                "z": z,
+                "z_stable": z_stable,
+                "z_dynamics": z_dynamics,
+                "z_affordance": z_affordance,
+                "z_nuisance": z_nuisance,
+            }
+
+        return z
