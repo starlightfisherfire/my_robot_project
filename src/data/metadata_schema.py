@@ -67,6 +67,7 @@ class EpisodeMetadata:
         - which split the episode belongs to;
         - whether it is sim or real;
         - layout / shape intervention family;
+        - reset template identity;
         - initial and goal poses;
         - obstacles;
         - labels used for metrics, probes, and failure analysis.
@@ -92,6 +93,13 @@ class EpisodeMetadata:
     # Object metadata
     object_size_x: float
     object_size_y: float
+
+    # Schema / provenance
+    schema_version: str = "v0.1"
+    reset_template_id: str | None = None
+    seed: int | None = None
+
+    # Optional physical metadata
     object_mass: float | None = None
     object_friction: float | None = None
 
@@ -130,6 +138,9 @@ class EpisodeMetadata:
         if not self.episode_id:
             raise ValueError("episode_id must be non-empty")
 
+        if not self.schema_version:
+            raise ValueError("schema_version must be non-empty")
+
         if not self.split:
             raise ValueError("split must be non-empty")
 
@@ -156,11 +167,24 @@ class EpisodeMetadata:
                 f"object_friction must be non-negative, got {self.object_friction}"
             )
 
+        if self.seed is not None and self.seed < 0:
+            raise ValueError(f"seed must be non-negative, got {self.seed}")
+
         if self.num_steps < 0:
             raise ValueError(f"num_steps must be non-negative, got {self.num_steps}")
 
         if self.control_dt <= 0:
             raise ValueError(f"control_dt must be positive, got {self.control_dt}")
+
+        if self.final_pos_error is not None and self.final_pos_error < 0:
+            raise ValueError(
+                f"final_pos_error must be non-negative, got {self.final_pos_error}"
+            )
+
+        if self.final_theta_error is not None and self.final_theta_error < 0:
+            raise ValueError(
+                f"final_theta_error must be non-negative, got {self.final_theta_error}"
+            )
 
         for obs in self.obstacles:
             if not obs.obstacle_id:
@@ -215,6 +239,9 @@ class EpisodeMetadata:
             ee_initial_pose=ee_initial_pose,
             object_size_x=data["object_size_x"],
             object_size_y=data["object_size_y"],
+            schema_version=data.get("schema_version", "v0.1"),
+            reset_template_id=data.get("reset_template_id"),
+            seed=data.get("seed"),
             object_mass=data.get("object_mass"),
             object_friction=data.get("object_friction"),
             obstacles=obstacles,

@@ -36,6 +36,9 @@ def make_fake_metadata() -> EpisodeMetadata:
         ee_initial_pose=Pose2D(x=0.10, y=0.10, theta=0.0),
         object_size_x=0.08,
         object_size_y=0.08,
+        schema_version="v0.1",
+        reset_template_id="reset_train_open_space_000001",
+        seed=42,
         object_mass=0.05,
         object_friction=None,
         obstacles=[
@@ -79,15 +82,26 @@ def check_save_load_roundtrip() -> None:
     loaded.validate()
 
     assert loaded.episode_id == metadata.episode_id
+    assert loaded.schema_version == metadata.schema_version
     assert loaded.domain == metadata.domain
     assert loaded.split == metadata.split
     assert loaded.layout_family == metadata.layout_family
     assert loaded.shape_family == metadata.shape_family
+    assert loaded.reset_template_id == metadata.reset_template_id
+    assert loaded.seed == metadata.seed
     assert loaded.object_shape == metadata.object_shape
 
     assert loaded.object_initial_pose.x == metadata.object_initial_pose.x
     assert loaded.object_initial_pose.y == metadata.object_initial_pose.y
     assert loaded.object_initial_pose.theta == metadata.object_initial_pose.theta
+
+    assert loaded.goal_pose.x == metadata.goal_pose.x
+    assert loaded.goal_pose.y == metadata.goal_pose.y
+    assert loaded.goal_pose.theta == metadata.goal_pose.theta
+
+    assert loaded.ee_initial_pose.x == metadata.ee_initial_pose.x
+    assert loaded.ee_initial_pose.y == metadata.ee_initial_pose.y
+    assert loaded.ee_initial_pose.theta == metadata.ee_initial_pose.theta
 
     assert len(loaded.obstacles) == len(metadata.obstacles)
 
@@ -97,11 +111,20 @@ def check_save_load_roundtrip() -> None:
     assert loaded.future_delta_pose.y == metadata.future_delta_pose.y
     assert loaded.future_delta_pose.theta == metadata.future_delta_pose.theta
 
+    assert loaded.final_object_pose is not None
+    assert metadata.final_object_pose is not None
+    assert loaded.final_object_pose.x == metadata.final_object_pose.x
+    assert loaded.final_object_pose.y == metadata.final_object_pose.y
+    assert loaded.final_object_pose.theta == metadata.final_object_pose.theta
+
     print("episode_id:", loaded.episode_id)
+    print("schema_version:", loaded.schema_version)
     print("domain:", loaded.domain)
     print("split:", loaded.split)
     print("layout_family:", loaded.layout_family)
     print("shape_family:", loaded.shape_family)
+    print("reset_template_id:", loaded.reset_template_id)
+    print("seed:", loaded.seed)
     print("num_obstacles:", len(loaded.obstacles))
     print("future_delta_pose:", loaded.future_delta_pose)
     print("save path:", save_path)
@@ -135,6 +158,36 @@ def check_invalid_metadata() -> None:
     try:
         bad_episode_id.validate()
         raise AssertionError("Empty episode_id did not raise ValueError.")
+    except ValueError:
+        pass
+
+    # Negative seed should raise ValueError.
+    bad_seed = make_fake_metadata()
+    bad_seed.seed = -1
+
+    try:
+        bad_seed.validate()
+        raise AssertionError("Negative seed did not raise ValueError.")
+    except ValueError:
+        pass
+
+    # Negative final position error should raise ValueError.
+    bad_final_pos_error = make_fake_metadata()
+    bad_final_pos_error.final_pos_error = -0.01
+
+    try:
+        bad_final_pos_error.validate()
+        raise AssertionError("Negative final_pos_error did not raise ValueError.")
+    except ValueError:
+        pass
+
+    # Negative obstacle size should raise ValueError.
+    bad_obstacle = make_fake_metadata()
+    bad_obstacle.obstacles[0].size_x = -0.05
+
+    try:
+        bad_obstacle.validate()
+        raise AssertionError("Negative obstacle size did not raise ValueError.")
     except ValueError:
         pass
 
