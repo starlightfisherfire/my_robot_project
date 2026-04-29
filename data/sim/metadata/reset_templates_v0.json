@@ -1,0 +1,4962 @@
+[
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000000",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 42,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20836560790747305,
+      "y": 0.15150064531336002,
+      "theta": -0.11248534081544037
+    },
+    "goal_pose": {
+      "x": 0.42785685905190585,
+      "y": 0.298917697133121,
+      "theta": 0.08834974371145565
+    },
+    "ee_initial_pose": {
+      "x": 0.10836560790747304,
+      "y": 0.15150064531336002,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000001",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 43,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1923131103602428,
+      "y": 0.19177345935822315,
+      "theta": -0.2136400671627834
+    },
+    "goal_pose": {
+      "x": 0.417002580386327,
+      "y": 0.3371646764117767,
+      "theta": 0.17577076299317657
+    },
+    "ee_initial_pose": {
+      "x": 0.09231311036024278,
+      "y": 0.17177345935822316,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000002",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 44,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19451215275526965,
+      "y": 0.18251832054627576,
+      "theta": 0.1810183082396366
+    },
+    "goal_pose": {
+      "x": 0.4241332515356355,
+      "y": 0.25801276164625175,
+      "theta": -0.23545137336594446
+    },
+    "ee_initial_pose": {
+      "x": 0.09451215275526964,
+      "y": 0.18251832054627576,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000003",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 45,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20631252486304544,
+      "y": 0.17928169247105447,
+      "theta": -0.25087239457730004
+    },
+    "goal_pose": {
+      "x": 0.4070986789593656,
+      "y": 0.2772333607705354,
+      "theta": -0.29337817975206
+    },
+    "ee_initial_pose": {
+      "x": 0.10631252486304543,
+      "y": 0.15928169247105448,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000004",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 46,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22329608458714928,
+      "y": 0.17399966375826076,
+      "theta": 0.04431009138711606
+    },
+    "goal_pose": {
+      "x": 0.4787829338834209,
+      "y": 0.2582831362691681,
+      "theta": 0.007858642011759898
+    },
+    "ee_initial_pose": {
+      "x": 0.12329608458714927,
+      "y": 0.17399966375826076,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000005",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 47,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21111077534967296,
+      "y": 0.17581117475940589,
+      "theta": -0.027797481846255467
+    },
+    "goal_pose": {
+      "x": 0.40747757927026024,
+      "y": 0.3212444364924409,
+      "theta": -0.0645507591267169
+    },
+    "ee_initial_pose": {
+      "x": 0.11111077534967295,
+      "y": 0.1558111747594059,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000006",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 48,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20288946970497979,
+      "y": 0.15791348780255254,
+      "theta": 0.10577342113401222
+    },
+    "goal_pose": {
+      "x": 0.43418000447342525,
+      "y": 0.3150660219820217,
+      "theta": -0.15364082636733511
+    },
+    "ee_initial_pose": {
+      "x": 0.10288946970497978,
+      "y": 0.15791348780255254,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000007",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 49,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1940130385805651,
+      "y": 0.17479456898569556,
+      "theta": -0.2336971596323168
+    },
+    "goal_pose": {
+      "x": 0.4401689169134827,
+      "y": 0.3211285109875652,
+      "theta": -0.2701956033116816
+    },
+    "ee_initial_pose": {
+      "x": 0.09401303858056509,
+      "y": 0.15479456898569557,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000008",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 50,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19985219412551614,
+      "y": 0.16597042338435242,
+      "theta": 0.06870558072184546
+    },
+    "goal_pose": {
+      "x": 0.429398380334701,
+      "y": 0.27785348639899643,
+      "theta": 0.23516807455587668
+    },
+    "ee_initial_pose": {
+      "x": 0.09985219412551613,
+      "y": 0.16597042338435242,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000009",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 51,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20461106576256022,
+      "y": 0.18013253937018936,
+      "theta": -0.20283749142551644
+    },
+    "goal_pose": {
+      "x": 0.44569777726746246,
+      "y": 0.2931399512533836,
+      "theta": 0.03139718438314343
+    },
+    "ee_initial_pose": {
+      "x": 0.10461106576256021,
+      "y": 0.16013253937018937,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000010",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 52,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22870129150225982,
+      "y": 0.15327135930062744,
+      "theta": 0.11283086058716246
+    },
+    "goal_pose": {
+      "x": 0.4487089394659554,
+      "y": 0.3153378596133126,
+      "theta": -0.046572755895354034
+    },
+    "ee_initial_pose": {
+      "x": 0.1287012915022598,
+      "y": 0.15327135930062744,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000011",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 53,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22702848860019714,
+      "y": 0.203408313192153,
+      "theta": -0.026107668122364258
+    },
+    "goal_pose": {
+      "x": 0.43691238074463357,
+      "y": 0.3636981303378233,
+      "theta": 0.012335896614368513
+    },
+    "ee_initial_pose": {
+      "x": 0.12702848860019714,
+      "y": 0.183408313192153,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000012",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 54,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22481857835329347,
+      "y": 0.15824868117523386,
+      "theta": 0.028035068131706753
+    },
+    "goal_pose": {
+      "x": 0.4486417990266306,
+      "y": 0.3167184331938825,
+      "theta": -0.059805124182248315
+    },
+    "ee_initial_pose": {
+      "x": 0.12481857835329346,
+      "y": 0.15824868117523386,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000013",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 55,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19542039125616098,
+      "y": 0.20703801387380663,
+      "theta": -0.21001736820240874
+    },
+    "goal_pose": {
+      "x": 0.43914962965410237,
+      "y": 0.35412423959349365,
+      "theta": 0.14828217111722813
+    },
+    "ee_initial_pose": {
+      "x": 0.09542039125616097,
+      "y": 0.18703801387380664,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000014",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 56,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22795515128149665,
+      "y": 0.18358535483993427,
+      "theta": -0.013164055894678173
+    },
+    "goal_pose": {
+      "x": 0.4518623580343372,
+      "y": 0.30141280504627616,
+      "theta": 0.24430301387223607
+    },
+    "ee_initial_pose": {
+      "x": 0.12795515128149665,
+      "y": 0.18358535483993427,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000015",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 57,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1925539428149546,
+      "y": 0.18538118702409923,
+      "theta": -0.2884135131916881
+    },
+    "goal_pose": {
+      "x": 0.4211300911433815,
+      "y": 0.3676646136323808,
+      "theta": -0.12585191584765118
+    },
+    "ee_initial_pose": {
+      "x": 0.0925539428149546,
+      "y": 0.16538118702409924,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000016",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 58,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2048454298960374,
+      "y": 0.1623434399388648,
+      "theta": 0.0709846838655675
+    },
+    "goal_pose": {
+      "x": 0.48571883511613007,
+      "y": 0.24329651724839824,
+      "theta": -0.025300192067773508
+    },
+    "ee_initial_pose": {
+      "x": 0.1048454298960374,
+      "y": 0.1623434399388648,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000017",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 59,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20345112849083957,
+      "y": 0.20595841779584084,
+      "theta": 0.267446165350878
+    },
+    "goal_pose": {
+      "x": 0.38182068594465846,
+      "y": 0.3546916946023094,
+      "theta": 0.12862391184240923
+    },
+    "ee_initial_pose": {
+      "x": 0.10345112849083957,
+      "y": 0.18595841779584085,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__open_space__T_shape__000018",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 60,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18846840528402664,
+      "y": 0.18467747263050235,
+      "theta": -0.11719098229091213
+    },
+    "goal_pose": {
+      "x": 0.47463168411463913,
+      "y": 0.27737737768010085,
+      "theta": -0.08374009663129428
+    },
+    "ee_initial_pose": {
+      "x": 0.08846840528402664,
+      "y": 0.18467747263050235,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "train_sim_id__mild_offset__T_shape__000019",
+    "domain": "sim",
+    "split": "train_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 61,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2196692461587661,
+      "y": 0.18340150380884396,
+      "theta": 0.18584565329716612
+    },
+    "goal_pose": {
+      "x": 0.40564924555619103,
+      "y": 0.30209674790797925,
+      "theta": 0.11590010238165332
+    },
+    "ee_initial_pose": {
+      "x": 0.11966924615876609,
+      "y": 0.16340150380884397,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000000",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 62,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22567949395266046,
+      "y": 0.16038161340288262,
+      "theta": 0.23531446164391112
+    },
+    "goal_pose": {
+      "x": 0.4290487020566779,
+      "y": 0.27718016464106876,
+      "theta": 0.19888079788847796
+    },
+    "ee_initial_pose": {
+      "x": 0.12567949395266045,
+      "y": 0.16038161340288262,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000001",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 63,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21670835350940937,
+      "y": 0.1676453089403331,
+      "theta": 0.24565732443153038
+    },
+    "goal_pose": {
+      "x": 0.41874450782526706,
+      "y": 0.2787045963009508,
+      "theta": 0.1499747786456282
+    },
+    "ee_initial_pose": {
+      "x": 0.11670835350940936,
+      "y": 0.14764530894033312,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000002",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 64,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19856949573376076,
+      "y": 0.1878131432591331,
+      "theta": -0.04801951521576353
+    },
+    "goal_pose": {
+      "x": 0.48360192101410615,
+      "y": 0.2413481296321816,
+      "theta": 0.24380527536812618
+    },
+    "ee_initial_pose": {
+      "x": 0.09856949573376075,
+      "y": 0.1878131432591331,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000003",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 65,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21488463995852075,
+      "y": 0.1672620103571888,
+      "theta": 0.20682740458822596
+    },
+    "goal_pose": {
+      "x": 0.4155016818394975,
+      "y": 0.32287265587083824,
+      "theta": 0.03075551804965282
+    },
+    "ee_initial_pose": {
+      "x": 0.11488463995852075,
+      "y": 0.1472620103571888,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000004",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 66,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17424853562354436,
+      "y": 0.17607526522448044,
+      "theta": -0.1268751144895191
+    },
+    "goal_pose": {
+      "x": 0.4456548632943876,
+      "y": 0.26048702536728185,
+      "theta": 0.18074314960575733
+    },
+    "ee_initial_pose": {
+      "x": 0.07424853562354436,
+      "y": 0.17607526522448044,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000005",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 67,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19448762541238665,
+      "y": 0.19596004414933285,
+      "theta": 0.28325620055632533
+    },
+    "goal_pose": {
+      "x": 0.4132234551112948,
+      "y": 0.36448761164870547,
+      "theta": -0.042320173288336094
+    },
+    "ee_initial_pose": {
+      "x": 0.09448762541238664,
+      "y": 0.17596004414933286,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000006",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 68,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2145001361368744,
+      "y": 0.2064482329888329,
+      "theta": 0.12370169842708134
+    },
+    "goal_pose": {
+      "x": 0.482651405036915,
+      "y": 0.24887818253440047,
+      "theta": 0.039886590999983984
+    },
+    "ee_initial_pose": {
+      "x": 0.1145001361368744,
+      "y": 0.2064482329888329,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000007",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 69,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2310544571447244,
+      "y": 0.15575023850860825,
+      "theta": -0.19985111623998428
+    },
+    "goal_pose": {
+      "x": 0.428409908619295,
+      "y": 0.30280360320201316,
+      "theta": 0.24877339246751423
+    },
+    "ee_initial_pose": {
+      "x": 0.13105445714472438,
+      "y": 0.13575023850860826,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000008",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 70,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22458615427543233,
+      "y": 0.16764474244552072,
+      "theta": -0.020283060334390257
+    },
+    "goal_pose": {
+      "x": 0.4209086968434849,
+      "y": 0.3196048576277016,
+      "theta": -0.17267800189622634
+    },
+    "ee_initial_pose": {
+      "x": 0.12458615427543232,
+      "y": 0.16764474244552072,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000009",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 71,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20942520074924595,
+      "y": 0.18720176911293268,
+      "theta": -0.2949120003062593
+    },
+    "goal_pose": {
+      "x": 0.45862862298177803,
+      "y": 0.3522158506189751,
+      "theta": 0.2994118729201047
+    },
+    "ee_initial_pose": {
+      "x": 0.10942520074924594,
+      "y": 0.1672017691129327,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000010",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 72,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1744055992881399,
+      "y": 0.18566171574817425,
+      "theta": 0.2447234808887046
+    },
+    "goal_pose": {
+      "x": 0.4375187323683026,
+      "y": 0.2835179433940587,
+      "theta": -0.06282978390555222
+    },
+    "ee_initial_pose": {
+      "x": 0.07440559928813989,
+      "y": 0.18566171574817425,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000011",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 73,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20678892841437926,
+      "y": 0.18012842661748407,
+      "theta": 0.03848868988366122
+    },
+    "goal_pose": {
+      "x": 0.4168769486532582,
+      "y": 0.3286736560416477,
+      "theta": -0.007659729998119591
+    },
+    "ee_initial_pose": {
+      "x": 0.10678892841437926,
+      "y": 0.16012842661748408,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000012",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 74,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22158370671151195,
+      "y": 0.1809167897107873,
+      "theta": -0.19319460794600923
+    },
+    "goal_pose": {
+      "x": 0.41964920508861,
+      "y": 0.26472969840875904,
+      "theta": 0.18770631721686132
+    },
+    "ee_initial_pose": {
+      "x": 0.12158370671151195,
+      "y": 0.1809167897107873,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000013",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 75,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21705070804870055,
+      "y": 0.17619717409656505,
+      "theta": -0.27501933248878196
+    },
+    "goal_pose": {
+      "x": 0.4414101806366773,
+      "y": 0.33734553564483233,
+      "theta": 0.10251452442751618
+    },
+    "ee_initial_pose": {
+      "x": 0.11705070804870055,
+      "y": 0.15619717409656506,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000014",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 76,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19223339846577844,
+      "y": 0.20701112615599152,
+      "theta": -0.1499767679400159
+    },
+    "goal_pose": {
+      "x": 0.43375792983339184,
+      "y": 0.27344970574503136,
+      "theta": -0.13134739815581115
+    },
+    "ee_initial_pose": {
+      "x": 0.09223339846577844,
+      "y": 0.20701112615599152,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000015",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 77,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.23794692214700364,
+      "y": 0.16955436864375217,
+      "theta": -0.1557038909503959
+    },
+    "goal_pose": {
+      "x": 0.4458044695494545,
+      "y": 0.28150625369871035,
+      "theta": -0.014257934899433666
+    },
+    "ee_initial_pose": {
+      "x": 0.13794692214700363,
+      "y": 0.14955436864375218,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000016",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 78,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21886868872686863,
+      "y": 0.15576137660453301,
+      "theta": 0.21219715723695448
+    },
+    "goal_pose": {
+      "x": 0.4684337698648034,
+      "y": 0.26058720156156934,
+      "theta": -0.036258101834694356
+    },
+    "ee_initial_pose": {
+      "x": 0.11886868872686862,
+      "y": 0.15576137660453301,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000017",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 79,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19872016970999684,
+      "y": 0.1709706753175809,
+      "theta": -0.20223850053141812
+    },
+    "goal_pose": {
+      "x": 0.39967145664913545,
+      "y": 0.3392380782175576,
+      "theta": -0.20698759824264765
+    },
+    "ee_initial_pose": {
+      "x": 0.09872016970999684,
+      "y": 0.1509706753175809,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__open_space__T_shape__000018",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 80,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18628946679559674,
+      "y": 0.1825143956684665,
+      "theta": 0.10406517186350511
+    },
+    "goal_pose": {
+      "x": 0.4866876568918195,
+      "y": 0.26952629349538015,
+      "theta": 0.016395797585269878
+    },
+    "ee_initial_pose": {
+      "x": 0.08628946679559674,
+      "y": 0.1825143956684665,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "val_sim_id__mild_offset__T_shape__000019",
+    "domain": "sim",
+    "split": "val_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 81,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22035642482621487,
+      "y": 0.17719708278987756,
+      "theta": 0.03478249549060125
+    },
+    "goal_pose": {
+      "x": 0.4107376703494332,
+      "y": 0.35345211373072244,
+      "theta": -0.20435474597431597
+    },
+    "ee_initial_pose": {
+      "x": 0.12035642482621486,
+      "y": 0.15719708278987757,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 82,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17868323315802012,
+      "y": 0.17939383953068738,
+      "theta": 0.0025500740562685587
+    },
+    "goal_pose": {
+      "x": 0.4875079142001663,
+      "y": 0.30495898078656153,
+      "theta": 0.1450837447009361
+    },
+    "ee_initial_pose": {
+      "x": 0.07868323315802012,
+      "y": 0.17939383953068738,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 83,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21976937018802475,
+      "y": 0.20140584221180677,
+      "theta": -0.24678346606442825
+    },
+    "goal_pose": {
+      "x": 0.41027376296186413,
+      "y": 0.27491613220584243,
+      "theta": 0.08987575566267991
+    },
+    "ee_initial_pose": {
+      "x": 0.11976937018802475,
+      "y": 0.18140584221180678,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 84,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21389186782401268,
+      "y": 0.20484370743106478,
+      "theta": -0.23133502718383814
+    },
+    "goal_pose": {
+      "x": 0.4103513220081955,
+      "y": 0.31947601119363067,
+      "theta": -0.09074081915203053
+    },
+    "ee_initial_pose": {
+      "x": 0.11389186782401267,
+      "y": 0.20484370743106478,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 85,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.201975322381246,
+      "y": 0.1869031561106982,
+      "theta": -0.23573380565253077
+    },
+    "goal_pose": {
+      "x": 0.4524142312678882,
+      "y": 0.28920767294058297,
+      "theta": -0.02326731483329436
+    },
+    "ee_initial_pose": {
+      "x": 0.10197532238124599,
+      "y": 0.1669031561106982,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 86,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21749155615768795,
+      "y": 0.1518620241684617,
+      "theta": 0.1688709854769379
+    },
+    "goal_pose": {
+      "x": 0.43539838179538,
+      "y": 0.24096145198861413,
+      "theta": -0.21515996863057152
+    },
+    "ee_initial_pose": {
+      "x": 0.11749155615768794,
+      "y": 0.1518620241684617,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 87,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19875728804077883,
+      "y": 0.16135051930328845,
+      "theta": 0.20346448039961945
+    },
+    "goal_pose": {
+      "x": 0.4232437414539979,
+      "y": 0.2980861450390062,
+      "theta": -0.09874025593083324
+    },
+    "ee_initial_pose": {
+      "x": 0.09875728804077882,
+      "y": 0.14135051930328846,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 88,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19384933261888745,
+      "y": 0.16137069419002892,
+      "theta": 0.20121965998776564
+    },
+    "goal_pose": {
+      "x": 0.46004298926258796,
+      "y": 0.2821337501814608,
+      "theta": 0.09836335110595118
+    },
+    "ee_initial_pose": {
+      "x": 0.09384933261888745,
+      "y": 0.16137069419002892,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 89,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19486543987743307,
+      "y": 0.18640816734875576,
+      "theta": 0.29863671031056743
+    },
+    "goal_pose": {
+      "x": 0.39124693950669864,
+      "y": 0.35522860412648294,
+      "theta": -0.21025635370436918
+    },
+    "ee_initial_pose": {
+      "x": 0.09486543987743307,
+      "y": 0.16640816734875577,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 90,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1822202268452631,
+      "y": 0.15556160531089988,
+      "theta": 0.07974000116663038
+    },
+    "goal_pose": {
+      "x": 0.45689035374510295,
+      "y": 0.29075273685838665,
+      "theta": -0.07257652727896013
+    },
+    "ee_initial_pose": {
+      "x": 0.08222022684526309,
+      "y": 0.15556160531089988,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 91,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19501123126921516,
+      "y": 0.16034245847203177,
+      "theta": 0.1102869302564588
+    },
+    "goal_pose": {
+      "x": 0.39290877366200094,
+      "y": 0.36492090229614166,
+      "theta": 0.20659681312237838
+    },
+    "ee_initial_pose": {
+      "x": 0.09501123126921515,
+      "y": 0.14034245847203178,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000010",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 92,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19526267685719878,
+      "y": 0.18389488378916063,
+      "theta": 0.0290702238380261
+    },
+    "goal_pose": {
+      "x": 0.4571080102121486,
+      "y": 0.3040625261090464,
+      "theta": 0.23343839078155598
+    },
+    "ee_initial_pose": {
+      "x": 0.09526267685719877,
+      "y": 0.18389488378916063,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000011",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 93,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.24474060156158495,
+      "y": 0.17966098483800977,
+      "theta": 0.039480872703888226
+    },
+    "goal_pose": {
+      "x": 0.4082635920543279,
+      "y": 0.28136164970085675,
+      "theta": -0.08677196436604492
+    },
+    "ee_initial_pose": {
+      "x": 0.14474060156158494,
+      "y": 0.15966098483800978,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000012",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 94,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.202808093212198,
+      "y": 0.15744713402856933,
+      "theta": -0.10995319372976375
+    },
+    "goal_pose": {
+      "x": 0.4444561772637047,
+      "y": 0.24135158281760025,
+      "theta": -0.0009023905884302241
+    },
+    "ee_initial_pose": {
+      "x": 0.102808093212198,
+      "y": 0.15744713402856933,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000013",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 95,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.23560968869858645,
+      "y": 0.18082899613819498,
+      "theta": 0.298261310471633
+    },
+    "goal_pose": {
+      "x": 0.4231376849315268,
+      "y": 0.36355556060695937,
+      "theta": -0.22300639921293597
+    },
+    "ee_initial_pose": {
+      "x": 0.13560968869858644,
+      "y": 0.16082899613819499,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000014",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 96,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1922356586074812,
+      "y": 0.20445750817956562,
+      "theta": -0.0519866908927889
+    },
+    "goal_pose": {
+      "x": 0.4264842743253722,
+      "y": 0.30542381128123974,
+      "theta": 0.1293920466531674
+    },
+    "ee_initial_pose": {
+      "x": 0.0922356586074812,
+      "y": 0.20445750817956562,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000015",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 97,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20167223487599087,
+      "y": 0.19836463808796484,
+      "theta": -0.07676408924035993
+    },
+    "goal_pose": {
+      "x": 0.44736215938133084,
+      "y": 0.34962952185492613,
+      "theta": 0.04460868547268687
+    },
+    "ee_initial_pose": {
+      "x": 0.10167223487599086,
+      "y": 0.17836463808796485,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000016",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 98,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19138389240576334,
+      "y": 0.19986961664695158,
+      "theta": -0.07381067641760458
+    },
+    "goal_pose": {
+      "x": 0.4146979850363462,
+      "y": 0.27786644237154773,
+      "theta": 0.11409069157081897
+    },
+    "ee_initial_pose": {
+      "x": 0.09138389240576333,
+      "y": 0.19986961664695158,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000017",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 99,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21423868449661998,
+      "y": 0.16200452667449672,
+      "theta": -0.1927186076480326
+    },
+    "goal_pose": {
+      "x": 0.39987450548007747,
+      "y": 0.3459877436508078,
+      "theta": -0.14930939497486795
+    },
+    "ee_initial_pose": {
+      "x": 0.11423868449661997,
+      "y": 0.14200452667449673,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__open_space__T_shape__000018",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "open_space",
+    "shape_family": "T_shape",
+    "seed": 100,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17874015530624782,
+      "y": 0.17729562027084128,
+      "theta": 0.13539190282951108
+    },
+    "goal_pose": {
+      "x": 0.46644105815472225,
+      "y": 0.29855671784266047,
+      "theta": -0.03324278255229812
+    },
+    "ee_initial_pose": {
+      "x": 0.07874015530624781,
+      "y": 0.17729562027084128,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_id__mild_offset__T_shape__000019",
+    "domain": "sim",
+    "split": "test_sim_id",
+    "layout_family": "mild_offset",
+    "shape_family": "T_shape",
+    "seed": 101,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2248691279502739,
+      "y": 0.1616852697320482,
+      "theta": 0.27915066423666673
+    },
+    "goal_pose": {
+      "x": 0.4539181121341435,
+      "y": 0.3167138678196974,
+      "theta": 0.09808238671803632
+    },
+    "ee_initial_pose": {
+      "x": 0.12486912795027388,
+      "y": 0.1416852697320482,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 102,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16240856031935416,
+      "y": 0.20579826435381118,
+      "theta": -0.1651570888071664
+    },
+    "goal_pose": {
+      "x": 0.49487548631626455,
+      "y": 0.30754827449302297,
+      "theta": -0.05783126394151472
+    },
+    "ee_initial_pose": {
+      "x": 0.062408560319354156,
+      "y": 0.20579826435381118,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33334192866238804,
+          "y": 0.25932336690720503,
+          "theta": -0.36542219683945787
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 103,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2039525060036387,
+      "y": 0.19781491381459243,
+      "theta": 0.10942351705011821
+    },
+    "goal_pose": {
+      "x": 0.4964420369809738,
+      "y": 0.28004311679479443,
+      "theta": -0.21098101544243797
+    },
+    "ee_initial_pose": {
+      "x": 0.1039525060036387,
+      "y": 0.19781491381459243,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.35430700094299183,
+          "y": 0.2238057954136007,
+          "theta": -0.09421869241495279
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 104,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20299804650974776,
+      "y": 0.21859318435112865,
+      "theta": 0.11595264736834193
+    },
+    "goal_pose": {
+      "x": 0.4609335685325566,
+      "y": 0.28814496294015673,
+      "theta": 0.10690531181213564
+    },
+    "ee_initial_pose": {
+      "x": 0.10299804650974775,
+      "y": 0.21859318435112865,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34423418411525064,
+          "y": 0.23403800403089758,
+          "theta": -0.2666450077001361
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 105,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19890496745382463,
+      "y": 0.1924559323417852,
+      "theta": 0.14536182995299868
+    },
+    "goal_pose": {
+      "x": 0.5116111243526554,
+      "y": 0.28685531315716034,
+      "theta": 0.1341609789821298
+    },
+    "ee_initial_pose": {
+      "x": 0.09890496745382463,
+      "y": 0.1924559323417852,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3486459936690475,
+          "y": 0.22620716468879482,
+          "theta": -0.12135754724949016
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 106,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19053418665312463,
+      "y": 0.22005537803442662,
+      "theta": -0.24161816181467394
+    },
+    "goal_pose": {
+      "x": 0.510944426185501,
+      "y": 0.3224702434489665,
+      "theta": -0.22165752219670698
+    },
+    "ee_initial_pose": {
+      "x": 0.09053418665312463,
+      "y": 0.22005537803442662,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.36299240885871714,
+          "y": 0.28344265871643376,
+          "theta": -0.24983359092643936
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 107,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1673240979834679,
+      "y": 0.204064496519539,
+      "theta": 0.23614050346282556
+    },
+    "goal_pose": {
+      "x": 0.49104547947473504,
+      "y": 0.29877641650605125,
+      "theta": -0.09550808013619078
+    },
+    "ee_initial_pose": {
+      "x": 0.06732409798346789,
+      "y": 0.204064496519539,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.31469745257766657,
+          "y": 0.2713700442584561,
+          "theta": 0.20346382334189173
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 108,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1615260114950335,
+      "y": 0.2157817181516258,
+      "theta": 0.19022032119996057
+    },
+    "goal_pose": {
+      "x": 0.4719564574284794,
+      "y": 0.28435939219943723,
+      "theta": -0.15205915655934366
+    },
+    "ee_initial_pose": {
+      "x": 0.061526011495033506,
+      "y": 0.2157817181516258,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.2999777184825388,
+          "y": 0.23866369100341098,
+          "theta": -0.23839141898642488
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 109,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1689791519302934,
+      "y": 0.1979639487154945,
+      "theta": 0.023615371651067973
+    },
+    "goal_pose": {
+      "x": 0.45210504111600003,
+      "y": 0.3001550381247911,
+      "theta": 0.22818505130249583
+    },
+    "ee_initial_pose": {
+      "x": 0.06897915193029339,
+      "y": 0.1979639487154945,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.313049350085524,
+          "y": 0.24981440355485884,
+          "theta": 0.2319443597521441
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 110,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20171309813519864,
+      "y": 0.1944017364809843,
+      "theta": 0.160820598155836
+    },
+    "goal_pose": {
+      "x": 0.4623434420585777,
+      "y": 0.298744289055064,
+      "theta": -0.11318790302394505
+    },
+    "ee_initial_pose": {
+      "x": 0.10171309813519863,
+      "y": 0.1944017364809843,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33370909207857047,
+          "y": 0.22957267687925706,
+          "theta": -0.06660289465665814
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 111,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1963585282671157,
+      "y": 0.18563815575880865,
+      "theta": 0.22125972180058984
+    },
+    "goal_pose": {
+      "x": 0.47957438017125886,
+      "y": 0.2928311007409393,
+      "theta": 0.058582338734228245
+    },
+    "ee_initial_pose": {
+      "x": 0.09635852826711569,
+      "y": 0.18563815575880865,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.32475163080323177,
+          "y": 0.226979115087831,
+          "theta": -0.06268399620601317
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000010",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 112,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17906233170366542,
+      "y": 0.2083043778612469,
+      "theta": 0.059916847567473175
+    },
+    "goal_pose": {
+      "x": 0.4939610241543363,
+      "y": 0.3281583815773305,
+      "theta": 0.1259067455811631
+    },
+    "ee_initial_pose": {
+      "x": 0.07906233170366542,
+      "y": 0.2083043778612469,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3230147498220049,
+          "y": 0.2570683019256574,
+          "theta": -0.03616510017424901
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000011",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 113,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15652776600936869,
+      "y": 0.21838090189244552,
+      "theta": 0.1110380041399946
+    },
+    "goal_pose": {
+      "x": 0.4462511731198923,
+      "y": 0.3034955444510991,
+      "theta": -0.13066168339376294
+    },
+    "ee_initial_pose": {
+      "x": 0.05652776600936868,
+      "y": 0.21838090189244552,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3166598821381925,
+          "y": 0.2750801842301336,
+          "theta": -0.1586798481568309
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000012",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 114,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16704677505892473,
+      "y": 0.1798943613977546,
+      "theta": 0.08296304554850598
+    },
+    "goal_pose": {
+      "x": 0.4620431891369831,
+      "y": 0.30869855264828117,
+      "theta": -0.1732303331842121
+    },
+    "ee_initial_pose": {
+      "x": 0.06704677505892473,
+      "y": 0.1798943613977546,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33377771163145803,
+          "y": 0.2512859684286202,
+          "theta": -0.16466689359161651
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000013",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 115,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19979511875035083,
+      "y": 0.18484674981884064,
+      "theta": -0.1933106834540549
+    },
+    "goal_pose": {
+      "x": 0.4528568461791884,
+      "y": 0.31780127779469264,
+      "theta": 0.17900148611102906
+    },
+    "ee_initial_pose": {
+      "x": 0.09979511875035083,
+      "y": 0.18484674981884064,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34598377798102903,
+          "y": 0.25846231193591274,
+          "theta": 0.11200470497727655
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000014",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 116,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19606787657197947,
+      "y": 0.20499025901638854,
+      "theta": 0.11106702051366024
+    },
+    "goal_pose": {
+      "x": 0.44561109790726894,
+      "y": 0.31023862986587286,
+      "theta": 0.11881217037208908
+    },
+    "ee_initial_pose": {
+      "x": 0.09606787657197946,
+      "y": 0.20499025901638854,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3200682174316621,
+          "y": 0.25696785532758554,
+          "theta": -0.20324047640498977
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000015",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 117,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1670051515033128,
+      "y": 0.1832201224601962,
+      "theta": -0.050075844514777146
+    },
+    "goal_pose": {
+      "x": 0.45610586404128683,
+      "y": 0.2934659587526449,
+      "theta": -0.19132710354054994
+    },
+    "ee_initial_pose": {
+      "x": 0.0670051515033128,
+      "y": 0.1832201224601962,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3126451924219493,
+          "y": 0.24099320834910032,
+          "theta": -0.12094070639134591
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000016",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 118,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19054911338981423,
+      "y": 0.18412692781991163,
+      "theta": -0.2004921447388091
+    },
+    "goal_pose": {
+      "x": 0.47035911903213645,
+      "y": 0.3187639600132353,
+      "theta": -0.0981203566045698
+    },
+    "ee_initial_pose": {
+      "x": 0.09054911338981422,
+      "y": 0.18412692781991163,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34588624095274234,
+          "y": 0.255757890181229,
+          "theta": 0.006259625958782489
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000017",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 119,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2013156429253507,
+      "y": 0.18399094743226582,
+      "theta": 0.1420445439649236
+    },
+    "goal_pose": {
+      "x": 0.482705186803443,
+      "y": 0.33347389841677116,
+      "theta": 0.026618625058473122
+    },
+    "ee_initial_pose": {
+      "x": 0.1013156429253507,
+      "y": 0.18399094743226582,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3393185964210157,
+          "y": 0.2419043240027273,
+          "theta": -0.05753479224044761
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000018",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 120,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18074689770038746,
+      "y": 0.1844324085657688,
+      "theta": 0.22645976355363845
+    },
+    "goal_pose": {
+      "x": 0.48946883567698485,
+      "y": 0.3062763299566966,
+      "theta": 0.22021214091203772
+    },
+    "ee_initial_pose": {
+      "x": 0.08074689770038745,
+      "y": 0.1844324085657688,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.31875740583604695,
+          "y": 0.25706846628837987,
+          "theta": -0.22148150886387638
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000019",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 121,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15936507434329084,
+      "y": 0.20419040429344762,
+      "theta": -0.05112425377326124
+    },
+    "goal_pose": {
+      "x": 0.5090262600209673,
+      "y": 0.30801368308018773,
+      "theta": 0.011262279664335462
+    },
+    "ee_initial_pose": {
+      "x": 0.05936507434329083,
+      "y": 0.20419040429344762,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3517224369186887,
+          "y": 0.24752925341715176,
+          "theta": 0.27887471698004285
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 122,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18050092533717396,
+      "y": 0.20484990435537898,
+      "theta": -0.09885090623221471
+    },
+    "goal_pose": {
+      "x": 0.5301022149992651,
+      "y": 0.2137842679172236,
+      "theta": 0.13050721667783372
+    },
+    "ee_initial_pose": {
+      "x": 0.08050092533717396,
+      "y": 0.20484990435537898,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3387430737108772,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3500663556163985,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 123,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1576181799425472,
+      "y": 0.17935933387613162,
+      "theta": -0.04637911816480084
+    },
+    "goal_pose": {
+      "x": 0.47253901644569074,
+      "y": 0.22407193267710168,
+      "theta": -0.2309231669488388
+    },
+    "ee_initial_pose": {
+      "x": 0.0576181799425472,
+      "y": 0.17935933387613162,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3410860612010178,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3349659309552904,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 124,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20303903783776162,
+      "y": 0.2024127654752645,
+      "theta": -0.16146025453737212
+    },
+    "goal_pose": {
+      "x": 0.5325843082677585,
+      "y": 0.19497134146666248,
+      "theta": 0.14376777173639477
+    },
+    "ee_initial_pose": {
+      "x": 0.10303903783776161,
+      "y": 0.2024127654752645,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3259476862065737,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3299642533207199,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 125,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20000291095778272,
+      "y": 0.1861266142980867,
+      "theta": 0.15402336269116024
+    },
+    "goal_pose": {
+      "x": 0.48606585241633643,
+      "y": 0.21423082031966179,
+      "theta": -0.07446576971266572
+    },
+    "ee_initial_pose": {
+      "x": 0.10000291095778271,
+      "y": 0.1861266142980867,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3432252464382415,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3434491526257652,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 126,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18362883696713206,
+      "y": 0.2039031947387293,
+      "theta": -0.021826374353868305
+    },
+    "goal_pose": {
+      "x": 0.5101590412279102,
+      "y": 0.19831075946103233,
+      "theta": -0.013593106608888517
+    },
+    "ee_initial_pose": {
+      "x": 0.08362883696713205,
+      "y": 0.2039031947387293,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3297113449895361,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3289884447862147,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 127,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15722878974391702,
+      "y": 0.206195144571549,
+      "theta": 0.03202558987777071
+    },
+    "goal_pose": {
+      "x": 0.47186498263217264,
+      "y": 0.1717901685542807,
+      "theta": 0.22006243170435857
+    },
+    "ee_initial_pose": {
+      "x": 0.05722878974391701,
+      "y": 0.206195144571549,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3372437457502008,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.33397580608906396,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 128,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2020017045175423,
+      "y": 0.1868324068954821,
+      "theta": 0.00575566427400559
+    },
+    "goal_pose": {
+      "x": 0.4743829508410681,
+      "y": 0.17172650798494593,
+      "theta": -0.17289506897844859
+    },
+    "ee_initial_pose": {
+      "x": 0.10200170451754229,
+      "y": 0.1868324068954821,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.34413939204950195,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.33254834159369134,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 129,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18430488842279788,
+      "y": 0.21410145182921458,
+      "theta": -0.11410135758603573
+    },
+    "goal_pose": {
+      "x": 0.5269058545222138,
+      "y": 0.22330177293483763,
+      "theta": 0.2275581560984315
+    },
+    "ee_initial_pose": {
+      "x": 0.08430488842279787,
+      "y": 0.21410145182921458,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.34392602851048887,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.33488203068047107,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 130,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.180988897094676,
+      "y": 0.1886660843284862,
+      "theta": 0.12039933972134359
+    },
+    "goal_pose": {
+      "x": 0.5208407089919632,
+      "y": 0.20883469915041825,
+      "theta": -0.2390316301645269
+    },
+    "ee_initial_pose": {
+      "x": 0.080988897094676,
+      "y": 0.1886660843284862,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3322003904538946,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3351518055547584,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 131,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17077175944017225,
+      "y": 0.21349341590255452,
+      "theta": -0.20620648416541532
+    },
+    "goal_pose": {
+      "x": 0.48507767186453754,
+      "y": 0.19342840810676645,
+      "theta": 0.19783817277546067
+    },
+    "ee_initial_pose": {
+      "x": 0.07077175944017225,
+      "y": 0.21349341590255452,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.33544279044085296,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.34281542114140406,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000010",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 132,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17562144136271393,
+      "y": 0.1953861050539652,
+      "theta": 0.19887921650331064
+    },
+    "goal_pose": {
+      "x": 0.5278663723387202,
+      "y": 0.18842606788390184,
+      "theta": 0.1742922543604985
+    },
+    "ee_initial_pose": {
+      "x": 0.07562144136271393,
+      "y": 0.1953861050539652,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3537470911724667,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3500778081744368,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000011",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 133,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1796916325220786,
+      "y": 0.19911769566026646,
+      "theta": 0.13447633614983356
+    },
+    "goal_pose": {
+      "x": 0.52158014948684,
+      "y": 0.19032083878596823,
+      "theta": 0.022500595799151812
+    },
+    "ee_initial_pose": {
+      "x": 0.07969163252207859,
+      "y": 0.19911769566026646,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3436273919214621,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.34628240828361606,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000012",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 134,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1792059378039571,
+      "y": 0.1849384109399486,
+      "theta": 0.241939736743348
+    },
+    "goal_pose": {
+      "x": 0.5287729396707166,
+      "y": 0.21476663647805533,
+      "theta": 0.1678349305940599
+    },
+    "ee_initial_pose": {
+      "x": 0.0792059378039571,
+      "y": 0.1849384109399486,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3258066693667969,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.34789060506657643,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000013",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 135,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.188476751809412,
+      "y": 0.20627343566838569,
+      "theta": 0.041387033746877244
+    },
+    "goal_pose": {
+      "x": 0.4991525758845746,
+      "y": 0.21925413580498618,
+      "theta": -0.18966214562766143
+    },
+    "ee_initial_pose": {
+      "x": 0.088476751809412,
+      "y": 0.20627343566838569,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.33348744005225855,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3427985075485704,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000014",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 136,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18378581040682151,
+      "y": 0.20140467623647507,
+      "theta": -0.03342179024534703
+    },
+    "goal_pose": {
+      "x": 0.5185015777060047,
+      "y": 0.19536145241354325,
+      "theta": -0.1800635748869686
+    },
+    "ee_initial_pose": {
+      "x": 0.08378581040682151,
+      "y": 0.20140467623647507,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.34412402410023313,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3264005899050805,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000015",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 137,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15861832871347353,
+      "y": 0.1955047560206229,
+      "theta": 0.24512735825942383
+    },
+    "goal_pose": {
+      "x": 0.481164557890477,
+      "y": 0.19092664972398907,
+      "theta": 0.16032231377393946
+    },
+    "ee_initial_pose": {
+      "x": 0.05861832871347353,
+      "y": 0.1955047560206229,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3519951609968812,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.34045385420072277,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000016",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 138,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16467181674461914,
+      "y": 0.19750531425584553,
+      "theta": 0.0990824747885975
+    },
+    "goal_pose": {
+      "x": 0.47957741742254767,
+      "y": 0.22174868744747608,
+      "theta": -0.12611367857053007
+    },
+    "ee_initial_pose": {
+      "x": 0.06467181674461914,
+      "y": 0.19750531425584553,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.32938761468521927,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.33829127263322745,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000017",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 139,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15507550863900854,
+      "y": 0.20974936396486782,
+      "theta": 0.019415056734536085
+    },
+    "goal_pose": {
+      "x": 0.5273808304320557,
+      "y": 0.2264185495062407,
+      "theta": 0.07838429251095314
+    },
+    "ee_initial_pose": {
+      "x": 0.055075508639008536,
+      "y": 0.20974936396486782,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3474654815121648,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3414151694642576,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000018",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 140,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19357954698491653,
+      "y": 0.17975062244765352,
+      "theta": -0.11656296246424924
+    },
+    "goal_pose": {
+      "x": 0.5022200794609327,
+      "y": 0.17318804130528523,
+      "theta": 0.11118474314474663
+    },
+    "ee_initial_pose": {
+      "x": 0.09357954698491652,
+      "y": 0.17975062244765352,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.3254516141522549,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.33068508170522154,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_narrow_passage__narrow_passage__T_shape__000019",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_narrow_passage",
+    "layout_family": "narrow_passage",
+    "shape_family": "T_shape",
+    "seed": 141,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18086604497533618,
+      "y": 0.17650937757653953,
+      "theta": 0.1420538778417505
+    },
+    "goal_pose": {
+      "x": 0.4774156528722815,
+      "y": 0.21186518361969614,
+      "theta": -0.24918365506416318
+    },
+    "ee_initial_pose": {
+      "x": 0.08086604497533617,
+      "y": 0.17650937757653953,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_narrow_top",
+        "pose": {
+          "x": 0.333068099167419,
+          "y": 0.32,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_narrow_bottom",
+        "pose": {
+          "x": 0.3418369253752881,
+          "y": 0.08000000000000002,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 142,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2241294219691589,
+      "y": 0.22900950679175255,
+      "theta": -0.006473026553747097
+    },
+    "goal_pose": {
+      "x": 0.5494413522736815,
+      "y": 0.3738131884806939,
+      "theta": 0.16684205752982295
+    },
+    "ee_initial_pose": {
+      "x": 0.12412942196915888,
+      "y": 0.22900950679175255,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 143,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.24031855776307312,
+      "y": 0.23757001875077233,
+      "theta": -0.22709153959196382
+    },
+    "goal_pose": {
+      "x": 0.539043141645687,
+      "y": 0.3697807923207237,
+      "theta": 0.1165459916342923
+    },
+    "ee_initial_pose": {
+      "x": 0.14031855776307312,
+      "y": 0.23757001875077233,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 144,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2174133610856835,
+      "y": 0.2177197651123666,
+      "theta": 0.222423180363245
+    },
+    "goal_pose": {
+      "x": 0.5588789958267546,
+      "y": 0.392396656989085,
+      "theta": -0.20559914162748255
+    },
+    "ee_initial_pose": {
+      "x": 0.11741336108568348,
+      "y": 0.2177197651123666,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 145,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.23852378612662448,
+      "y": 0.23530372404410124,
+      "theta": 0.20585034609948283
+    },
+    "goal_pose": {
+      "x": 0.5300672624830484,
+      "y": 0.3609789793681927,
+      "theta": -0.08958662400619394
+    },
+    "ee_initial_pose": {
+      "x": 0.13852378612662447,
+      "y": 0.23530372404410124,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 146,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20166675833606554,
+      "y": 0.226166075292286,
+      "theta": 0.13630634847072715
+    },
+    "goal_pose": {
+      "x": 0.5326066816326894,
+      "y": 0.3825492826945047,
+      "theta": 0.19915336774444908
+    },
+    "ee_initial_pose": {
+      "x": 0.10166675833606553,
+      "y": 0.226166075292286,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 147,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22526199402009478,
+      "y": 0.20243987818322795,
+      "theta": 0.22242406157509703
+    },
+    "goal_pose": {
+      "x": 0.5475798870962023,
+      "y": 0.3779387787529146,
+      "theta": 0.06308916537454651
+    },
+    "ee_initial_pose": {
+      "x": 0.12526199402009477,
+      "y": 0.20243987818322795,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 148,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21517508771379068,
+      "y": 0.22680151536886534,
+      "theta": 0.23513201207623458
+    },
+    "goal_pose": {
+      "x": 0.5315561797798835,
+      "y": 0.3871652097719546,
+      "theta": 0.23899235706658845
+    },
+    "ee_initial_pose": {
+      "x": 0.11517508771379067,
+      "y": 0.22680151536886534,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 149,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1985553753741486,
+      "y": 0.20758603721008206,
+      "theta": -0.1806362713299639
+    },
+    "goal_pose": {
+      "x": 0.5321984118287255,
+      "y": 0.392129459732076,
+      "theta": 0.039002664533598075
+    },
+    "ee_initial_pose": {
+      "x": 0.0985553753741486,
+      "y": 0.20758603721008206,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 150,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2361903620982044,
+      "y": 0.2397604579474584,
+      "theta": -0.15606579472330762
+    },
+    "goal_pose": {
+      "x": 0.5421543588674662,
+      "y": 0.37913193826237757,
+      "theta": -0.1685478857901423
+    },
+    "ee_initial_pose": {
+      "x": 0.1361903620982044,
+      "y": 0.2397604579474584,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 151,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2303286867624587,
+      "y": 0.23729906606362844,
+      "theta": 0.22539283600469667
+    },
+    "goal_pose": {
+      "x": 0.5553115474354866,
+      "y": 0.3681844098425174,
+      "theta": 0.2366619753920931
+    },
+    "ee_initial_pose": {
+      "x": 0.1303286867624587,
+      "y": 0.23729906606362844,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000010",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 152,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.24388266613941395,
+      "y": 0.21457252458765297,
+      "theta": -0.17690927765556608
+    },
+    "goal_pose": {
+      "x": 0.5688642135859067,
+      "y": 0.39193515362931075,
+      "theta": 0.0623362474787762
+    },
+    "ee_initial_pose": {
+      "x": 0.14388266613941395,
+      "y": 0.21457252458765297,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000011",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 153,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.24466838378105726,
+      "y": 0.19878335790238433,
+      "theta": -0.11999479419146142
+    },
+    "goal_pose": {
+      "x": 0.5640619648737188,
+      "y": 0.39582674699507964,
+      "theta": 0.03307678100078948
+    },
+    "ee_initial_pose": {
+      "x": 0.14466838378105726,
+      "y": 0.19878335790238433,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000012",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 154,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20515711531877637,
+      "y": 0.2411082271449839,
+      "theta": -0.06224040878410164
+    },
+    "goal_pose": {
+      "x": 0.5632373330616274,
+      "y": 0.37774897501127286,
+      "theta": -0.24736218197071308
+    },
+    "ee_initial_pose": {
+      "x": 0.10515711531877636,
+      "y": 0.2411082271449839,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000013",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 155,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22404431466113647,
+      "y": 0.22196932739817657,
+      "theta": 0.19681374834945786
+    },
+    "goal_pose": {
+      "x": 0.569320855047237,
+      "y": 0.39100894658002744,
+      "theta": -0.04178727589680292
+    },
+    "ee_initial_pose": {
+      "x": 0.12404431466113647,
+      "y": 0.22196932739817657,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000014",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 156,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21938897394299794,
+      "y": 0.23944736046354545,
+      "theta": -0.126268056156
+    },
+    "goal_pose": {
+      "x": 0.5443065008973968,
+      "y": 0.3689226031178329,
+      "theta": -0.17126333761609447
+    },
+    "ee_initial_pose": {
+      "x": 0.11938897394299794,
+      "y": 0.23944736046354545,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000015",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 157,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22558216962624428,
+      "y": 0.20624002157174345,
+      "theta": -0.2417893706646066
+    },
+    "goal_pose": {
+      "x": 0.5439762545664854,
+      "y": 0.3692542926423687,
+      "theta": 0.1581038577058133
+    },
+    "ee_initial_pose": {
+      "x": 0.12558216962624427,
+      "y": 0.20624002157174345,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000016",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 158,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22921261532015402,
+      "y": 0.24477452688682463,
+      "theta": 0.21718060163996095
+    },
+    "goal_pose": {
+      "x": 0.5340964111865656,
+      "y": 0.37673812406172535,
+      "theta": 0.13547530378648193
+    },
+    "ee_initial_pose": {
+      "x": 0.12921261532015402,
+      "y": 0.24477452688682463,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000017",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 159,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21472599408426055,
+      "y": 0.22862686911548885,
+      "theta": -0.12783917219554175
+    },
+    "goal_pose": {
+      "x": 0.5636436218610837,
+      "y": 0.38493316745583106,
+      "theta": -0.23982710111282274
+    },
+    "ee_initial_pose": {
+      "x": 0.11472599408426054,
+      "y": 0.22862686911548885,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000018",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 160,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20112685065875952,
+      "y": 0.21215911157409664,
+      "theta": -0.1627997274718026
+    },
+    "goal_pose": {
+      "x": 0.5535123742674198,
+      "y": 0.38844263252326433,
+      "theta": 0.011671556132840488
+    },
+    "ee_initial_pose": {
+      "x": 0.10112685065875951,
+      "y": 0.21215911157409664,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_edge_goal__edge_goal__T_shape__000019",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_edge_goal",
+    "layout_family": "edge_goal",
+    "shape_family": "T_shape",
+    "seed": 161,
+    "object_shape": "T",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2209105034933104,
+      "y": 0.22251665345133284,
+      "theta": -0.13521957051569644
+    },
+    "goal_pose": {
+      "x": 0.5659788587535179,
+      "y": 0.3854745094746823,
+      "theta": -0.01003411772011914
+    },
+    "ee_initial_pose": {
+      "x": 0.1209105034933104,
+      "y": 0.22251665345133284,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 162,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17322225020384635,
+      "y": 0.20417658297464314,
+      "theta": -0.1476885844014077
+    },
+    "goal_pose": {
+      "x": 0.42619833672822266,
+      "y": 0.2799589936553679,
+      "theta": 0.05551196253283375
+    },
+    "ee_initial_pose": {
+      "x": 0.07322225020384635,
+      "y": 0.20417658297464314,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 163,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22248524127360944,
+      "y": 0.17742627735784675,
+      "theta": 0.050591576872315636
+    },
+    "goal_pose": {
+      "x": 0.41941731027595597,
+      "y": 0.35971539273083086,
+      "theta": -0.12913117013824146
+    },
+    "ee_initial_pose": {
+      "x": 0.12248524127360944,
+      "y": 0.15742627735784676,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 164,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17572009402870242,
+      "y": 0.16806218772869955,
+      "theta": 0.22182828283092415
+    },
+    "goal_pose": {
+      "x": 0.44703936248388554,
+      "y": 0.2884039797689815,
+      "theta": -0.18952859906193137
+    },
+    "ee_initial_pose": {
+      "x": 0.07572009402870242,
+      "y": 0.16806218772869955,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 165,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19100950035234443,
+      "y": 0.2077095963289221,
+      "theta": 0.23494139505939887
+    },
+    "goal_pose": {
+      "x": 0.3859361401162656,
+      "y": 0.29339859078801905,
+      "theta": -0.19449653135584505
+    },
+    "ee_initial_pose": {
+      "x": 0.09100950035234442,
+      "y": 0.18770959632892212,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 166,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18072286127466503,
+      "y": 0.1861948006184661,
+      "theta": -0.035989660724287775
+    },
+    "goal_pose": {
+      "x": 0.43615385403999063,
+      "y": 0.2428043565078566,
+      "theta": 0.12180021244247896
+    },
+    "ee_initial_pose": {
+      "x": 0.08072286127466502,
+      "y": 0.1861948006184661,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 167,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20372973434062497,
+      "y": 0.15527317836655874,
+      "theta": -0.04525561486188989
+    },
+    "goal_pose": {
+      "x": 0.4573444824599179,
+      "y": 0.346870546296786,
+      "theta": 0.13338993377847919
+    },
+    "ee_initial_pose": {
+      "x": 0.10372973434062496,
+      "y": 0.13527317836655875,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 168,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2147335775710102,
+      "y": 0.18102217392746742,
+      "theta": -0.06018738379971594
+    },
+    "goal_pose": {
+      "x": 0.42773012729434373,
+      "y": 0.2552032275186644,
+      "theta": 0.1817081590961741
+    },
+    "ee_initial_pose": {
+      "x": 0.11473357757101019,
+      "y": 0.18102217392746742,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 169,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2053316500126366,
+      "y": 0.18748327337583387,
+      "theta": 0.03317644228301697
+    },
+    "goal_pose": {
+      "x": 0.3898306074923028,
+      "y": 0.3490078452460558,
+      "theta": -0.09311015532510158
+    },
+    "ee_initial_pose": {
+      "x": 0.10533165001263659,
+      "y": 0.16748327337583388,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 170,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21724408150240246,
+      "y": 0.20459441623858368,
+      "theta": 0.04328834012237259
+    },
+    "goal_pose": {
+      "x": 0.43516784435040273,
+      "y": 0.25937823315019926,
+      "theta": -0.11728419519777294
+    },
+    "ee_initial_pose": {
+      "x": 0.11724408150240245,
+      "y": 0.20459441623858368,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 171,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2368934977670462,
+      "y": 0.18370956318999027,
+      "theta": 0.289646147551516
+    },
+    "goal_pose": {
+      "x": 0.38943765282434584,
+      "y": 0.3289920206561461,
+      "theta": 0.24947763590026334
+    },
+    "ee_initial_pose": {
+      "x": 0.1368934977670462,
+      "y": 0.16370956318999028,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000010",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 172,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19115119138069442,
+      "y": 0.16283925680798647,
+      "theta": 0.17421601843935614
+    },
+    "goal_pose": {
+      "x": 0.46925507846408704,
+      "y": 0.3140508814995925,
+      "theta": -0.019402371490026493
+    },
+    "ee_initial_pose": {
+      "x": 0.09115119138069441,
+      "y": 0.16283925680798647,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000011",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 173,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20944760344347238,
+      "y": 0.1901154433872235,
+      "theta": 0.16671412649090983
+    },
+    "goal_pose": {
+      "x": 0.4375307267155236,
+      "y": 0.3208448977728979,
+      "theta": -0.08031811913040826
+    },
+    "ee_initial_pose": {
+      "x": 0.10944760344347237,
+      "y": 0.1701154433872235,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000012",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 174,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2182461828014357,
+      "y": 0.1765306672378902,
+      "theta": -0.2378356736281178
+    },
+    "goal_pose": {
+      "x": 0.4387648368288804,
+      "y": 0.25801930955673863,
+      "theta": -0.12906057348032263
+    },
+    "ee_initial_pose": {
+      "x": 0.1182461828014357,
+      "y": 0.1765306672378902,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000013",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 175,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21663756366132564,
+      "y": 0.1531089988609027,
+      "theta": 0.04404909471753138
+    },
+    "goal_pose": {
+      "x": 0.4440745691594418,
+      "y": 0.32028683036201067,
+      "theta": 0.2943324711503937
+    },
+    "ee_initial_pose": {
+      "x": 0.11663756366132563,
+      "y": 0.13310899886090272,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000014",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 176,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1717819501707943,
+      "y": 0.19604618666046084,
+      "theta": -0.1382159487254671
+    },
+    "goal_pose": {
+      "x": 0.41889143099231757,
+      "y": 0.3116102995782395,
+      "theta": 0.06798704086735674
+    },
+    "ee_initial_pose": {
+      "x": 0.0717819501707943,
+      "y": 0.19604618666046084,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000015",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 177,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2480704104379399,
+      "y": 0.17991217706511153,
+      "theta": 0.04957858708176344
+    },
+    "goal_pose": {
+      "x": 0.43676697669802955,
+      "y": 0.3508547864880269,
+      "theta": -0.27401120322030564
+    },
+    "ee_initial_pose": {
+      "x": 0.1480704104379399,
+      "y": 0.15991217706511154,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000016",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 178,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2269173095133934,
+      "y": 0.20738645176141984,
+      "theta": 0.19642204965896032
+    },
+    "goal_pose": {
+      "x": 0.461580363656133,
+      "y": 0.300408059336125,
+      "theta": -0.08188362449548542
+    },
+    "ee_initial_pose": {
+      "x": 0.1269173095133934,
+      "y": 0.20738645176141984,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000017",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 179,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2440900845184228,
+      "y": 0.1618906774184266,
+      "theta": 0.1947942811165519
+    },
+    "goal_pose": {
+      "x": 0.3846866458174106,
+      "y": 0.32166647680428095,
+      "theta": -0.03367781694072969
+    },
+    "ee_initial_pose": {
+      "x": 0.14409008451842278,
+      "y": 0.14189067741842662,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__open_space__L_shape__000018",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "open_space",
+    "shape_family": "L_shape",
+    "seed": 180,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17865438837409403,
+      "y": 0.19046278149398171,
+      "theta": 0.05923717940168688
+    },
+    "goal_pose": {
+      "x": 0.4197605065062679,
+      "y": 0.28049448874568983,
+      "theta": -0.12667160257836124
+    },
+    "ee_initial_pose": {
+      "x": 0.07865438837409403,
+      "y": 0.19046278149398171,
+      "theta": 0.0
+    },
+    "obstacles": []
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_shape_ood_L__mild_offset__L_shape__000019",
+    "domain": "sim",
+    "split": "test_sim_shape_ood_L",
+    "layout_family": "mild_offset",
+    "shape_family": "L_shape",
+    "seed": 181,
+    "object_shape": "L",
+    "object_size_x": 0.08,
+    "object_size_y": 0.08,
+    "object_mass": 0.05,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2248565143490343,
+      "y": 0.15631872477722725,
+      "theta": -0.099141660644876
+    },
+    "goal_pose": {
+      "x": 0.40713954379298084,
+      "y": 0.28920362021930385,
+      "theta": -0.11348308882005156
+    },
+    "ee_initial_pose": {
+      "x": 0.1248565143490343,
+      "y": 0.13631872477722726,
+      "theta": 0.0
+    },
+    "obstacles": []
+  }
+]
