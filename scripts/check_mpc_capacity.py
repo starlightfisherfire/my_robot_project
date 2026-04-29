@@ -1,13 +1,16 @@
 """
 Planner capacity check utilities for Paper 1.
 
-Current implemented mode:
+Implemented modes:
 
     state_sanity
+        Does not call MuJoCo and does not run CEM-MPC.
+        Checks whether reset templates are geometrically reasonable.
 
-This mode does not call MuJoCo and does not run CEM-MPC yet.
-It only checks whether reset templates are geometrically reasonable enough
-to be used later by Oracle-MPC / MuJoCo.
+    toy_oracle_mpc
+        Does not call MuJoCo.
+        Uses ToyPushEnv + true toy dynamics + CEM-MPC to verify the oracle
+        rollout and planner interface over reset templates.
 """
 
 from __future__ import annotations
@@ -23,6 +26,10 @@ from src.metrics.planner_capacity import (
     run_state_sanity,
     save_state_sanity_report,
 )
+from src.metrics.toy_oracle_capacity import (
+    run_toy_oracle_mpc_capacity,
+    save_toy_oracle_mpc_report,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -32,7 +39,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         type=str,
         default="state_sanity",
-        choices=["state_sanity"],
+        choices=["state_sanity", "toy_oracle_mpc"],
         help="Planner capacity check mode.",
     )
 
@@ -46,8 +53,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--out",
         type=str,
-        default="runs/debug/planner_capacity_state_sanity.json",
-        help="Path to save state sanity report.",
+        default=None,
+        help="Path to save report. If omitted, a mode-specific debug path is used.",
+    )
+
+    parser.add_argument(
+        "--split",
+        type=str,
+        default="train_sim_id",
+        help=(
+            "Split used by toy_oracle_mpc mode. "
+            "Use 'all' to evaluate all templates."
+        ),
+    )
+
+    parser.add_argument(
+        "--max-templates",
+        type=int,
+        default=10,
+        help="Maximum number of templates to evaluate in toy_oracle_mpc mode.",
     )
 
     parser.add_argument(
@@ -84,7 +108,59 @@ def parse_args() -> argparse.Namespace:
         help="If set, warnings also cause a non-zero exit.",
     )
 
+    parser.add_argument(
+        "--horizon",
+        type=int,
+        default=18,
+        help="CEM planning horizon for toy_oracle_mpc mode.",
+    )
+
+    parser.add_argument(
+        "--num-samples",
+        type=int,
+        default=768,
+        help="CEM number of samples for toy_oracle_mpc mode.",
+    )
+
+    parser.add_argument(
+        "--num-elites",
+        type=int,
+        default=96,
+        help="CEM number of elites for toy_oracle_mpc mode.",
+    )
+
+    parser.add_argument(
+        "--num-iterations",
+        type=int,
+        default=6,
+        help="CEM number of iterations for toy_oracle_mpc mode.",
+    )
+
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Base seed for toy_oracle_mpc mode.",
+    )
+
+    parser.add_argument(
+        "--success-dist-threshold",
+        type=float,
+        default=0.05,
+        help="Success distance threshold for toy_oracle_mpc mode.",
+    )
+
     return parser.parse_args()
+
+
+def _default_out_path(mode: str) -> str:
+    if mode == "state_sanity":
+        return "runs/debug/planner_capacity_state_sanity.json"
+
+    if mode == "toy_oracle_mpc":
+        return "runs/debug/planner_capacity_toy_oracle_mpc.json"
+
+    raise ValueError(f"Unknown mode={mode}")
 
 
 def print_problem_examples(report: dict, max_print: int) -> None:
@@ -145,7 +221,8 @@ def run_state_sanity_mode(args: argparse.Namespace) -> None:
         thresholds=DEFAULT_THRESHOLDS,
     )
 
-    save_state_sanity_report(report, args.out)
+    out_path = args.out or _default_out_path(args.mode)
+    save_state_sanity_report(report, out_path)
 
     summary = report["summary"]
 
@@ -161,7 +238,7 @@ def run_state_sanity_mode(args: argparse.Namespace) -> None:
     print(json.dumps(summary["by_layout_family"], indent=2, ensure_ascii=False))
     print("by_shape_family:")
     print(json.dumps(summary["by_shape_family"], indent=2, ensure_ascii=False))
-    print("report path:", args.out)
+    print("report path:", out_path)
 
     if summary["num_error_messages"] > 0 or summary["num_warning_messages"] > 0:
         print_problem_examples(report, max_print=args.max_print)
@@ -178,11 +255,85 @@ def run_state_sanity_mode(args: argparse.Namespace) -> None:
         print("state sanity ok")
 
 
+def run_toy_oracle_mpc_mode(args: argparse.Namespace) -> None:
+    template_path = Path(args.templates)
+
+    if not template_path.exists():
+        raise FileNotFoundError(
+            f"Reset template file does not exist: {template_path}\n"
+            "Generate it first with:\n"
+            "  PYTHONPATH=. python scripts/generate_reset_templates.py"
+        )
+
+    templates = load_reset_templates(template_path)
+
+    if args.split != "all":
+        templates = [t for t in templates if t["split"] == args.split]
+
+    if not templates:
+        raise ValueError(f"No templates selected for split={args.split}")
+
+    if args.max_templates <= 0:
+        raise ValueError(f"max_templates must be positive, got {args.max_templates}")
+
+    templates = templates[: args.max_templates]
+
+    report = run_toy_oracle_mpc_capacity(
+        templates=templates,
+        horizon=args.horizon,
+        num_samples=args.num_samples,
+        num_elites=args.num_elites,
+        num_iterations=args.num_iterations,
+        seed=args.seed,
+        success_dist_threshold=args.success_dist_threshold,
+    )
+
+    out_path = args.out or _default_out_path(args.mode)
+    save_toy_oracle_mpc_report(report, out_path)
+
+    summary = report["summary"]
+
+    print("mode: toy_oracle_mpc")
+    print("templates:", template_path)
+    print("split:", args.split)
+    print("num_templates:", summary["num_templates"])
+    print("num_success:", summary["num_success"])
+    print("success_rate:", f"{summary['success_rate']:.3f}")
+    print("num_improved_cost:", summary["num_improved_cost"])
+    print("num_improved_dist:", summary["num_improved_dist"])
+    print("num_restored_ok:", summary["num_restored_ok"])
+    print("mean_initial_dist:", f"{summary['mean_initial_dist']:.4f}")
+    print("mean_final_dist:", f"{summary['mean_final_dist']:.4f}")
+    print("mean_zero_cost:", f"{summary['mean_zero_cost']:.4f}")
+    print("mean_planned_cost:", f"{summary['mean_planned_cost']:.4f}")
+    print("report path:", out_path)
+
+    for result in report["results"][: min(5, len(report["results"]))]:
+        print("-" * 80)
+        print("reset_template_id:", result["reset_template_id"])
+        print("initial_dist:", f"{result['initial_dist']:.4f}")
+        print("final_dist:", f"{result['final_dist']:.4f}")
+        print("zero_cost:", f"{result['zero_cost']:.4f}")
+        print("planned_cost:", f"{result['planned_cost']:.4f}")
+        print("success:", result["success"])
+        print("restored_ok:", result["restored_ok"])
+
+    if summary["num_restored_ok"] != summary["num_templates"]:
+        raise SystemExit("toy oracle mpc failed: some rollouts did not restore env state")
+
+    if summary["num_improved_cost"] != summary["num_templates"]:
+        raise SystemExit("toy oracle mpc failed: not all templates improved cost")
+
+    print("toy oracle mpc debug ok")
+
+
 def main() -> None:
     args = parse_args()
 
     if args.mode == "state_sanity":
         run_state_sanity_mode(args)
+    elif args.mode == "toy_oracle_mpc":
+        run_toy_oracle_mpc_mode(args)
     else:
         raise ValueError(f"Unsupported mode: {args.mode}")
 
