@@ -134,6 +134,7 @@ class ObjectShapeFactory:
         - Vertical stem: width=arm_width, height=(footprint[1] - arm_width)
 
         Non-overlapping rectangles centered at origin.
+        Mass is distributed by area ratio.
         """
         W, H = footprint_m
         w = arm_width_m
@@ -147,14 +148,19 @@ class ObjectShapeFactory:
         stem_size_y = (H - w) / 2.0
         stem_pos_y = -(w / 2.0)
 
-        mass_per_geom = mass_kg / 2.0
+        top_bar_area = W * w
+        stem_area = w * (H - w)
+        total_area = top_bar_area + stem_area
+
+        mass_top_bar = mass_kg * (top_bar_area / total_area)
+        mass_stem = mass_kg * (stem_area / total_area)
 
         geoms = f"""      <geom
         name="object_geom_top"
         type="box"
         pos="0 {top_bar_pos_y:.6f} 0"
         size="{top_bar_size_x:.6f} {top_bar_size_y:.6f} {half_thickness:.6f}"
-        mass="{mass_per_geom:.6f}"
+        mass="{mass_top_bar:.6f}"
         rgba="{rgba}"
         contype="{contype}"
         conaffinity="{conaffinity}"
@@ -164,7 +170,7 @@ class ObjectShapeFactory:
         type="box"
         pos="0 {stem_pos_y:.6f} 0"
         size="{stem_size_x:.6f} {stem_size_y:.6f} {half_thickness:.6f}"
-        mass="{mass_per_geom:.6f}"
+        mass="{mass_stem:.6f}"
         rgba="{rgba}"
         contype="{contype}"
         conaffinity="{conaffinity}"
@@ -188,6 +194,7 @@ class ObjectShapeFactory:
         - Vertical bar: width=arm_width, height=(footprint[1] - arm_width)
 
         Non-overlapping rectangles centered at origin.
+        Mass is distributed by area ratio.
         """
         W, H = footprint_m
         w = arm_width_m
@@ -202,14 +209,19 @@ class ObjectShapeFactory:
         vert_bar_pos_x = -(W - w) / 2.0
         vert_bar_pos_y = w / 2.0
 
-        mass_per_geom = mass_kg / 2.0
+        horiz_bar_area = W * w
+        vert_bar_area = w * (H - w)
+        total_area = horiz_bar_area + vert_bar_area
+
+        mass_horiz_bar = mass_kg * (horiz_bar_area / total_area)
+        mass_vert_bar = mass_kg * (vert_bar_area / total_area)
 
         geoms = f"""      <geom
         name="object_geom_horiz"
         type="box"
         pos="0 {horiz_bar_pos_y:.6f} 0"
         size="{horiz_bar_size_x:.6f} {horiz_bar_size_y:.6f} {half_thickness:.6f}"
-        mass="{mass_per_geom:.6f}"
+        mass="{mass_horiz_bar:.6f}"
         rgba="{rgba}"
         contype="{contype}"
         conaffinity="{conaffinity}"
@@ -219,7 +231,7 @@ class ObjectShapeFactory:
         type="box"
         pos="{vert_bar_pos_x:.6f} {vert_bar_pos_y:.6f} 0"
         size="{vert_bar_size_x:.6f} {vert_bar_size_y:.6f} {half_thickness:.6f}"
-        mass="{mass_per_geom:.6f}"
+        mass="{mass_vert_bar:.6f}"
         rgba="{rgba}"
         contype="{contype}"
         conaffinity="{conaffinity}"
@@ -237,35 +249,72 @@ class ObjectShapeFactory:
         contype: int,
         conaffinity: int,
     ) -> str:
-        """Cross shape: horizontal + vertical bars intersecting at center."""
+        """
+        Cross shape: non-overlapping decomposition.
+        - Central vertical bar: arm_width × footprint[1]
+        - Left arm: arm_width × arm_width
+        - Right arm: arm_width × arm_width
+
+        Mass is distributed by area ratio.
+        """
         W, H = footprint_m
         w = arm_width_m
         half_thickness = thickness_m / 2.0
 
-        horiz_size_x = W / 2.0
-        horiz_size_y = w / 2.0
+        # Central vertical bar: full height, arm_width width
+        vert_bar_size_x = w / 2.0
+        vert_bar_size_y = H / 2.0
+        vert_bar_pos_x = 0
+        vert_bar_pos_y = 0
 
-        vert_size_x = w / 2.0
-        vert_size_y = H / 2.0
+        # Left arm: arm_width × arm_width
+        left_arm_size_x = w / 2.0
+        left_arm_size_y = w / 2.0
+        left_arm_pos_x = -(W - w) / 2.0
+        left_arm_pos_y = 0
 
-        mass_per_geom = mass_kg / 2.0
+        # Right arm: arm_width × arm_width
+        right_arm_size_x = w / 2.0
+        right_arm_size_y = w / 2.0
+        right_arm_pos_x = (W - w) / 2.0
+        right_arm_pos_y = 0
+
+        # Calculate areas and masses
+        vert_bar_area = w * H
+        left_arm_area = w * w
+        right_arm_area = w * w
+        total_area = vert_bar_area + left_arm_area + right_arm_area
+
+        mass_vert_bar = mass_kg * (vert_bar_area / total_area)
+        mass_left_arm = mass_kg * (left_arm_area / total_area)
+        mass_right_arm = mass_kg * (right_arm_area / total_area)
 
         geoms = f"""      <geom
-        name="object_geom_horiz"
+        name="object_geom_vert"
         type="box"
-        pos="0 0 0"
-        size="{horiz_size_x:.6f} {horiz_size_y:.6f} {half_thickness:.6f}"
-        mass="{mass_per_geom:.6f}"
+        pos="{vert_bar_pos_x:.6f} {vert_bar_pos_y:.6f} 0"
+        size="{vert_bar_size_x:.6f} {vert_bar_size_y:.6f} {half_thickness:.6f}"
+        mass="{mass_vert_bar:.6f}"
         rgba="{rgba}"
         contype="{contype}"
         conaffinity="{conaffinity}"
       />
       <geom
-        name="object_geom_vert"
+        name="object_geom_left"
         type="box"
-        pos="0 0 0"
-        size="{vert_size_x:.6f} {vert_size_y:.6f} {half_thickness:.6f}"
-        mass="{mass_per_geom:.6f}"
+        pos="{left_arm_pos_x:.6f} {left_arm_pos_y:.6f} 0"
+        size="{left_arm_size_x:.6f} {left_arm_size_y:.6f} {half_thickness:.6f}"
+        mass="{mass_left_arm:.6f}"
+        rgba="{rgba}"
+        contype="{contype}"
+        conaffinity="{conaffinity}"
+      />
+      <geom
+        name="object_geom_right"
+        type="box"
+        pos="{right_arm_pos_x:.6f} {right_arm_pos_y:.6f} 0"
+        size="{right_arm_size_x:.6f} {right_arm_size_y:.6f} {half_thickness:.6f}"
+        mass="{mass_right_arm:.6f}"
         rgba="{rgba}"
         contype="{contype}"
         conaffinity="{conaffinity}"
