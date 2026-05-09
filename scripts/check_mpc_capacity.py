@@ -120,29 +120,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--horizon",
         type=int,
-        default=80,
-        help="CEM planning horizon (default: 80 for mujoco, 18 for toy).",
+        default=None,
+        help="CEM planning horizon (default: mode-specific, toy=18, mujoco=80).",
     )
 
     parser.add_argument(
         "--num-samples",
         type=int,
-        default=1536,
-        help="CEM number of samples (default: 1536 for mujoco, 768 for toy).",
+        default=None,
+        help="CEM number of samples (default: mode-specific, toy=768, mujoco=1536).",
     )
 
     parser.add_argument(
         "--num-elites",
         type=int,
-        default=128,
-        help="CEM number of elites (default: 128 for mujoco, 96 for toy).",
+        default=None,
+        help="CEM number of elites (default: mode-specific, toy=96, mujoco=128).",
     )
 
     parser.add_argument(
         "--num-iterations",
         type=int,
-        default=7,
-        help="CEM number of iterations (default: 7 for mujoco, 6 for toy).",
+        default=None,
+        help="CEM number of iterations (default: mode-specific, toy=6, mujoco=7).",
     )
 
     parser.add_argument(
@@ -290,12 +290,18 @@ def run_toy_oracle_mpc_mode(args: argparse.Namespace) -> None:
 
     templates = templates[: args.max_templates]
 
+    # Mode-specific defaults for toy_oracle_mpc
+    horizon = args.horizon if args.horizon is not None else 18
+    num_samples = args.num_samples if args.num_samples is not None else 768
+    num_elites = args.num_elites if args.num_elites is not None else 96
+    num_iterations = args.num_iterations if args.num_iterations is not None else 6
+
     report = run_toy_oracle_mpc_capacity(
         templates=templates,
-        horizon=args.horizon,
-        num_samples=args.num_samples,
-        num_elites=args.num_elites,
-        num_iterations=args.num_iterations,
+        horizon=horizon,
+        num_samples=num_samples,
+        num_elites=num_elites,
+        num_iterations=num_iterations,
         seed=args.seed,
         success_dist_threshold=args.success_dist_threshold,
     )
@@ -362,12 +368,18 @@ def run_mujoco_oracle_mpc_mode(args: argparse.Namespace) -> None:
 
     templates = templates[: args.max_templates]
 
+    # Mode-specific defaults for mujoco_oracle_mpc
+    horizon = args.horizon if args.horizon is not None else 80
+    num_samples = args.num_samples if args.num_samples is not None else 1536
+    num_elites = args.num_elites if args.num_elites is not None else 128
+    num_iterations = args.num_iterations if args.num_iterations is not None else 7
+
     report = run_mujoco_oracle_mpc_capacity(
         templates=templates,
-        horizon=args.horizon,
-        num_samples=args.num_samples,
-        num_elites=args.num_elites,
-        num_iterations=args.num_iterations,
+        horizon=horizon,
+        num_samples=num_samples,
+        num_elites=num_elites,
+        num_iterations=num_iterations,
         seed=args.seed,
         success_dist_threshold=args.success_dist_threshold,
     )
