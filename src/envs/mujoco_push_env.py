@@ -13,6 +13,7 @@ except ImportError as exc:  # pragma: no cover
     ) from exc
 
 from src.planners.cost_functions import wrap_angle
+from src.envs.object_shape_factory import ObjectShapeFactory
 
 
 MINIMAL_PUSH_XML = """
@@ -68,15 +69,7 @@ MINIMAL_PUSH_XML = """
 
     <body name="object" pos="0.20 0.18 0.006">
       <freejoint name="object_free"/>
-      <geom
-        name="object_geom"
-        type="box"
-        size="0.024 0.024 0.006"
-        mass="0.01905"
-        rgba="0.9 0.2 0.1 1"
-        contype="1"
-        conaffinity="1"
-      />
+{object_geoms}
     </body>
 
     <site
@@ -103,6 +96,41 @@ MINIMAL_PUSH_XML = """
   </actuator>
 </mujoco>
 """
+
+
+def _build_xml_with_shape(shape_type: str, use_simple_box: bool = False) -> str:
+    """
+    Build MuJoCo XML with object geometry from ObjectShapeFactory.
+
+    Args:
+        shape_type: Shape type (T, L, cross, bar, square, cylinder)
+        use_simple_box: If True, use simple box instead of compound geoms
+
+    Returns:
+        Complete MuJoCo XML string
+    """
+    if use_simple_box:
+        # Legacy single box object
+        object_geoms = """      <geom
+        name="object_geom"
+        type="box"
+        size="0.024 0.024 0.006"
+        mass="0.01905"
+        rgba="0.9 0.2 0.1 1"
+        contype="1"
+        conaffinity="1"
+      />"""
+    else:
+        # Use ObjectShapeFactory for compound geoms
+        factory = ObjectShapeFactory()
+        object_geoms = factory.get_object_geoms_xml(
+            shape_type=shape_type,
+            rgba="0.9 0.2 0.1 1",
+            contype=1,
+            conaffinity=1,
+        )
+
+    return MINIMAL_PUSH_XML.format(object_geoms=object_geoms)
 
 
 @dataclass
@@ -144,8 +172,24 @@ class MujocoPushEnv:
         self,
         control_dt: float = 0.1,
         max_speed_mps: float = 0.05,
-        xml: str = MINIMAL_PUSH_XML,
+        shape_type: str = "T",
+        use_simple_box_object: bool = False,
+        xml: str | None = None,
     ):
+        """
+        Initialize MuJoCo pushing environment.
+
+        Args:
+            control_dt: Control timestep in seconds
+            max_speed_mps: Maximum pusher speed in m/s
+            shape_type: Object shape type (T, L, cross, bar, square, cylinder)
+                TODO: This should be read from reset_template["object_shape"]
+                      in reset_from_template(), but for now we use a default.
+            use_simple_box_object: If True, use legacy single box object.
+                                   If False, use ObjectShapeFactory compound geoms.
+            xml: Optional custom XML string. If None, generates XML based on
+                 shape_type and use_simple_box_object.
+        """
         if control_dt <= 0:
             raise ValueError(f"control_dt must be positive, got {control_dt}")
 
@@ -154,6 +198,12 @@ class MujocoPushEnv:
 
         self.control_dt = float(control_dt)
         self.max_speed_mps = float(max_speed_mps)
+        self.shape_type = shape_type
+        self.use_simple_box_object = use_simple_box_object
+
+        # Generate XML if not provided
+        if xml is None:
+            xml = _build_xml_with_shape(shape_type, use_simple_box_object)
 
         self.model = mujoco.MjModel.from_xml_string(xml)
         self.data = mujoco.MjData(self.model)
@@ -410,7 +460,12 @@ class MujocoPushEnv:
 
             names = {geom1_name, geom2_name}
 
-            if "pusher_geom" in names and "object_geom" in names:
+            # Check if pusher_geom is in contact with any object geom
+            # Object may have multiple geoms (e.g., object_geom_top, object_geom_stem)
+            has_pusher = "pusher_geom" in names
+            has_object = any("object_geom" in name for name in names if name)
+
+            if has_pusher and has_object:
                 contact = True
                 break
 
