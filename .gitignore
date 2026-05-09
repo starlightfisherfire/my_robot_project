@@ -39,3 +39,4 @@ papers/**/*.blg
 papers/**/*.fls
 papers/**/*.fdb_latexmk
 papers/**/*.synctex.gz
+artifacts/
