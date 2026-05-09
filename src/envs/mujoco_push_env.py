@@ -66,13 +66,13 @@ MINIMAL_PUSH_XML = """
       />
     </body>
 
-    <body name="object" pos="0.20 0.18 0.025">
+    <body name="object" pos="0.20 0.18 0.006">
       <freejoint name="object_free"/>
       <geom
         name="object_geom"
         type="box"
-        size="0.04 0.04 0.015"
-        mass="0.05"
+        size="0.024 0.024 0.006"
+        mass="0.01905"
         rgba="0.9 0.2 0.1 1"
         contype="1"
         conaffinity="1"
@@ -254,7 +254,7 @@ class MujocoPushEnv:
         self.last_contact = False
         self.last_collision = False
 
-        z = 0.025
+        z = 0.006
         theta = float(object_pose[2])
         qw = float(np.cos(theta / 2.0))
         qz = float(np.sin(theta / 2.0))

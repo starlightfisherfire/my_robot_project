@@ -1,0 +1,59 @@
+object_spec_v0_1:
+  thickness_mm: 12.0
+  nominal_volume_mm3: 15360.0
+  nominal_mass_g: 19.05
+
+  manipulated_objects:
+    T:
+      shape_type: T
+      footprint_mm: [48.0, 48.0]
+      arm_width_mm: 16.0
+      decomposition: "(48*16 + 32*16) * 12"
+      volume_mm3: 15360.0
+      nominal_mass_g: 19.05
+      use_as: ["train_id", "test_id"]
+
+    L:
+      shape_type: L
+      footprint_mm: [48.0, 48.0]
+      arm_width_mm: 16.0
+      decomposition: "(48*16 + 32*16) * 12"
+      volume_mm3: 15360.0
+      nominal_mass_g: 19.05
+      use_as: ["shape_ood_primary"]
+
+    cross:
+      shape_type: cross
+      footprint_mm: [48.0, 48.0]
+      arm_width_mm: 16.0
+      decomposition: "(48*16 + 32*16) * 12"
+      volume_mm3: 15360.0
+      nominal_mass_g: 19.05
+      use_as: ["optional_extension"]
+
+    bar:
+      shape_type: bar
+      footprint_mm: [80.0, 16.0]
+      decomposition: "(80*16) * 12"
+      volume_mm3: 15360.0
+      nominal_mass_g: 19.05
+      use_as: ["shape_ood_secondary"]
+
+  obstacles:
+    square:
+      shape_type: square
+      size_mm: [35.78, 35.78, 12.0]
+      decomposition: "(35.78*35.78) * 12"
+      volume_mm3: 15360.0
+      nominal_mass_g: 19.05
+      use_as: ["id_obstacle"]
+
+    cylinder:
+      shape_type: cylinder
+      radius_mm: 20.185
+      diameter_mm: 40.37
+      height_mm: 12.0
+      decomposition: "(pi * 20.185^2) * 12"
+      volume_mm3: 15360.0
+      nominal_mass_g: 19.05
+      use_as: ["ood_obstacle"]
