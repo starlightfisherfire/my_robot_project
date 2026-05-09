@@ -130,7 +130,7 @@ def compute_bar_rectangles(footprint_mm):
 
 
 def compute_square_rectangles(size_mm):
-    """Compute rectangle for square obstacle."""
+    """Compute rectangle for square pushable object shape."""
     W, H = size_mm[0], size_mm[1]
 
     square = {
@@ -144,7 +144,7 @@ def compute_square_rectangles(size_mm):
 
 
 def compute_cylinder_circle(radius_mm):
-    """Compute circle for cylinder obstacle."""
+    """Compute circle for cylinder pushable object shape."""
     return {
         "center": (0, 0),
         "radius": radius_mm,
@@ -317,7 +317,7 @@ def main():
 
         shapes_data.append((shape_name, obj_spec, rectangles, False))
 
-    # Obstacles
+    # Additional pushable object shapes
     square_spec = specs["obstacles"]["square"]
     square_spec["thickness_mm"] = thickness_mm
     square_rectangles = compute_square_rectangles(square_spec["size_mm"])

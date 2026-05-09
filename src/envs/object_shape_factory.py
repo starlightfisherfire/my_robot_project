@@ -12,11 +12,12 @@ ShapeType = Literal["T", "L", "cross", "bar", "square", "cylinder"]
 
 class ObjectShapeFactory:
     """
-    Generate MuJoCo compound geometries from object specifications.
+    Generate MuJoCo compound geometries for pushable object shapes.
 
     Reads configs/object_specs.yaml and converts shape_type specifications
     into actual MuJoCo geom XML strings.
 
+    All shapes (T, L, cross, bar, square, cylinder) are pushable manipulated objects.
     T and L shapes are decomposed into non-overlapping rectangles.
     """
 
@@ -65,7 +66,7 @@ class ObjectShapeFactory:
                 shape_type, rgba, contype, conaffinity
             )
         elif shape_type in ["square", "cylinder"]:
-            return self._get_obstacle_geoms(
+            return self._get_additional_object_geoms(
                 shape_type, rgba, contype, conaffinity
             )
         else:
@@ -348,25 +349,25 @@ class ObjectShapeFactory:
 
         return geoms
 
-    def _get_obstacle_geoms(
+    def _get_additional_object_geoms(
         self,
         shape_type: str,
         rgba: str,
         contype: int,
         conaffinity: int,
     ) -> str:
-        """Generate geoms for obstacles (square, cylinder)."""
-        obs_spec = self.specs["obstacles"][shape_type]
+        """Generate geoms for additional pushable object shapes (square, cylinder)."""
+        obj_spec = self.specs["obstacles"][shape_type]
 
         if shape_type == "square":
-            size_mm = obs_spec["size_mm"]
-            mass_g = obs_spec["nominal_mass_g"]
+            size_mm = obj_spec["size_mm"]
+            mass_g = obj_spec["nominal_mass_g"]
 
             size_m = [s / 1000.0 for s in size_mm]
             mass_kg = mass_g / 1000.0
 
             geoms = f"""      <geom
-        name="obstacle_geom"
+        name="object_geom"
         type="box"
         pos="0 0 0"
         size="{size_m[0]/2.0:.6f} {size_m[1]/2.0:.6f} {size_m[2]/2.0:.6f}"
@@ -377,16 +378,16 @@ class ObjectShapeFactory:
       />"""
 
         elif shape_type == "cylinder":
-            radius_mm = obs_spec["radius_mm"]
-            height_mm = obs_spec["height_mm"]
-            mass_g = obs_spec["nominal_mass_g"]
+            radius_mm = obj_spec["radius_mm"]
+            height_mm = obj_spec["height_mm"]
+            mass_g = obj_spec["nominal_mass_g"]
 
             radius_m = radius_mm / 1000.0
             half_height_m = (height_mm / 1000.0) / 2.0
             mass_kg = mass_g / 1000.0
 
             geoms = f"""      <geom
-        name="obstacle_geom"
+        name="object_geom"
         type="cylinder"
         pos="0 0 0"
         size="{radius_m:.6f} {half_height_m:.6f}"
@@ -397,6 +398,6 @@ class ObjectShapeFactory:
       />"""
 
         else:
-            raise ValueError(f"Unsupported obstacle type: {shape_type}")
+            raise ValueError(f"Unsupported additional object shape: {shape_type}")
 
         return geoms
