@@ -11,6 +11,11 @@ Implemented modes:
         Does not call MuJoCo.
         Uses ToyPushEnv + true toy dynamics + CEM-MPC to verify the oracle
         rollout and planner interface over reset templates.
+
+    mujoco_oracle_mpc
+        Uses MujocoPushEnv + MuJoCo true dynamics + CEM-MPC.
+        Smoke test for MuJoCo oracle rollout + CEM-MPC interface.
+        v0.1 does not yet instantiate obstacles from templates.
 """
 
 from __future__ import annotations
@@ -30,6 +35,10 @@ from src.metrics.toy_oracle_capacity import (
     run_toy_oracle_mpc_capacity,
     save_toy_oracle_mpc_report,
 )
+from src.metrics.mujoco_oracle_capacity import (
+    run_mujoco_oracle_mpc_capacity,
+    save_mujoco_oracle_mpc_report,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -39,7 +48,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         type=str,
         default="state_sanity",
-        choices=["state_sanity", "toy_oracle_mpc"],
+        choices=["state_sanity", "toy_oracle_mpc", "mujoco_oracle_mpc"],
         help="Planner capacity check mode.",
     )
 
@@ -111,29 +120,29 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--horizon",
         type=int,
-        default=18,
-        help="CEM planning horizon for toy_oracle_mpc mode.",
+        default=80,
+        help="CEM planning horizon (default: 80 for mujoco, 18 for toy).",
     )
 
     parser.add_argument(
         "--num-samples",
         type=int,
-        default=768,
-        help="CEM number of samples for toy_oracle_mpc mode.",
+        default=1536,
+        help="CEM number of samples (default: 1536 for mujoco, 768 for toy).",
     )
 
     parser.add_argument(
         "--num-elites",
         type=int,
-        default=96,
-        help="CEM number of elites for toy_oracle_mpc mode.",
+        default=128,
+        help="CEM number of elites (default: 128 for mujoco, 96 for toy).",
     )
 
     parser.add_argument(
         "--num-iterations",
         type=int,
-        default=6,
-        help="CEM number of iterations for toy_oracle_mpc mode.",
+        default=7,
+        help="CEM number of iterations (default: 7 for mujoco, 6 for toy).",
     )
 
     parser.add_argument(
@@ -159,6 +168,9 @@ def _default_out_path(mode: str) -> str:
 
     if mode == "toy_oracle_mpc":
         return "runs/debug/planner_capacity_toy_oracle_mpc.json"
+
+    if mode == "mujoco_oracle_mpc":
+        return "runs/debug/planner_capacity_mujoco_oracle_mpc.json"
 
     raise ValueError(f"Unknown mode={mode}")
 
@@ -327,6 +339,101 @@ def run_toy_oracle_mpc_mode(args: argparse.Namespace) -> None:
     print("toy oracle mpc debug ok")
 
 
+def run_mujoco_oracle_mpc_mode(args: argparse.Namespace) -> None:
+    template_path = Path(args.templates)
+
+    if not template_path.exists():
+        raise FileNotFoundError(
+            f"Reset template file does not exist: {template_path}\n"
+            "Generate it first with:\n"
+            "  PYTHONPATH=. python scripts/generate_reset_templates.py"
+        )
+
+    templates = load_reset_templates(template_path)
+
+    if args.split != "all":
+        templates = [t for t in templates if t["split"] == args.split]
+
+    if not templates:
+        raise ValueError(f"No templates selected for split={args.split}")
+
+    if args.max_templates <= 0:
+        raise ValueError(f"max_templates must be positive, got {args.max_templates}")
+
+    templates = templates[: args.max_templates]
+
+    report = run_mujoco_oracle_mpc_capacity(
+        templates=templates,
+        horizon=args.horizon,
+        num_samples=args.num_samples,
+        num_elites=args.num_elites,
+        num_iterations=args.num_iterations,
+        seed=args.seed,
+        success_dist_threshold=args.success_dist_threshold,
+    )
+
+    out_path = args.out or _default_out_path(args.mode)
+    save_mujoco_oracle_mpc_report(report, out_path)
+
+    summary = report["summary"]
+
+    print("mode: mujoco_oracle_mpc")
+    print("templates:", template_path)
+    print("split:", args.split)
+    print("num_templates:", summary["num_templates"])
+    print("num_success:", summary["num_success"])
+    print("success_rate:", f"{summary['success_rate']:.3f}")
+    print("num_improved_cost:", summary["num_improved_cost"])
+    print("num_improved_dist:", summary["num_improved_dist"])
+    print("num_restored_ok:", summary["num_restored_ok"])
+    print("mean_initial_dist:", f"{summary['mean_initial_dist']:.4f}")
+    print("mean_best_min_dist:", f"{summary['mean_best_min_dist']:.4f}")
+    print("mean_final_dist:", f"{summary['mean_final_dist']:.4f}")
+    print("mean_zero_cost:", f"{summary['mean_zero_cost']:.4f}")
+    print("mean_planned_cost:", f"{summary['mean_planned_cost']:.4f}")
+    print("report path:", out_path)
+
+    for result in report["results"][: min(5, len(report["results"]))]:
+        print("-" * 80)
+        print("reset_template_id:", result["reset_template_id"])
+        print("initial_dist:", f"{result['initial_dist']:.4f}")
+        print("best_min_dist:", f"{result['best_min_dist']:.4f}")
+        print("final_dist:", f"{result['final_dist']:.4f}")
+        print("zero_cost:", f"{result['zero_cost']:.4f}")
+        print("planned_cost:", f"{result['planned_cost']:.4f}")
+        print("best_cost:", f"{result['best_cost']:.4f}")
+        print("improved_cost:", result["improved_cost"])
+        print("improved_dist:", result["improved_dist"])
+        print("success:", result["success"])
+        print("restored_ok:", result["restored_ok"])
+
+        # Enhanced diagnostic fields
+        print(f"dist_delta: {result.get('dist_delta', 0.0):.8f} m")
+        print(f"cost_delta: {result.get('cost_delta', 0.0):.6f}")
+        print(f"object_displacement: {result.get('object_displacement', 0.0):.8f} m")
+        print(f"object_moved: {result.get('object_moved', False)}")
+        print(f"max_contact: {result.get('max_contact', 0.0):.2f}")
+        print(f"best_action_norm_mean: {result.get('best_action_norm_mean', 0.0):.4f}")
+        print(f"best_action_norm_max: {result.get('best_action_norm_max', 0.0):.4f}")
+
+    if summary["num_restored_ok"] != summary["num_templates"]:
+        raise SystemExit(
+            "mujoco oracle mpc failed: some rollouts did not restore env state"
+        )
+
+    if summary["num_improved_cost"] == 0:
+        raise SystemExit(
+            "mujoco oracle mpc failed: no templates improved cost"
+        )
+
+    if summary["num_improved_dist"] == 0:
+        raise SystemExit(
+            "mujoco oracle mpc failed: no templates improved distance"
+        )
+
+    print("mujoco oracle mpc capacity check ok")
+
+
 def main() -> None:
     args = parse_args()
 
@@ -334,6 +441,8 @@ def main() -> None:
         run_state_sanity_mode(args)
     elif args.mode == "toy_oracle_mpc":
         run_toy_oracle_mpc_mode(args)
+    elif args.mode == "mujoco_oracle_mpc":
+        run_mujoco_oracle_mpc_mode(args)
     else:
         raise ValueError(f"Unsupported mode: {args.mode}")
 
