@@ -6,15 +6,32 @@ This is a project-specific rule file for Cline.
 For detailed rules on project scope, architecture, data splits, testing discipline, 
 and code style, see **CLAUDE.md** — it is the authoritative source.
 
+## Document Reading Protocol（启动任务前必读）
+
+**第一步：读 docs/agent_doc_map.md**，按其指引决定读哪些文档。
+
 Cline must read these source-of-truth documents before non-trivial changes:
 
+- `docs/ai_handoff.md`
+- `docs/current_sprint.md`
+- `docs/code_audit.md`
+- `docs/known_issues.md`
 
-- docs/ai_handoff.md
-- docs/current_sprint.md
-- docs/code_audit.md
-- docs/file_topology_map.md
+**不要默认读取所有 docs。** 按任务类型读取相关协议文档（见 `docs/agent_doc_map.md`）。
+
+**Staleness rule：** 如果 `docs/file_topology_map.md` 与 `current_sprint.md` / `code_audit.md` 冲突，以后者为准。
 
 Use those documents as the project memory. Do not duplicate or override them here.
+
+## Experiment Execution Rules
+
+**默认只允许：**
+- `py_compile`、`grep`、`git diff`、静态检查、读取文件
+
+**不允许（除非用户明确授权）：**
+- 运行 MuJoCo / MPC / render / sweep / 长时间实验
+- 启动后台进程（tmux / nohup / &）
+- 修改 `src/` / `scripts/` / `configs/` / `data/`
 
 ## Role
 

@@ -75,6 +75,47 @@ class ObjectShapeFactory:
                 f"Supported: T, L, cross, bar, square, cylinder"
             )
 
+    def get_goal_ghost_geoms_xml(
+        self,
+        shape_type: ShapeType,
+        rgba: str = "0.1 0.8 0.1 0.25",
+        name_prefix: str = "goal_geom",
+    ) -> str:
+        """
+        Generate visual-only goal ghost geoms for a given shape type.
+
+        This reuses the same shape decomposition as get_object_geoms_xml,
+        but with visual-only properties:
+        - No mass (mass attribute is removed)
+        - No collision (contype=0, conaffinity=0)
+        - Semi-transparent green color by default
+        - Different geom names to avoid conflicts
+
+        Args:
+            shape_type: T, L, cross, bar, square, or cylinder
+            rgba: color string for MuJoCo (default: semi-transparent green)
+            name_prefix: prefix for geom names (default: "goal_geom")
+
+        Returns:
+            XML string with visual-only geom definitions
+        """
+        # Get geoms with contype=0 and conaffinity=0 for visual-only
+        geoms_xml = self.get_object_geoms_xml(
+            shape_type=shape_type,
+            rgba=rgba,
+            contype=0,
+            conaffinity=0,
+        )
+
+        # Remove mass attributes (visual-only geoms don't need mass)
+        import re
+        geoms_xml = re.sub(r'\s+mass="[^"]*"', '', geoms_xml)
+
+        # Rename geoms to avoid conflicts with physical object
+        geoms_xml = geoms_xml.replace('name="object_geom', f'name="{name_prefix}')
+
+        return geoms_xml
+
     def _get_manipulated_object_geoms(
         self,
         shape_type: str,

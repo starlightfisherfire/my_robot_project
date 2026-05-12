@@ -314,3 +314,84 @@ PYTHONPATH=. python scripts/debug_encoder_variants.py
 - Obstacles not yet instantiated
 - Task success not yet achieved
 - Next gate: user decision between Option A (tune Oracle-MPC) or Option B (implement obstacles)
+- **v0.2** (2026-05-12): 重大进展更新 — Oracle-MPC 毫米级精度确认，strict pose stop 修复
+
+---
+
+## 14. 最新实验事实（2026-05-12 更新）
+
+### 已确认：Oracle-MPC 在 open_space 上具备毫米级精度
+
+来自 `boundary_video_night2`（`runs/video_sweeps/boundary_video_night2_20260512_001900`）：
+
+**c23_precise（500 steps）：**
+- mean_final_pos_error ≈ 2.70mm，median ≈ 1.55mm
+- success_pos_1cm_rate = 1.0，success_pos_0p5cm_rate = 0.8
+- success_pose_0p5cm_5deg_rate = 0.6
+
+**c25_fast（600 steps）：**
+- mean_final_pos_error ≈ 2.38mm，median ≈ 1.21mm
+- success_pos_0p5cm_rate = 1.0，success_pose_0p5cm_5deg_rate = 1.0
+
+**结论：** 当前问题不再是"planner 完全不会推"，而是高精度停止、预算分配和 obstacle gate。
+
+### 已确认：5cm early stop 不适合作为能力边界判断
+
+- 旧的 5cm early stop 让系统看起来只能到 4.8cm 左右
+- no-early-stop full budget 后，Oracle-MPC 可达到毫米级误差
+- 5cm 只能作为粗成功统计，不应作为正式 pose-to-goal 完成标准
+
+### 已修复：strict pose stop 被 legacy 5cm 截断的 bug（2026-05-12）
+
+**旧问题：** legacy 5cm success 设置 `success=True`，chunk end 的 `if success and not disable_early_stop: break` 导致 strict pose stop 开启时仍被 5cm 截断。
+
+**修复：** 引入 `should_stop`、`legacy_success_reached`、`strict_pose_stop_active`；chunk end 改为 `if should_stop: break`；strict 阈值改为 `<=`。
+
+**状态：** py_compile 通过，正式 smoke test 待人工执行。
+
+### 当前技术状态更新
+
+✅ Oracle-MPC 在 open_space / mild_offset 上具备毫米级精度（2.70mm / 2.38mm）
+✅ Strict pose stop 代码逻辑已修复
+✅ 两种运行模式已定义（boundary search / confirmatory eval）
+❌ Strict pose stop smoke test 尚未执行
+❌ Obstacles 仍未接入 MuJoCo（最大阻塞项）
+❌ Layout OOD capacity 仍无效（obstacles missing）
+
+---
+
+## 15. 当前主线任务（2026-05-12）
+
+1. **执行 strict pose stop smoke test**（1 template，c23_strict600）
+2. **执行 c23_strict600 confirmatory eval**（3 open_space + 3 mild_offset）
+3. **接入真实 MuJoCo obstacles**（blocking / narrow_passage / edge_goal）
+4. **在真实 obstacle 下用 config23 做 gate test**
+5. **obstacle gate 通过后做小范围局部 sweep**（16 configs）
+
+### 暂时不要做
+
+❌ 继续大范围 blind sweep
+❌ 只围绕 open-space 调漂亮结果
+❌ 把 mild_offset 说成真实 obstacle
+❌ 改 cost function（先确保 obstacle 真正进入 MuJoCo）
+❌ 进入 learned model 训练（直到 oracle-MPC capacity + obstacle gate 基本通过）
+❌ 改 Paper 1 主线去做 VLM/VLA/LLM
+❌ 让 AI agent 自动运行长实验
+
+---
+
+## 16. 新 AI 快速上手（更新版）
+
+1. 读 `CLAUDE.md`
+2. 读 `docs/current_sprint.md`（第 10 节是最新状态）
+3. 读 `docs/known_issues.md`（关键风险）
+4. 读 `docs/planner_capacity_protocol.md`（实验协议）
+5. 读 `docs/experiment_log.md`（最新实验结果）
+6. **不要自动运行任何实验**，先向用户确认当前任务
+
+### 关键提醒
+
+- mild_offset ≠ 真实 obstacle，不要混淆
+- 当前所有结果均来自 train_sim_id，尚未在 OOD split 上测试
+- strict pose stop smoke test 需要人工执行，不要让 AI agent 自动运行
+- 不要修改 CEM、cost function、planner 参数、env、reset templates，除非用户明确要求

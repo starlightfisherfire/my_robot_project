@@ -40,3 +40,7 @@ papers/**/*.fls
 papers/**/*.fdb_latexmk
 papers/**/*.synctex.gz
 artifacts/
+.aider*
+*.tar.gz
+test_*.py
+on

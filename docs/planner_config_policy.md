@@ -1,6 +1,6 @@
 # Planner Config Policy
 
-**Last updated:** 2026-05-09
+**Last updated:** 2026-05-12
 
 This document clarifies the CEM-MPC parameter policy to avoid config confusion and ensure fair comparison.
 
@@ -69,20 +69,22 @@ num_iterations: 7
 - Establishes what is possible with perfect dynamics
 - Used to validate that task is solvable
 
-**Example (future):**
-```yaml
-horizon: 100-120
-num_samples: 2048-4096
-num_elites: 256-512
-num_iterations: 10-15
-```
+**Update (2026-05-12):** Concrete configs are now defined in `docs/planner_capacity_protocol.md`:
+
+| Config | horizon | execute_steps | max_mpc_steps | num_samples | num_elites | num_iterations | Total budget |
+|--------|---------|---------------|---------------|-------------|------------|----------------|--------------|
+| **c23_precise** (main baseline) | 80 | 20 | 25 | 1024 | 96 | 5 | 500 steps |
+| **c23_strict600** (confirmatory) | 80 | 20 | 30 | 1024 | 96 | 5 | 600 steps |
+| **c25_fast** (conservative backup) | 80 | 30 | 20 | 512 | 48 | 5 | 600 steps |
+
+**Results (boundary_video_night2, 2026-05-12):**
+- c23_precise: mean_final_pos_error ≈ 2.70mm, success_pos_1cm_rate = 1.0
+- c25_fast: mean_final_pos_error ≈ 2.38mm, success_pos_0p5cm_rate = 1.0
 
 **Important:**
 - This config does NOT need to match learned eval config
 - Oracle can use longer horizon because it has perfect dynamics
 - Learned model cannot use very long horizon due to error accumulation
-
-**Status:** ⬜ NOT DEFINED YET (waiting for task-solving capacity tuning)
 
 ---
 
@@ -157,6 +159,12 @@ cem:
 - Do NOT use this for Oracle-MPC capacity tuning
 - Do NOT use this for learned eval
 - Update this file after configs are finalized
+
+---
+
+## Current Oracle Capacity Config (2026-05-12)
+
+config23 / c23_precise 已作为 oracle capacity config，见 docs/planner_capacity_protocol.md。
 
 ---
 
@@ -245,6 +253,7 @@ Is this for interface validation?
 
 Is this for Oracle-MPC capacity with true dynamics?
     YES → Use oracle_capacity_strong config (can be stronger)
+           See docs/planner_capacity_protocol.md for concrete configs
     NO ↓
 
 Is this for learned model evaluation?
@@ -266,14 +275,17 @@ Unknown use case → Ask user for clarification
 2. **Oracle strong ≠ learned eval:** Oracle can use longer horizon
 3. **Learned eval MUST be identical:** Flat/object/causal use same config
 4. **Current configs/planner/cem_mpc.yaml is placeholder:** Do NOT assume it's final
-5. **Always snapshot configs:** Reproducibility and audit trail
+5. **Oracle strong configs now defined:** See docs/planner_capacity_protocol.md (c23_precise, c23_strict600, c25_fast)
+6. **Current oracle capacity config:** c23_precise, see docs/planner_capacity_protocol.md
+7. **Always snapshot configs:** Reproducibility and audit trail
 
 ---
 
 ## Next Actions
 
-1. ⬜ Tune Oracle-MPC for task success (success_rate > 80%)
-2. ⬜ Save oracle_capacity_strong config
-3. ⬜ After learned model training, define learned_eval_default config
-4. ⬜ Implement config snapshot protocol in train/eval scripts
-5. ⬜ Update configs/planner/cem_mpc.yaml with clear documentation
+1. ✅ Oracle-MPC task capacity partially established (millimeter precision on open_space/mild_offset)
+2. ⬜ Strict pose stop smoke test pending
+3. ⬜ Implement obstacles (Gate 8) for true oracle_capacity_strong validation
+4. ⬜ After learned model training, define learned_eval_default config
+5. ⬜ Implement config snapshot protocol in train/eval scripts
+6. ⬜ Update configs/planner/cem_mpc.yaml with clear documentation

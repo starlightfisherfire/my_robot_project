@@ -375,3 +375,86 @@ Current sprint is complete when:
 - **2026-05-06**: MuJoCo env scaffold + oracle rollout passed
 - **2026-05-08**: MuJoCo Oracle-MPC interface smoke test passed
 - **2026-05-09**: Topology audit + documentation update
+- **2026-05-11**: Wide sweep (5cm early stop) → 结论：5cm early stop 不适合精度边界判断
+- **2026-05-11**: Boundary refine v1 → no-early-stop boundary search 确认可行
+- **2026-05-12**: boundary_video_night2 → c23/c25 毫米级精度结果确认
+- **2026-05-12**: strict pose stop 代码 bug 修复（legacy 5cm 截断问题）
+
+---
+
+## 10. Sprint Update — 2026-05-12
+
+**Last updated:** 2026-05-12
+
+### 当前阶段
+
+**正在完成：** 第 1 关 — MuJoCo Oracle-MPC capacity gate（open_space + mild_offset）
+
+**尚未进入：**
+- ❌ dataset generation
+- ❌ learned dynamics / world model 训练
+- ❌ flat / object / causal representation 对比
+- ❌ OOD final evaluation
+- ❌ SO-101 real robot validation
+
+### 已确认结论
+
+**5cm early stop 不适合作为能力边界判断：**
+- no-early-stop full budget 后，Oracle-MPC 可达到毫米级误差
+- 5cm 只能作为粗成功统计，不应作为正式 pose-to-goal 完成标准
+
+**boundary_video_night2 结果（train_sim_id, 5 templates）：**
+
+c23_precise：mean_final_pos_error ≈ 2.70mm，success_pos_1cm_rate = 1.0，success_pos_0p5cm_rate = 0.8
+
+c25_fast：mean_final_pos_error ≈ 2.38mm，success_pos_0p5cm_rate = 1.0，success_pose_0p5cm_5deg_rate = 1.0
+
+c23 更快进入高精度区（~405 steps 到 1cm），更适合作为主 baseline。c25 更稳但更慢，适合保守备用。
+
+**strict pose stop 代码修复（2026-05-12）：**
+- 修复了 legacy 5cm success 截断 strict pose stop 的 bug
+- 引入 `should_stop`、`legacy_success_reached`、`strict_pose_stop_active`
+- py_compile 通过，正式 smoke test 待执行
+
+### 当前主线任务
+
+1. 执行 strict pose stop smoke test（1 template，c23_strict600）
+2. 执行 c23_strict600 confirmatory eval（3 open_space + 3 mild_offset）
+3. 接入真实 MuJoCo obstacles（blocking / narrow_passage / edge_goal）
+4. 在真实 obstacle 下用 config23 做 gate test
+5. obstacle gate 通过后做小范围局部 sweep
+
+### 暂时不要做
+
+❌ 继续大范围 blind sweep
+❌ 只围绕 open-space 调漂亮结果
+❌ 把 mild_offset 说成真实 obstacle
+❌ 改 cost function（先确保 obstacle 真正进入 MuJoCo）
+❌ 进入 learned model 训练（直到 oracle-MPC capacity + obstacle gate 基本通过）
+❌ 改 Paper 1 主线去做 VLM/VLA/LLM
+❌ 让 AI agent 自动运行长实验
+
+### 下一步 smoke test 命令（人工执行）
+
+```bash
+cd ~/my_robot_project
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate lerobot
+
+PYTHONPATH=. python scripts/check_mpc_capacity.py \
+  --mode mujoco_oracle_mpc_closed_loop \
+  --split train_sim_id \
+  --max-templates 1 \
+  --horizon 80 \
+  --execute-steps 20 \
+  --max-mpc-steps 30 \
+  --num-samples 1024 \
+  --num-elites 96 \
+  --num-iterations 5 \
+  --strict-pose-stop \
+  --stop-pos-threshold 0.0015 \
+  --stop-theta-threshold-deg 3.0 \
+  --out runs/debug/c23_strict600_smoke.json
+```
+
+检查重点：不能在 5cm 处提前停止；只有 `pos<=1.5mm 且 theta<=3°` 才触发 STRICT POSE EARLY STOP。

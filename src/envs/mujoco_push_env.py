@@ -22,6 +22,10 @@ MINIMAL_PUSH_XML = """
 
   <option timestep="0.005" gravity="0 0 -9.81" integrator="Euler"/>
 
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+
   <default>
     <geom friction="1.0 0.005 0.0001" solref="0.01 1" solimp="0.9 0.95 0.001"/>
   </default>
@@ -39,7 +43,7 @@ MINIMAL_PUSH_XML = """
       conaffinity="1"
     />
 
-    <body name="pusher" pos="0 0 0.035">
+    <body name="pusher" pos="0 0 {pusher_z}">
       <joint
         name="pusher_x"
         type="slide"
@@ -56,15 +60,7 @@ MINIMAL_PUSH_XML = """
         range="0.0 0.50"
         damping="4.0"
       />
-      <geom
-        name="pusher_geom"
-        type="sphere"
-        size="0.025"
-        mass="0.05"
-        rgba="0.1 0.2 0.9 1"
-        contype="1"
-        conaffinity="1"
-      />
+{pusher_geom}
     </body>
 
     <body name="object" pos="0.20 0.18 0.006">
@@ -72,12 +68,9 @@ MINIMAL_PUSH_XML = """
 {object_geoms}
     </body>
 
-    <site
-      name="goal_site"
-      pos="0.42 0.18 0.005"
-      size="0.02"
-      rgba="0.1 0.8 0.1 0.5"
-    />
+    <body name="goal_shape" pos="0.42 0.18 0.006">
+{goal_geoms}
+    </body>
   </worldbody>
 
   <actuator>
@@ -98,13 +91,51 @@ MINIMAL_PUSH_XML = """
 """
 
 
-def _build_xml_with_shape(shape_type: str, use_simple_box: bool = False) -> str:
+def _build_pusher_geom_xml(
+    pusher_radius: float,
+    pusher_halfheight: float,
+    pusher_mass: float,
+) -> str:
+    """
+    Build pusher geom XML for vertical cylinder pusher.
+
+    Args:
+        pusher_radius: Radius in meters
+        pusher_halfheight: Half-height for cylinder
+        pusher_mass: Mass in kg
+
+    Returns:
+        XML string for pusher geom
+    """
+    return f"""      <geom
+        name="pusher_geom"
+        type="cylinder"
+        size="{pusher_radius:.6f} {pusher_halfheight:.6f}"
+        mass="{pusher_mass:.6f}"
+        rgba="0.1 0.2 0.9 1"
+        contype="1"
+        conaffinity="1"
+      />"""
+
+
+def _build_xml_with_shape(
+    shape_type: str,
+    use_simple_box: bool = False,
+    pusher_radius: float = 0.010,
+    pusher_halfheight: float = 0.014,
+    pusher_z: float = 0.016,
+    pusher_mass: float = 0.05,
+) -> str:
     """
     Build MuJoCo XML with object geometry from ObjectShapeFactory.
 
     Args:
         shape_type: Shape type (T, L, cross, bar, square, cylinder)
         use_simple_box: If True, use simple box instead of compound geoms
+        pusher_radius: Pusher radius in meters (default 0.010)
+        pusher_halfheight: Pusher half-height (default 0.014, total height 28mm)
+        pusher_z: Pusher body z position in meters (default 0.016)
+        pusher_mass: Pusher mass in kg (default 0.05)
 
     Returns:
         Complete MuJoCo XML string
@@ -120,6 +151,14 @@ def _build_xml_with_shape(shape_type: str, use_simple_box: bool = False) -> str:
         contype="1"
         conaffinity="1"
       />"""
+        goal_geoms = """      <geom
+        name="goal_geom"
+        type="box"
+        size="0.024 0.024 0.006"
+        rgba="0.1 0.8 0.1 0.25"
+        contype="0"
+        conaffinity="0"
+      />"""
     else:
         # Use ObjectShapeFactory for compound geoms
         factory = ObjectShapeFactory()
@@ -129,8 +168,25 @@ def _build_xml_with_shape(shape_type: str, use_simple_box: bool = False) -> str:
             contype=1,
             conaffinity=1,
         )
+        goal_geoms = factory.get_goal_ghost_geoms_xml(
+            shape_type=shape_type,
+            rgba="0.1 0.8 0.1 0.25",
+            name_prefix="goal_geom",
+        )
 
-    return MINIMAL_PUSH_XML.format(object_geoms=object_geoms)
+    # Build pusher geom XML
+    pusher_geom = _build_pusher_geom_xml(
+        pusher_radius=pusher_radius,
+        pusher_halfheight=pusher_halfheight,
+        pusher_mass=pusher_mass,
+    )
+
+    return MINIMAL_PUSH_XML.format(
+        pusher_z=pusher_z,
+        pusher_geom=pusher_geom,
+        object_geoms=object_geoms,
+        goal_geoms=goal_geoms,
+    )
 
 
 @dataclass
@@ -174,6 +230,10 @@ class MujocoPushEnv:
         max_speed_mps: float = 0.05,
         shape_type: str = "T",
         use_simple_box_object: bool = False,
+        pusher_radius: float = 0.010,
+        pusher_halfheight: float = 0.014,
+        pusher_z: float = 0.016,
+        pusher_mass: float = 0.05,
         xml: str | None = None,
     ):
         """
@@ -187,6 +247,10 @@ class MujocoPushEnv:
                       in reset_from_template(), but for now we use a default.
             use_simple_box_object: If True, use legacy single box object.
                                    If False, use ObjectShapeFactory compound geoms.
+            pusher_radius: Pusher radius in meters (default 0.010)
+            pusher_halfheight: Pusher half-height (default 0.014, total height 28mm)
+            pusher_z: Pusher body z position in meters (default 0.016)
+            pusher_mass: Pusher mass in kg (default 0.05)
             xml: Optional custom XML string. If None, generates XML based on
                  shape_type and use_simple_box_object.
         """
@@ -200,10 +264,21 @@ class MujocoPushEnv:
         self.max_speed_mps = float(max_speed_mps)
         self.shape_type = shape_type
         self.use_simple_box_object = use_simple_box_object
+        self.pusher_radius = float(pusher_radius)
+        self.pusher_halfheight = float(pusher_halfheight)
+        self.pusher_z = float(pusher_z)
+        self.pusher_mass = float(pusher_mass)
 
         # Generate XML if not provided
         if xml is None:
-            xml = _build_xml_with_shape(shape_type, use_simple_box_object)
+            xml = _build_xml_with_shape(
+                shape_type=shape_type,
+                use_simple_box=use_simple_box_object,
+                pusher_radius=pusher_radius,
+                pusher_halfheight=pusher_halfheight,
+                pusher_z=pusher_z,
+                pusher_mass=pusher_mass,
+            )
 
         self.model = mujoco.MjModel.from_xml_string(xml)
         self.data = mujoco.MjData(self.model)
@@ -246,12 +321,38 @@ class MujocoPushEnv:
         self.pusher_x_qvel_adr = int(self.model.jnt_dofadr[self.pusher_x_joint_id])
         self.pusher_y_qvel_adr = int(self.model.jnt_dofadr[self.pusher_y_joint_id])
 
+        self.goal_shape_body_id = mujoco.mj_name2id(
+            self.model,
+            mujoco.mjtObj.mjOBJ_BODY,
+            "goal_shape",
+        )
+
         self.goal_pose = np.array([0.42, 0.18, 0.0], dtype=np.float64)
         self.step_count = 0
         self.last_contact = False
         self.last_collision = False
 
         self.reset()
+
+    def _sync_goal_visuals(self) -> None:
+        """
+        Sync goal visualization (goal_shape) with goal_pose.
+
+        This is visualization-only and does not affect physics or planning.
+        """
+        if self.goal_shape_body_id >= 0:
+            theta = float(self.goal_pose[2])
+            qw = float(np.cos(theta / 2.0))
+            qz = float(np.sin(theta / 2.0))
+
+            self.model.body_pos[self.goal_shape_body_id] = np.array(
+                [self.goal_pose[0], self.goal_pose[1], 0.006],
+                dtype=np.float64,
+            )
+            self.model.body_quat[self.goal_shape_body_id] = np.array(
+                [qw, 0.0, 0.0, qz],
+                dtype=np.float64,
+            )
 
     def reset(
         self,
@@ -325,6 +426,9 @@ class MujocoPushEnv:
 
         self.data.ctrl[:] = 0.0
 
+        # Sync goal visuals with goal_pose (visualization only)
+        self._sync_goal_visuals()
+
         mujoco.mj_forward(self.model, self.data)
         self._update_contact_flags()
 
@@ -384,6 +488,9 @@ class MujocoPushEnv:
         self.step_count = int(state.step_count)
         self.last_contact = bool(state.last_contact)
         self.last_collision = bool(state.last_collision)
+
+        # Sync goal visuals with goal_pose (visualization only)
+        self._sync_goal_visuals()
 
         mujoco.mj_forward(self.model, self.data)
 

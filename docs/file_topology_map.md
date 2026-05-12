@@ -1,493 +1,385 @@
-# File Topology Map: Paper 1 Experiment Flow
+# 文件拓扑关系图
 
-**Last updated:** 2026-05-09
-
-This document describes the file topology organized by Paper 1 experimental flow, not just by directory structure.
+本文档描述 Paper 1 实验系统中关键文件的拓扑连接关系。
 
 ---
 
-## Main Experimental Chain
+## 完整拓扑层次结构
 
 ```
-A. Reset Template / Split Generation
-    ↓
-B. Environment Scaffold
-    ↓
-C. Oracle Rollout
-    ↓
-D. Oracle-MPC Smoke Test
-    ↓
-E. Future: Full Oracle-MPC Task Capacity
-    ↓
-F. Future: Sim Data Collection
-    ↓
-G. Future: Learned Model Training
-    ↓
-H. Future: Learned Model + MPC Eval
+┌─────────────────────────────────────────────────────────────────┐
+│                      数据定义与生成层                              │
+├─────────────────────────────────────────────────────────────────┤
+│ src/interventions/shape_families.py                             │
+│ src/interventions/layout_families.py                            │
+│ src/interventions/sampling_rules.py                             │
+│         ↓                                                        │
+│ scripts/generate_reset_templates.py                             │
+│         ↓                                                        │
+│ data/sim/metadata/reset_templates_v0.json                       │
+│         ↓                                                        │
+│ src/interventions/reset_template_loader.py                      │
+│ src/data/metadata_schema.py                                     │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                      配置层 (Config)                              │
+├─────────────────────────────────────────────────────────────────┤
+│ configs/object_specs.yaml        → ObjectShapeFactory           │
+│ configs/reset_templates.yaml     → generate_reset_templates.py  │
+│ configs/splits.yaml              → train/OOD split 定义         │
+│ configs/planner/cem_mpc_capacity.yaml → capacity sweep 参数     │
+│ configs/planner/cem_mpc.yaml     → CEM-MPC 默认参数             │
+│ configs/planner/cost_weights.yaml → rollout_cost 权重            │
+│ configs/train/causality_aware.yaml    → CausalityAwareEncoder   │
+│ configs/train/flat_high_level.yaml    → FlatEncoder             │
+│ configs/train/object_centric_noncausal.yaml → ObjectCentricEncoder│
+│ configs/eval/eval_default.yaml   → 评估配置                     │
+│ configs/baselines.yaml           → baseline 参数                │
+│ configs/failure_codes.yaml       → 失败码定义                   │
+│ configs/analysis/representation_analysis.yaml → 分析配置        │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                      环境层 (Dynamics)                            │
+├─────────────────────────────────────────────────────────────────┤
+│ src/envs/toy_push_env.py          (toy dynamics, 接口测试)       │
+│ src/envs/object_shape_factory.py  (MuJoCo compound geom 工厂)    │
+│   └── 读取 configs/object_specs.yaml                            │
+│   └── 生成 T/L/cross/bar/square/cylinder 的 geom XML            │
+│ src/envs/mujoco_push_env.py       (MuJoCo dynamics, 主实验)      │
+│   └── 调用 ObjectShapeFactory 构建 MuJoCo XML                   │
+│         ↓                                                        │
+│ scripts/debug_mujoco_env.py       (环境接口验证)                  │
+│ scripts/debug_shape_factory.py    (形状工厂验证)                  │
+│ scripts/debug_mujoco_shape_render.py (形状渲染验证)               │
+│ scripts/preview_object_shapes.py  (形状预览)                     │
+│ scripts/preview_reset_templates.py (模板预览)                    │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                      规划器层 (Planning)                          │
+├─────────────────────────────────────────────────────────────────┤
+│ src/planners/cost_functions.py    (cost计算核心)                 │
+│         ↓                                                        │
+│ src/planners/oracle_rollout.py    (toy oracle rollout)          │
+│ src/planners/mujoco_oracle_rollout.py  (MuJoCo oracle rollout)  │
+│         ↓                                                        │
+│ scripts/debug_oracle_rollout.py                                 │
+│ scripts/debug_mujoco_oracle_rollout.py                          │
+│         ↓                                                        │
+│ src/planners/cem_mpc.py            (CEM优化器，固定不变)          │
+│ src/planners/heuristic_baselines.py (启发式 baseline)           │
+│         ↓                                                        │
+│ scripts/debug_cem_mpc_toy.py                                    │
+│ scripts/render_closed_loop_rollout.py (闭环 rollout 渲染)        │
+│ scripts/render_pusher_capacity.py  (pusher capacity 渲染)        │
+│ scripts/debug_pusher_capacity.py  (pusher capacity 调试)         │
+│ scripts/visualize_mpc_rollout.py  (MPC rollout 可视化)           │
+│ scripts/diagnose_mpc_rollout.py   (MPC rollout 诊断)             │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   Oracle-MPC 容量验证层                           │
+├─────────────────────────────────────────────────────────────────┤
+│ src/metrics/planner_capacity.py   (通用 capacity 抽象)           │
+│ src/metrics/toy_oracle_capacity.py                              │
+│ src/metrics/mujoco_oracle_capacity.py                           │
+│         ↓                                                        │
+│ scripts/check_mpc_capacity.py     (统一入口)                     │
+│   --mode state_sanity                                           │
+│   --mode toy_oracle_mpc                                         │
+│   --mode mujoco_oracle_mpc                                      │
+│   --mode mujoco_oracle_mpc_closed_loop                          │
+│         ↓                                                        │
+│ scripts/run_wide_mpc_sweep_with_best_video.py (wide sweep)     │
+│ scripts/run_mpc_eval.py           (MPC 评估)                    │
+│ scripts/run_closed_loop_sweep.py  (闭环 sweep)                  │
+│         ↓                                                        │
+│ scripts/analyze_results.py        (结果分析)                     │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   Metrics 与评估层                                │
+├─────────────────────────────────────────────────────────────────┤
+│ src/metrics/success_metrics.py    (成功率计算)                   │
+│ src/metrics/failure_analysis.py   (失败分析)                     │
+│ src/metrics/ood_gap.py            (OOD 泛化差距)                 │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   数据归一化层 (Critical!)                        │
+├─────────────────────────────────────────────────────────────────┤
+│ src/data/state_normalizer.py                                    │
+│   ⚠️  MUST fit only on train/adaptation splits                  │
+│   ⚠️  NEVER fit on test/OOD splits                              │
+│         ↓                                                        │
+│ scripts/debug_state_normalizer.py                               │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   模型层 (Learned Models)                         │
+├─────────────────────────────────────────────────────────────────┤
+│ src/models/encoders.py                                          │
+│   - FlatEncoder                                                 │
+│   - ObjectCentricEncoder                                        │
+│   - CausalityAwareEncoder                                       │
+│         ↓                                                        │
+│ src/models/heads.py                                             │
+│   - DynamicsHead                                                │
+│   - SubgoalHead                                                 │
+│         ↓                                                        │
+│ src/models/rig_world.py            (统一接口)                     │
+│         ↓                                                        │
+│ scripts/debug_encoder_variants.py                               │
+│ scripts/debug_rig_world_model.py                                │
+│         ↓                                                        │
+│ src/models/losses.py               (训练loss)                    │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   Learned Rollout 层                             │
+├─────────────────────────────────────────────────────────────────┤
+│ src/planners/rollout_model.py                                   │
+│   (使用learned model进行rollout预测)                             │
+│         ↓                                                        │
+│ 与 cem_mpc.py 结合                                               │
+│         ↓                                                        │
+│ Learned Model + Fixed CEM-MPC                                   │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   工具层 (Utils)                                  │
+├─────────────────────────────────────────────────────────────────┤
+│ src/utils/io.py                   (I/O 工具)                    │
+│ src/utils/logging_utils.py        (日志工具)                     │
+│ src/utils/seed.py                 (随机种子)                     │
+│ src/data/episode_loader.py        (episode 加载)                │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   评估与对比层                                    │
+├─────────────────────────────────────────────────────────────────┤
+│ 对比三种encoder在相同planner下的OOD泛化性能                        │
+│   - ID test                                                     │
+│   - Layout OOD (blocking, narrow_passage, edge_goal)            │
+│   - Shape OOD (L-shape)                                         │
+└─────────────────────────────────────────────────────────────────┘
+                            ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                   基准文档层 (Benchmark)                          │
+├─────────────────────────────────────────────────────────────────┤
+│ benchmark/benchmark_card.md       (基准卡片)                     │
+│ benchmark/baselines.md            (baseline 定义)               │
+│ benchmark/tasks.md                (任务定义)                     │
+│ benchmark/splits.md               (split 定义)                  │
+│ benchmark/metrics.md              (metrics 定义)                │
+│ benchmark/dataset_card.md         (数据集卡片)                   │
+│ benchmark/leaderboard_template.csv (排行榜模板)                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## A. Reset Template / Split Generation
+## 关键依赖关系详解
 
-**Purpose:** Generate reset templates with split/layout/shape family labels
-
-```
-src/interventions/shape_families.py
-    - SHAPE_FAMILIES = {"T", "L", "other"}
-    - get_shape_config(shape_name)
-    ↓
-src/interventions/layout_families.py
-    - LAYOUT_FAMILIES = {"open_space", "mild_offset", "blocking", "narrow_passage", "edge_goal"}
-    - get_layout_config(layout_name)
-    ↓
-src/interventions/sampling_rules.py
-    - validate_reset_templates(templates)
-    - check schema compliance
-    ↓
-scripts/generate_reset_templates.py
-    - main()
-    - CLI: --num-per-split, --seed
-    ↓
-data/sim/metadata/reset_templates_v0.json
-    - 140 templates
-    - train_sim_id: 20 templates (T-shape, open_space/mild_offset)
-    - val_sim_id: 20 templates
-    - test_sim_id: 20 templates
-    - test_sim_layout_ood_blocking: 20 templates (T-shape, blocking)
-    - test_sim_layout_ood_narrow_passage: 20 templates (T-shape, narrow_passage)
-    - test_sim_layout_ood_edge_goal: 20 templates (T-shape, edge_goal)
-    - test_sim_shape_ood_L: 20 templates (L-shape, open_space/mild_offset)
-    ↓
-src/interventions/reset_template_loader.py
-    - load_reset_templates(path)
-    - get_templates_by_split(templates, split)
-    - template_to_episode_metadata(template)
-    ↓
-src/data/metadata_schema.py
-    - EpisodeMetadata (dataclass)
-    - Pose2D (dataclass)
-    - ObstacleMetadata (dataclass)
-```
-
-**Debug command:**
-```bash
-PYTHONPATH=. python scripts/generate_reset_templates.py --num-per-split 3
-PYTHONPATH=. python scripts/debug_reset_templates.py
-```
-
-**Status:** ✅ PASS (140 templates generated, schema validated)
-
-**Limitation:** Obstacles not yet instantiated in MuJoCo
-
----
-
-## B. Environment Scaffold
-
-**Purpose:** MuJoCo environment with reset/step/clone/restore interface
-
-```
-src/envs/mujoco_push_env.py
-    - MujocoPushEnv
-    - MujocoPushState (dataclass)
-    - MINIMAL_PUSH_XML (hardcoded XML)
-    - reset(object_pose, goal_pose, ee_pos)
-    - reset_from_template(template)
-    - step(action)
-    - clone_state() → MujocoPushState
-    - restore_state(state)
-    - get_object_pose() → [x, y, theta]
-    - get_ee_pos() → [x, y]
-    - get_goal_pose() → [x, y, theta]
-    - get_contact_flag() → float
-    - get_collision_flag() → float (placeholder)
-    ↓
-scripts/debug_mujoco_env.py
-    - test reset / step / clone / restore
-    - test reset_from_template
-    - test contact detection
-```
-
-**Debug command:**
-```bash
-PYTHONPATH=. python scripts/debug_mujoco_env.py
-```
-
-**Status:** ✅ PASS (interface works, contact detection works)
-
-**Limitation:**
-- **Obstacles not instantiated** from templates
-- goal_site is static XML site, not dynamically updated
-- collision detection is placeholder (always False)
-
----
-
-## C. Oracle Rollout
-
-**Purpose:** Roll out action sequences using true MuJoCo dynamics
-
-```
-src/planners/cost_functions.py
-    - CostWeights (dataclass)
-    - rollout_cost(predicted_object_poses, ee_positions, action_sequence, goal_pose, weights, contact_flags, collision_flags)
-    - wrap_angle(angle)
-    ↓
-src/planners/mujoco_oracle_rollout.py
-    - MujocoOracleRolloutResult (dataclass)
-    - rollout_action_sequence_mujoco(env, action_sequence, restore_state=True)
-    - mujoco_oracle_rollout_cost(env, action_sequence, goal_pose, weights, restore_state=True)
-    ↓
-scripts/debug_mujoco_oracle_rollout.py
-    - test rollout with hand-coded actions
-    - test restore_state
-    - test contact detection
-    - test cost computation
-```
-
-**Debug command:**
-```bash
-PYTHONPATH=. python scripts/debug_mujoco_oracle_rollout.py
-```
-
-**Status:** ✅ PASS (rollout works, restore_state correct, cost finite)
-
-**Limitation:** Does not test with obstacles
-
----
-
-## D. Oracle-MPC Smoke Test
-
-**Purpose:** Verify CEM-MPC + oracle rollout interface works
-
-```
-src/planners/cem_mpc.py
-    - CEMMPC
-    - CEMResult (dataclass)
-    - optimize(cost_fn, init_mean, init_std) → CEMResult
-    - plan(cost_fn) → (first_action, CEMResult)
-    ↓
-src/metrics/mujoco_oracle_capacity.py
-    - make_default_mujoco_cost_weights() → CostWeights
-    - evaluate_one_template_mujoco_oracle_mpc(template, horizon, num_samples, num_elites, num_iterations, seed, success_dist_threshold)
-    - run_mujoco_oracle_mpc_capacity(templates, ...)
-    - save_mujoco_oracle_mpc_report(report, path)
-    ↓
-scripts/check_mpc_capacity.py
-    - parse_args()
-    - run_mujoco_oracle_mpc_mode(args)
-    - CLI: --mode mujoco_oracle_mpc --split train_sim_id --max-templates 5 --horizon 80 --num-samples 1536 --num-elites 128 --num-iterations 7
-```
-
-**Debug command:**
-```bash
-PYTHONPATH=. python scripts/check_mpc_capacity.py \
-  --mode mujoco_oracle_mpc \
-  --split train_sim_id \
-  --max-templates 5 \
-  --horizon 80 \
-  --num-samples 1536 \
-  --num-elites 128 \
-  --num-iterations 7
-```
-
-**Status:** ✅ PASS (interface smoke test)
-
-**Result:**
-- 5/5 templates: planned_cost < zero_cost
-- 5/5 templates: best_min_dist < initial_dist
-- 5/5 templates: restore_state correct
-- Prints "mujoco oracle mpc capacity check ok"
-
-**Limitation:**
-- **success_rate = 0/5** (task not solved yet)
-- final_dist does not reach success threshold (0.05)
-- Obstacles not tested
-
----
-
-## E. Future: Full Oracle-MPC Task Capacity
-
-**Purpose:** Establish upper bound for learned model performance
-
-**Required steps:**
-1. **Option A:** Tune CEM-MPC parameters for task success
-   - Increase horizon / num_samples / num_iterations
-   - Tune cost weights
-   - Goal: success_rate > 80% on train_sim_id
-
-2. **Option B:** Implement obstacles-enabled MuJoCo env first
-   - Modify MujocoPushEnv to instantiate obstacles from templates
-   - Add collision detection
-   - Then run full Oracle-MPC capacity on layout OOD
-
-**Expected files:**
-```
-src/envs/mujoco_push_env.py (updated)
-    - instantiate_obstacles_from_template(template)
-    - dynamic XML generation for obstacles
-    - collision detection with obstacles
-
-configs/planner/oracle_capacity_strong.yaml (new)
-    - horizon: 100+ (longer than learned eval)
-    - num_samples: 2048+ (more than learned eval)
-    - num_iterations: 10+ (more than learned eval)
-
-runs/oracle_capacity/train_sim_id_report.json
-runs/oracle_capacity/test_sim_layout_ood_blocking_report.json
-runs/oracle_capacity/test_sim_layout_ood_narrow_passage_report.json
-runs/oracle_capacity/test_sim_layout_ood_edge_goal_report.json
-runs/oracle_capacity/test_sim_shape_ood_L_report.json
-```
-
-**Status:** ⬜ NOT STARTED (waiting for user decision)
-
----
-
-## F. Future: Sim Data Collection
-
-**Purpose:** Collect training data for learned models
-
-**Required steps:**
-1. Use Oracle-MPC or exploratory policy to collect episodes
-2. Save episodes with metadata
-3. Validate split protocol (no test data leakage)
-
-**Expected files:**
-```
-scripts/collect_sim_data.py (new)
-    - collect_episodes_with_oracle_mpc(templates, policy, num_episodes)
-    - save_episode_data(episode, metadata, path)
-
-data/sim/episodes/train_sim_id/episode_*.npz
-data/sim/episodes/val_sim_id/episode_*.npz
-data/sim/metadata/train_sim_id_metadata.json
-data/sim/metadata/val_sim_id_metadata.json
-```
-
-**Status:** ⬜ NOT STARTED (blocked by Oracle-MPC capacity)
-
----
-
-## G. Future: Learned Model Training
-
-**Purpose:** Train flat/object/causal encoders + heads
-
-**Required steps:**
-1. Fit StateNormalizer on train data ONLY
-2. Train RIGWorldModel (flat/object/causal) with same hyperparameters
-3. Save checkpoints
-
-**Expected files:**
-```
-src/data/state_normalizer.py (existing)
-    - StateNormalizer.fit(train_data)  ⚠️ ONLY on train
-    - StateNormalizer.transform(state)
-
-scripts/train_high_level.py (new)
-    - load_train_data(split="train_sim_id")
-    - fit_normalizer(train_data)
-    - train_rig_world_model(model_type, train_data, val_data, normalizer)
-    - save_checkpoint(model, normalizer, path)
-
-configs/train/flat.yaml (new)
-configs/train/object_centric.yaml (new)
-configs/train/causality_aware.yaml (new)
-
-runs/train/flat/checkpoint_best.pt
-runs/train/object_centric/checkpoint_best.pt
-runs/train/causality_aware/checkpoint_best.pt
-```
-
-**Status:** ⬜ NOT STARTED (blocked by data collection)
-
----
-
-## H. Future: Learned Model + MPC Eval
-
-**Purpose:** Evaluate learned models with fixed CEM-MPC
-
-**Required steps:**
-1. Load trained model + normalizer
-2. Implement learned rollout interface
-3. Run CEM-MPC with learned rollout
-4. Evaluate on ID / layout OOD / shape OOD
-5. Compare flat / object / causal
-
-**Expected files:**
-```
-src/planners/rollout_model.py (new)
-    - rollout_with_learned_model(model, normalizer, env, action_sequence)
-    - learned_rollout_cost(model, normalizer, env, action_sequence, weights)
-
-scripts/eval_learned_mpc.py (new)
-    - load_checkpoint(path)
-    - evaluate_learned_mpc(model, normalizer, templates, planner_config)
-    - save_eval_report(report, path)
-
-configs/eval/learned_eval_default.yaml (new)
-    - horizon: 40-60 (shorter than oracle strong)
-    - num_samples: 1024 (same for all variants)
-    - num_iterations: 5 (same for all variants)
-
-runs/eval/flat/train_sim_id_report.json
-runs/eval/flat/test_sim_layout_ood_blocking_report.json
-runs/eval/object_centric/train_sim_id_report.json
-runs/eval/causality_aware/train_sim_id_report.json
-```
-
-**Status:** ⬜ NOT STARTED (blocked by model training)
-
----
-
-## Current Validated Chain
-
-**What is actually working right now:**
+### 1. 数据流向
 
 ```
 reset_templates_v0.json
-    ↓
-reset_template_loader.load_reset_templates()
-    ↓
-MujocoPushEnv.reset_from_template()
-    ↓
-mujoco_oracle_rollout.rollout_action_sequence_mujoco()
-    ↓
-cost_functions.rollout_cost()
-    ↓
-CEMMPC.plan(cost_fn)
-    ↓
-mujoco_oracle_capacity.evaluate_one_template_mujoco_oracle_mpc()
-    ↓
-check_mpc_capacity.py --mode mujoco_oracle_mpc
-    ↓
-Result: interface smoke test passed (5/5)
+    → reset_template_loader.load_reset_templates()
+    → MujocoPushEnv.reset_from_template()
+    → 环境初始状态
 ```
 
-**Status:** ✅ Interface works, cost improvement works, restore_state works
-
-**Limitation:** success_rate = 0, obstacles not instantiated
-
----
-
-## Current Missing Links
-
-1. **Obstacles not instantiated** in MujocoPushEnv
-   - Impact: Layout OOD capacity invalid
-   - Fix: Implement obstacles-enabled MuJoCo env
-
-2. **Task success not achieved** (success_rate = 0)
-   - Impact: Cannot attribute learned model failure to representation
-   - Fix: Tune Oracle-MPC or implement obstacles first
-
-3. **No learned dynamics dataset**
-   - Impact: Cannot train models
-   - Fix: Collect sim data after Oracle-MPC capacity established
-
-4. **No learned rollout validation**
-   - Impact: Cannot evaluate learned model + MPC
-   - Fix: Implement rollout_model.py after model training
-
-5. **No OOD gap yet**
-   - Impact: Cannot compare flat/object/causal
-   - Fix: Complete full experimental pipeline
-
----
-
-## File Importance Ranking
-
-### 🔴 Critical Path (must work first)
-1. `mujoco_push_env.py` - Environment interface
-2. `mujoco_oracle_rollout.py` - Oracle rollout
-3. `cem_mpc.py` - Fixed planner
-4. `cost_functions.py` - Cost computation
-5. `mujoco_oracle_capacity.py` - Capacity check
-6. `check_mpc_capacity.py` - Unified entry
-
-### 🟡 Data Path (needed for training)
-7. `reset_template_loader.py` - Template loading
-8. `state_normalizer.py` - Normalization (CRITICAL: fit only on train)
-9. `layout_families.py` - Layout OOD definitions
-10. `shape_families.py` - Shape OOD definitions
-
-### 🟢 Model Path (needed for evaluation)
-11. `encoders.py` - Flat/object/causal encoders
-12. `heads.py` - Dynamics/subgoal heads
-13. `rig_world.py` - Unified model interface
-14. `losses.py` - Training losses
-15. `rollout_model.py` - Learned rollout (future)
-
-### 🔵 Config / Debug
-16. `cem_mpc.yaml` - Planner config
-17. `cost_weights.yaml` - Cost weights
-18. `splits.yaml` - Split definitions
-19. `debug_*.py` - Smoke tests
-
----
-
-## Dependency Graph
+### 2. Oracle-MPC 验证流向
 
 ```
-                    reset_templates_v0.json
-                            ↓
-                    reset_template_loader.py
-                            ↓
-                    MujocoPushEnv
-                    ↙           ↘
-    mujoco_oracle_rollout    (future) learned_rollout
-                ↓                       ↓
-        cost_functions          cost_functions
-                ↓                       ↓
-            CEMMPC.plan()       CEMMPC.plan()
-                ↓                       ↓
-    mujoco_oracle_capacity    (future) learned_eval
-                ↓                       ↓
-    check_mpc_capacity.py     eval_learned_mpc.py
+reset_template
+    → MujocoPushEnv.reset_from_template()
+    → mujoco_oracle_rollout.rollout_action_sequence_mujoco()
+    → cost_functions.rollout_cost()
+    → CEMMPC.plan(cost_fn)
+    → mujoco_oracle_capacity.evaluate_one_template_mujoco_oracle_mpc()
+    → check_mpc_capacity.py --mode mujoco_oracle_mpc
+```
+
+### 3. ObjectShapeFactory 依赖链
+
+```
+configs/object_specs.yaml
+    → ObjectShapeFactory.__init__()
+    → ObjectShapeFactory.get_object_geoms_xml()
+    → ObjectShapeFactory.get_goal_ghost_geoms_xml()
+    → mujoco_push_env._build_xml_with_shape()
+    → MuJoCo XML (T/L/cross/bar/square/cylinder 复合几何体)
+```
+
+### 4. Learned Model 训练流向 (后续)
+
+```
+reset_templates
+    → 数据收集 (oracle policy / random policy)
+    → StateNormalizer.fit(train_data)  ⚠️ 只在train上fit
+    → 训练 RIGWorldModel (flat / object_centric / causality_aware)
+    → 保存 checkpoint
+```
+
+### 5. Learned Model 评估流向 (后续)
+
+```
+reset_template
+    → MujocoPushEnv.reset_from_template()
+    → StateNormalizer.transform(state)  ⚠️ 使用train上fit的normalizer
+    → RIGWorldModel.forward(normalized_state, action)
+    → rollout_model.rollout_with_learned_model()
+    → CEMMPC.plan(learned_cost_fn)
+    → 评估成功率 (ID / Layout OOD / Shape OOD)
 ```
 
 ---
 
-## Validation Commands
+## 关键文件重要性分级
 
-```bash
-# State sanity (140/140 passed)
-PYTHONPATH=. python scripts/check_mpc_capacity.py --mode state_sanity
+### 🔴 核心基础设施 (必须先验证)
 
-# Toy oracle-MPC (20/20 passed)
-PYTHONPATH=. python scripts/check_mpc_capacity.py --mode toy_oracle_mpc --split train_sim_id --max-templates 20
+1. **mujoco_push_env.py** - MuJoCo环境封装
+2. **object_shape_factory.py** - MuJoCo compound geom 工厂，被 mujoco_push_env 调用
+3. **cost_functions.py** - cost计算核心
+4. **cem_mpc.py** - 固定规划器
+5. **mujoco_oracle_rollout.py** - Oracle rollout接口
+6. **mujoco_oracle_capacity.py** - Oracle-MPC容量测试
 
-# MuJoCo oracle-MPC (5/5 interface passed, success_rate=0)
-PYTHONPATH=. python scripts/check_mpc_capacity.py --mode mujoco_oracle_mpc --split train_sim_id --max-templates 5
+### 🟡 数据与归一化 (训练前必须)
 
-# Model smoke tests (all passed)
-PYTHONPATH=. python scripts/debug_rig_world_model.py
-PYTHONPATH=. python scripts/debug_encoder_variants.py
+7. **reset_template_loader.py** - 加载reset templates
+8. **metadata_schema.py** - 数据schema定义
+9. **state_normalizer.py** - ⚠️ 数据归一化 (严格split规则)
+10. **layout_families.py** - Layout OOD定义
+11. **shape_families.py** - Shape OOD定义
+12. **sampling_rules.py** - 采样规则验证
 
-# Environment tests (all passed)
-PYTHONPATH=. python scripts/debug_mujoco_env.py
-PYTHONPATH=. python scripts/debug_mujoco_oracle_rollout.py
+### 🟢 模型层 (训练与评估)
 
-# Data tests (all passed)
-PYTHONPATH=. python scripts/debug_state_normalizer.py
-PYTHONPATH=. python scripts/debug_reset_templates.py
-PYTHONPATH=. python scripts/debug_metadata_schema.py
-```
+13. **encoders.py** - 三种encoder实现
+14. **heads.py** - 预测头
+15. **rig_world.py** - 统一模型接口
+16. **losses.py** - 训练loss
+17. **rollout_model.py** - Learned rollout接口
+
+### 🔵 脚本与工具
+
+18. **check_mpc_capacity.py** - 容量验证统一入口
+19. **run_wide_mpc_sweep_with_best_video.py** - Wide sweep 脚本
+20. **generate_reset_templates.py** - 生成reset templates
+21. **render_closed_loop_rollout.py** - 闭环 rollout 渲染
+22. **analyze_results.py** - 结果分析
+23. **debug_*.py** - 各模块烟雾测试
+
+### ⚪ 配置层
+
+24. **configs/object_specs.yaml** - 物体形状规格 (被 ObjectShapeFactory 读取)
+25. **configs/reset_templates.yaml** - Reset template 配置
+26. **configs/splits.yaml** - 数据分割定义
+27. **configs/planner/cem_mpc_capacity.yaml** - CEM-MPC capacity sweep 参数
+28. **configs/planner/cost_weights.yaml** - Cost 权重配置
+
+### 🟣 基准文档层
+
+29. **benchmark/benchmark_card.md** - 基准卡片
+30. **benchmark/baselines.md** - Baseline 定义
+31. **benchmark/tasks.md** - 任务定义
+32. **benchmark/splits.md** - Split 定义
+33. **benchmark/metrics.md** - Metrics 定义
+34. **benchmark/dataset_card.md** - 数据集卡片
 
 ---
 
-## Critical Rules
+## 当前验证状态
 
-1. **CEM-MPC fixed**: All encoder variants use same planner config
-2. **StateNormalizer rule**: Fit only on train/adaptation, never on test
-3. **Split isolation**: Layout OOD / Shape OOD not in training
-4. **Toy vs MuJoCo**: ToyPushEnv only for interface testing
-5. **Oracle-MPC first**: Must establish capacity before training learned models
+### ✅ 已验证
+- mujoco_push_env.py (基础 reset/step/contact)
+- object_shape_factory.py (compound geom 生成)
+- mujoco_oracle_rollout.py
+- debug_mujoco_oracle_rollout.py
+- debug_shape_factory.py
+- debug_mujoco_shape_render.py
+- check_mpc_capacity.py --mode state_sanity
+- check_mpc_capacity.py --mode toy_oracle_mpc
+
+### ✅ 正在进行 (Wide Sweep)
+- mujoco_oracle_capacity.py
+- check_mpc_capacity.py --mode mujoco_oracle_mpc_closed_loop
+- run_wide_mpc_sweep_with_best_video.py (~20 parallel processes executed)
+
+### ✅ 已完成
+- render_closed_loop_rollout.py (单个 config 视频渲染, config25)
+- strict-pose-stop 敏感参数 (pos 0.0015m + theta 3.0°)
+
+### 📋 后续需要
+- state_normalizer.py (训练前验证)
+- encoders.py, heads.py, rig_world.py (训练时)
+- rollout_model.py (评估时)
 
 ---
 
-## Next Steps
+## SO101 真机配置参数参考
 
-**User must decide:**
-- **Option A:** Tune Oracle-MPC for task success (success_rate > 80%)
-- **Option B:** Implement obstacles-enabled MuJoCo env first
+### Pusher (推杆) 默认几何参数 (MuJoCo 模拟)
 
-**Do NOT proceed without user confirmation.**
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `pusher_radius` | 0.010 m (1.0 cm) | 推杆半径 |
+| `pusher_halfheight` | 0.014 m (1.4 cm) | 推杆半高 |
+| `pusher_z` | 0.016 m (1.6 cm) | 推杆z轴位置 (底面高度) |
+
+这些参数可通过 `--pusher-radius`、`--pusher-halfheight`、`--pusher-z` 覆盖。
+
+---
+
+## 实验流程检查清单
+
+### Phase 1: Oracle-MPC 容量验证 (当前)
+- [x] 验证 mujoco_push_env.py
+- [x] 验证 object_shape_factory.py
+- [x] 验证 mujoco_oracle_rollout.py
+- [x] 运行 wide sweep (~20 parallel processes)
+- [x] 完成 wide sweep 全部配置
+- [ ] 运行 analyze_results.py 分析 sweep 结果
+- [x] 渲染 boundary config 闭环视频 (config25)
+- [x] 确认 Oracle-MPC 在 train_sim_id 上成功率边界
+- [ ] 确认 Oracle-MPC 在 layout OOD 上的降级程度
+
+### Phase 2: 数据收集
+- [ ] 使用 Oracle-MPC 收集 train_sim_id 数据
+- [ ] 验证 StateNormalizer 只在 train 上 fit
+- [ ] 检查数据split无泄漏
+
+### Phase 3: 模型训练
+- [ ] 训练 FlatEncoder + Heads
+- [ ] 训练 ObjectCentricEncoder + Heads
+- [ ] 训练 CausalityAwareEncoder + Heads
+- [ ] 相同训练数据、相同超参数
+
+### Phase 4: 模型评估
+- [ ] Learned Model + Fixed CEM-MPC
+- [ ] 评估 ID test
+- [ ] 评估 Layout OOD
+- [ ] 评估 Shape OOD
+- [ ] 对比三种encoder的OOD降级程度
+
+---
+
+## 重要规则提醒
+
+1. **CEM-MPC 固定**: 所有encoder变体使用相同的planner参数
+2. **StateNormalizer 规则**: 只在train/adaptation上fit，test上只transform
+3. **Split 隔离**: Layout OOD / Shape OOD 不能出现在训练集
+4. **Toy vs MuJoCo**: ToyPushEnv 只用于接口测试，不能作为实验结果
+5. **Oracle-MPC 先行**: 必须先验证Oracle-MPC容量，才能归因learned model失败
+6. **Wide sweep 不进 early-stop**: wide_overnight_v2 sweep 为 no-early-stop 模式
+7. **ObjectShapeFactory 已集成**: T/L/cross/bar/square/cylinder 复合几何体通过 YAML 配置驱动
+8. **`--max-templates` 选择逻辑**: 按 JSON 文件原始顺序取前 N 个 (不 shuffle)，`train_sim_id` 的第一个始终是 `open_space + T_shape + 0 障碍物`
+
+注意，file_topology_map.md 是文件结构索引，不是当前实验状态真相。
+当前实验状态以 docs/current_sprint.md 和 docs/code_audit.md 为主要标准，并且根据用户实际需求调整。
