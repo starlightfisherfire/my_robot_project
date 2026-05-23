@@ -1,0 +1,25 @@
+{
+  "generated": "2026-05-24T02:09:00+08:00",
+  "commit_hash": "5329baf7b06fddb08d0cd56ed21f8d32d879ec0f",
+  "commit_message": "Snapshot Paper 1 learned rollout pilot and project state",
+  "branch": "main",
+  "remote_configured": false,
+  "gh_available": false,
+  "ssh_authorized": false,
+  "push_status": "BLOCKED",
+  "manual_commands": [
+    "# Option A: GitHub CLI",
+    "gh auth login",
+    "gh repo create my_robot_project --private --source=. --remote=origin",
+    "git push -u origin main",
+    "",
+    "# Option B: SSH key",
+    "cat ~/.ssh/id_ed25519.pub  # Add to GitHub SSH keys",
+    "git remote add origin git@github.com:YOUR_USERNAME/my_robot_project.git",
+    "git push -u origin main",
+    "",
+    "# Option C: HTTPS + token",
+    "git remote add origin https://github.com/YOUR_USERNAME/my_robot_project.git",
+    "git push -u origin main  # Enter token when prompted"
+  ]
+}
