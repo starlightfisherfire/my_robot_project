@@ -1,0 +1,44 @@
+{
+  "generated": "2026-05-24T02:09:00+08:00",
+  "project": "my_robot_project (Paper 1 — MuJoCo Push + Learned Rollout)",
+  "branch": "main",
+  "latest_commit": "d8a680b",
+  "data_summary": {
+    "total_size": "196M",
+    "directories": [
+      {"path": "data/sim/metadata/", "size": "524K", "files": 11, "committed": true},
+      {"path": "data/sim/mppi_stage2c_state16/", "size": "164M", "files": 453, "committed": false, "reason": "large dataset"},
+      {"path": "data/sim/mppi_stage2c/", "size": "15M", "files": 455, "committed": false, "reason": "sweep data"},
+      {"path": "data/sim/mppi_stage2a/", "size": "8.6M", "files": 193, "committed": false, "reason": "sweep data"},
+      {"path": "data/sim/mppi_stage2b_speed/", "size": "5.2M", "files": 136, "committed": false, "reason": "sweep data"},
+      {"path": "data/sim/layout_ood_state16_v0/", "size": "1.4M", "files": 50, "committed": false, "reason": "dataset"},
+      {"path": "data/sim/layout_ood_state16_v1/", "size": "8K", "files": 1, "committed": false, "reason": "dataset"},
+      {"path": "data/sim/layout_ood_state16_v1_smoke/", "size": "204K", "files": 19, "committed": false, "reason": "dataset"}
+    ]
+  },
+  "runs_summary": {
+    "total_size": "885M",
+    "key_runs": [
+      {"path": "runs/mppi_stage2c_20260520_194856/", "size": "28M", "logs": 240, "has_checkpoint": false, "has_summary": true},
+      {"path": "runs/train_state16_poc/", "size": "32M", "has_checkpoint": true, "has_summary": true},
+      {"path": "runs/pilot_state16_mppi_stage2c/", "size": "38M", "has_checkpoint": true, "has_summary": true}
+    ]
+  },
+  "checkpoints": [
+    {"path": "runs/train_state16_poc/causality_aware/checkpoints/best.pt", "size_mb": 15},
+    {"path": "runs/train_state16_poc/object_centric/checkpoints/best.pt", "size_mb": 10},
+    {"path": "runs/train_state16_poc/flat/checkpoints/best.pt", "size_mb": 7},
+    {"path": "runs/pilot_state16_mppi_stage2c/train_causality_aware/causality_aware/checkpoints/best.pt", "size_mb": 15},
+    {"path": "runs/pilot_state16_mppi_stage2c/train_object_centric/object_centric/checkpoints/best.pt", "size_mb": 10},
+    {"path": "runs/pilot_state16_mppi_stage2c/train_flat/flat/checkpoints/best.pt", "size_mb": 7},
+    {"path": "runs/pilot_state16_mppi_stage2c/train_flat_sanity/flat/checkpoints/best.pt", "size_mb": 7}
+  ],
+  "important_assets": {
+    "learned_rollout_stack": "src/planners/rollout_model.py, src/planners/mppi.py",
+    "mppi_stage2c_state16_pilot": "data/sim/mppi_stage2c_state16/",
+    "three_model_training": "configs/train/causality_aware.yaml, flat_high_level.yaml, object_centric_noncausal.yaml",
+    "visual_state_v2": "configs/state_schema/visual_structured_state_v2.yaml",
+    "split_yaml": "configs/splits/mppi_stage2c_state16_pilot.yaml"
+  },
+  "backup_note": "Large files NOT committed to GitHub. Backup separately to external drive, cloud storage, or Git LFS."
+}

@@ -50,13 +50,36 @@ def check_profiles(path, schema_path):
             all_feats.add(feat["name"])
 
     issues = []
-    for name, prof in profiles.get("profiles", {}).items():
-        if "status" in prof and prof["status"] == "FORBIDDEN":
+    expanded_profiles = {}  # name -> set of feature names
+
+    def expand_profile(pname, visited=None):
+        if visited is None:
+            visited = set()
+        if pname in visited:
+            return set()
+        visited.add(pname)
+        prof = profiles.get("profiles", {}).get(pname, {})
+        if prof.get("status") == "FORBIDDEN":
+            return set()
+        feats = set()
+        for entry in prof.get("includes", []):
+            # Handle profile references
+            if entry in profiles.get("profiles", {}):
+                feats |= expand_profile(entry, visited)
+            else:
+                # Handle semicolon-separated or comma-separated feature names
+                for part in entry.replace(",", ";").split(";"):
+                    part = part.strip()
+                    if part:
+                        feats.add(part)
+        return feats
+
+    for name in profiles.get("profiles", {}):
+        if profiles["profiles"][name].get("status") == "FORBIDDEN":
             continue
-        for feat_name in prof.get("includes", []):
-            # Skip "all" and references
-            if feat_name in ("all",) or feat_name.startswith("visual_"):
-                continue
+        expanded = expand_profile(name)
+        expanded_profiles[name] = expanded
+        for feat_name in expanded:
             if feat_name not in all_feats:
                 issues.append(f"Profile {name}: feature '{feat_name}' not in schema")
     return issues
