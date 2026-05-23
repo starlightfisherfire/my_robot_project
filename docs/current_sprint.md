@@ -1,12 +1,12 @@
 # Current Sprint Control Console
 
-**Last updated:** 2026-05-23 (v3: self-check PASS + smoke expansion)
+**Last updated:** 2026-05-24 (v4: family_holdout + closed-loop readiness)
 
 ---
 
 ## 1. Current Stage
 
-**Phase:** Learned MPC internal smoke expansion (3-10 episodes)
+**Phase:** 16D pilot verification complete → MuJoCo closed-loop smoke preparation
 
 ---
 
@@ -14,52 +14,43 @@
 
 | Gate | Name | Status | Evidence |
 |------|------|--------|----------|
-| 0 | Repo/Config consistency | ✅ PASS | train configs filled, self_check passes |
-| 1 | MuJoCo env/reset/step | ✅ PASS | Gate 4 passed |
-| 2 | Oracle-MPC ID/open | ✅ PASS | boundary_video_night2 mm-level |
-| 3 | Oracle-MPC layout OOD | ⚠️ PARTIAL | mppi_stage2c 94.3% passage |
-| 4 | canonical_state16 data | ⚠️ PARTIAL | 54 eps, success=False, smoke-usable |
-| 5 | high-level model train smoke | ✅ PASS | train_state16_poc passed |
-| 6 | learned rollout interface | ✅ PASS | check_model_interfaces.py all pass |
-| 6A | learned rollout stack self-check | ✅ PASS | runs/self_check JSON 2026-05-23 |
-| 6B | learned MPC internal smoke | ✅ PASS | smoke_pass=true, planned<zero |
-| 7 | learned MPC 3-10 eps smoke | 🔧 RUNNING | expanding to verify stability |
-| 8 | flat/object/causal OOD compare | ❌ FAIL | No OOD data |
-| 9 | Real robot validation | ❌ UNKNOWN | No real data |
+| 0 | Repo/Config consistency | ✅ PASS | All checks pass |
+| 1-6 | Various | ✅ PASS | All passed |
+| 6A | Learned rollout stack self-check | ✅ PASS | self_check JSON |
+| 6B | Learned MPC internal smoke | ✅ PASS | smoke_pass=true |
+| 7A | Training artifact precheck | ✅ PASS | eval_precheck.json |
+| 7B | Offline dynamics eval | ✅ PASS | random_split + family_holdout |
+| 8 | Learned MPC internal eval | ✅ PASS | random_split + family_holdout |
+| 9 | Pilot report | ✅ DONE | docs/pilot_state16_mppi_stage2c_report.md |
+| 10 | Family holdout verification | ✅ DONE | Finding supported |
+| 11 | Closed-loop readiness | ✅ PASS | ready to implement smoke |
 
 ---
 
-## 3. Self-Check PASS Record
+## 3. Key Findings (PILOT)
 
-**报告路径：** `runs/self_check/learned_rollout_stack_self_check.json`
+**causality_aware multi-step rollout stability advantage holds on held-out families:**
+- Random split: Rollout@20 = 0.00108 vs flat 0.00386 (3.6×)
+- Family holdout: Rollout@20 = 0.00253 vs flat 0.00397 (1.57×)
 
-| Check | Status |
-|-------|--------|
-| repo_import_check | ✅ PASS |
-| py_compile_check | ✅ PASS |
-| dummy_interface_check | ✅ PASS |
-| cost_fn_check | ✅ PASS |
-| dataset_check | ✅ PASS |
-| checkpoint_check | ✅ PASS |
-| learned_mpc_smoke_check | ✅ PASS |
+**flat has higher short-horizon cost improvement:**
+- Both splits: flat mean_cost_improvement > causality_aware
 
-**overall_status: PASS**
+**Trade-off is real:** one-step accuracy vs long-horizon stability
 
 ---
 
-## 4. Current Task
+## 4. Next Steps
 
-1. ✅ Record PASS state in docs
-2. 🔧 Run 3-episode learned MPC internal smoke
-3. 🔧 Run 10-episode learned MPC internal smoke
-4. ⬜ Data quality audit (state16_transition_audit)
-5. ⬜ Decision: train three models or re-collect data
+1. Implement `scripts/run_learned_mujoco_closed_loop.py`
+2. Run 5-template closed-loop smoke with causality_aware
+3. Compare closed-loop success rates across models
+4. Scale to full test set
 
 ---
 
 ## 5. What NOT To Do
 
-- ❌ 大规模训练
-- ❌ OOD eval
-- ❌ 真机实验
-- ❌ 把 run_learned_mpc_eval.py 的 success_rate 当论文结果
+- ❌ Write as paper main result
+- ❌ Claim causal variables discovered
+- ❌ Run large-scale MuJoCo sweep yet

@@ -143,6 +143,8 @@ def main():
                         choices=["flat", "object_centric", "causality_aware"])
     parser.add_argument("--normalizer", default=None, help="Path to normalizer .json")
     parser.add_argument("--split", default=None, help="Split filter (e.g. train_sim_id)")
+    parser.add_argument("--split-file", default=None, help="YAML split file with episode_id lists")
+    parser.add_argument("--split-name", default=None, help="Split name from split-file (e.g. family_holdout_split/test_ood)")
     parser.add_argument("--dataset-dir", default=None, help="Dataset directory (default: data/sim/layout_ood_state16_v0)")
     parser.add_argument("--max-templates", type=int, default=3)
     parser.add_argument("--horizon", type=int, default=10)
@@ -206,6 +208,18 @@ def main():
 
     with open(meta_path) as f:
         all_episodes = [json.loads(line) for line in f if line.strip()]
+
+    # Filter by split-file if provided
+    if args.split_file and args.split_name:
+        import yaml
+        with open(args.split_file) as f:
+            split_cfg = yaml.safe_load(f)
+        parts = args.split_name.split("/")
+        split_key = parts[0]
+        sub_key = parts[1] if len(parts) > 1 else "test"
+        episode_ids = set(split_cfg["splits"][split_key][sub_key])
+        all_episodes = [ep for ep in all_episodes if ep["episode_id"] in episode_ids]
+        print(f"  Filtered by split-file: {args.split_file}/{args.split_name} → {len(all_episodes)} episodes")
 
     # Filter by split
     requested_split = args.split

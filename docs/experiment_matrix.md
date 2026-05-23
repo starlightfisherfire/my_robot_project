@@ -135,3 +135,17 @@ normalizer: fit on train only
 | flat | | | | |
 | object_centric | | | | |
 | causality_aware | | | | |
+
+---
+
+## v2 Schema Framework (2026-05-24)
+
+The `visual_structured_state_v2` framework is a parallel schema expansion:
+- Object tokens, relation tokens, temporal history, proprio action
+- Visual nuisance variables (color, light, texture)
+- Privileged physics (mass, friction, contact) — NOT main input
+- Profile-based ablation system
+- v2_to_state16 adapter for backward compatibility
+
+**Status:** FRAMEWORK SKELETON — not yet used for training
+**Next:** Complete 16D pilot first, then enable v2 profiles
