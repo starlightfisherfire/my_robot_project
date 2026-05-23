@@ -1,0 +1,16 @@
+=== Large Files Audit ===
+Date: 2026-05-24 02:09 CST
+
+>100MB: NONE
+>50MB: NONE
+>10MB:
+  15M ./runs/train_state16_poc/causality_aware/checkpoints/best.pt
+  15M ./runs/pilot_state16_mppi_stage2c/train_causality_aware/causality_aware/checkpoints/best.pt
+
+Classification:
+  - checkpoint: 2 files (*.pt, excluded by .gitignore)
+  - dataset: 0
+  - video: 0
+  - compressed archive: 0
+
+Risk: LOW — all large files excluded by .gitignore

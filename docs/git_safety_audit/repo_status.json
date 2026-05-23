@@ -1,0 +1,24 @@
+{
+  "date": "2026-05-24T02:09:00+08:00",
+  "project": "~/my_robot_project",
+  "pwd": "/home/brucewu/my_robot_project",
+  "branch": "main",
+  "latest_commit": "46cd965",
+  "remote_configured": false,
+  "untracked_count": 0,
+  "modified_count": 1,
+  "deleted_count": 0,
+  "modified_files": ["configs/state_schema/state_profiles.yaml"],
+  "top_dirs_mb": {
+    "runs": 885,
+    "data": 196,
+    "artifacts": 20,
+    "experiments": 5.4,
+    "scripts": 2.6,
+    "design": 2.0,
+    "archive": 1.9,
+    "docs": 1.0,
+    "src": 1.0,
+    "configs": 0.14
+  }
+}

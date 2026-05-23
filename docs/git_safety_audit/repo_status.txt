@@ -1,0 +1,24 @@
+=== Git Safety Audit — Phase 0 ===
+Date: 2026-05-24 02:09 CST
+Project: ~/my_robot_project
+
+1. pwd: /home/brucewu/my_robot_project
+2. branch: main
+3. latest commit: 46cd965 chore: pre-push snapshot
+4. remote: NONE CONFIGURED
+5. status:
+   - untracked: 0
+   - modified: 1 (configs/state_schema/state_profiles.yaml)
+   - deleted: 0
+6. diff: 1 file, +41/-12 lines
+7. top-level sizes:
+   - runs/: 885M
+   - data/: 196M
+   - artifacts/: 20M
+   - experiments/: 5.4M
+   - scripts/: 2.6M
+   - design/: 2.0M
+   - archive/: 1.9M
+   - docs/: 1012K
+   - src/: 980K
+   - configs/: 140K
