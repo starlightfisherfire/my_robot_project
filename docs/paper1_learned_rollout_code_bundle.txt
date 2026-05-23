@@ -1,0 +1,3102 @@
+==========================================
+FILE: src/planners/rollout_model.py
+==========================================
+# src/planners/rollout_model.py
+"""
+Learned rollout model for Paper 1.
+
+Wraps a trained RIGWorldModel (encoder + dynamics_head) to provide
+multi-step rollout predictions for CEM-MPC planning.
+
+Key design:
+    - LearnedRolloutModel wraps a trained model checkpoint
+    - forward_step: single-step prediction (state + action → delta_pose)
+    - rollout_sequence: multi-step rollout (initial_state + action_seq → trajectory)
+    - State update is explicit object-pose based (not full token update)
+    - Compatible with CEMMPC cost_fn interface
+
+Limitations (v0.1):
+    - State update only modifies manipulated_object token (index 1)
+    - EE position is updated by action accumulation
+    - History window is updated by shifting and appending
+    - Obstacle tokens are not updated (static obstacles)
+    - No learned dynamics for EE or obstacle movement
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Optional
+
+import numpy as np
+import torch
+import torch.nn as nn
+
+
+# Token indices in canonical_state16 [H, N, D]
+IDX_EE = 0
+IDX_OBJ = 1
+IDX_GOAL = 2
+
+# Feature indices in D=16
+FEAT_X = 0
+FEAT_Y = 1
+FEAT_SIN_THETA = 2
+FEAT_COS_THETA = 3
+FEAT_VX = 4
+FEAT_VY = 5
+FEAT_OMEGA = 6
+FEAT_VALID = 15
+
+
+def _wrap_angle(angle: np.ndarray) -> np.ndarray:
+    """Wrap angle to [-pi, pi]."""
+    return np.arctan2(np.sin(angle), np.cos(angle))
+
+
+@dataclass
+class LearnedRolloutStepResult:
+    """Result of a single learned rollout step."""
+    delta_pose: np.ndarray       # [3] = [dx, dy, dtheta]
+    pred_object_pose: np.ndarray # [3] = [x, y, theta]
+
+
+@dataclass
+class LearnedRolloutResult:
+    """Result of a multi-step learned rollout."""
+    object_traj: np.ndarray  # [horizon+1, 3] object poses (includes initial)
+    delta_traj: np.ndarray   # [horizon, 3] predicted deltas
+    ee_traj: np.ndarray      # [horizon+1, 2] EE positions (includes initial)
+
+
+class LearnedRolloutModel:
+    """
+    Learned rollout model wrapping a trained RIGWorldModel.
+
+    Uses the encoder + dynamics_head to predict object pose changes,
+    then explicitly updates the state for multi-step rollouts.
+    """
+
+    def __init__(
+        self,
+        model: nn.Module,
+        device: torch.device | str = "cpu",
+        normalizer: object | None = None,
+    ):
+        """
+        Args:
+            model: Trained RIGWorldModel (or compatible with encoder + dynamics_head).
+            device: Torch device for inference.
+            normalizer: Optional StateNormalizer for input normalization.
+        """
+        self.model = model
+        self.device = torch.device(device)
+        self.normalizer = normalizer
+
+        self.model.to(self.device)
+        self.model.eval()
+
+        # Cache model dimensions
+        self.z_dim = model.z_dim
+        self.action_dim = model.action_dim
+        self.history_len = model.history_len
+        self.num_tokens = model.num_tokens
+        self.raw_token_dim = model.raw_token_dim
+
+    def _normalize_state(self, state: np.ndarray) -> np.ndarray:
+        """Normalize state if normalizer is provided."""
+        if self.normalizer is not None:
+            return self.normalizer.transform(state)
+        return state
+
+    @torch.no_grad()
+    def forward_step(
+        self,
+        state_tokens: np.ndarray,
+        action: np.ndarray,
+    ) -> LearnedRolloutStepResult:
+        """
+        Single-step learned prediction.
+
+        Args:
+            state_tokens: [H, N, D] or [B, H, N, D] current state history.
+            action: [2] or [B, 2] action.
+
+        Returns:
+            LearnedRolloutStepResult with delta_pose and pred_object_pose.
+        """
+        squeeze = False
+        if state_tokens.ndim == 3:
+            state_tokens = state_tokens[np.newaxis]  # [1, H, N, D]
+            action = action[np.newaxis]  # [1, 2]
+            squeeze = True
+
+        # Normalize
+        state_norm = self._normalize_state(state_tokens)
+
+        # To tensors
+        state_t = torch.from_numpy(state_norm).float().to(self.device)
+        action_t = torch.from_numpy(action).float().to(self.device)
+
+        # Forward
+        out = self.model(state_t, action_t)
+
+        delta_pose = out["pred_delta"].cpu().numpy()  # [B, 3]
+
+        # Current object pose from last frame, token index 1
+        current_obj = state_tokens[:, -1, IDX_OBJ, :]  # [B, D]
+        current_xy = current_obj[:, [FEAT_X, FEAT_Y]]  # [B, 2]
+        current_theta = np.arctan2(
+            current_obj[:, FEAT_SIN_THETA],
+            current_obj[:, FEAT_COS_THETA],
+        )  # [B]
+
+        # Predicted next pose
+        pred_xy = current_xy + delta_pose[:, :2]
+        pred_theta = _wrap_angle(current_theta + delta_pose[:, 2])
+        pred_object_pose = np.stack([
+            pred_xy[:, 0], pred_xy[:, 1], pred_theta
+        ], axis=-1)  # [B, 3]
+
+        if squeeze:
+            delta_pose = delta_pose[0]
+            pred_object_pose = pred_object_pose[0]
+
+        return LearnedRolloutStepResult(
+            delta_pose=delta_pose,
+            pred_object_pose=pred_object_pose,
+        )
+
+    @torch.no_grad()
+    def rollout_sequence(
+        self,
+        initial_state: np.ndarray,
+        action_seq: np.ndarray,
+    ) -> LearnedRolloutResult:
+        """
+        Multi-step rollout using learned dynamics.
+
+        Args:
+            initial_state: [H, N, D] or [B, H, N, D] initial state history.
+            action_seq: [horizon, action_dim] or [B, horizon, action_dim]
+
+        Returns:
+            LearnedRolloutResult with object_traj, delta_traj, ee_traj.
+        """
+        squeeze = False
+        if initial_state.ndim == 3:
+            initial_state = initial_state[np.newaxis]  # [1, H, N, D]
+            action_seq = action_seq[np.newaxis]  # [1, horizon, action_dim]
+            squeeze = True
+
+        B = initial_state.shape[0]
+        horizon = action_seq.shape[1]
+
+        # Initialize trajectories
+        # Initial object pose from last frame
+        init_obj = initial_state[:, -1, IDX_OBJ, :]  # [B, D]
+        init_xy = init_obj[:, [FEAT_X, FEAT_Y]]  # [B, 2]
+        init_theta = np.arctan2(
+            init_obj[:, FEAT_SIN_THETA],
+            init_obj[:, FEAT_COS_THETA],
+        )  # [B]
+
+        # Initial EE position
+        init_ee = initial_state[:, -1, IDX_EE, :]  # [B, D]
+        init_ee_xy = init_ee[:, [FEAT_X, FEAT_Y]]  # [B, 2]
+
+        object_traj = np.zeros((B, horizon + 1, 3), dtype=np.float64)
+        delta_traj = np.zeros((B, horizon, 3), dtype=np.float64)
+        ee_traj = np.zeros((B, horizon + 1, 2), dtype=np.float64)
+
+        object_traj[:, 0] = np.stack([init_xy[:, 0], init_xy[:, 1], init_theta], axis=-1)
+        ee_traj[:, 0] = init_ee_xy
+
+        # Current state (will be updated each step)
+        current_state = initial_state.copy()  # [B, H, N, D]
+
+        for t in range(horizon):
+            action_t = action_seq[:, t]  # [B, 2]
+
+            # Predict delta
+            step_result = self.forward_step(current_state, action_t)
+            delta_traj[:, t] = step_result.delta_pose
+            object_traj[:, t + 1] = step_result.pred_object_pose
+
+            # Update EE position: accumulate action
+            ee_traj[:, t + 1] = ee_traj[:, t] + action_t
+
+            # Update state for next step
+            current_state = self._update_state(
+                current_state,
+                step_result.pred_object_pose,
+                ee_traj[:, t + 1],
+            )
+
+        if squeeze:
+            object_traj = object_traj[0]
+            delta_traj = delta_traj[0]
+            ee_traj = ee_traj[0]
+
+        return LearnedRolloutResult(
+            object_traj=object_traj,
+            delta_traj=delta_traj,
+            ee_traj=ee_traj,
+        )
+
+    def _update_state(
+        self,
+        current_state: np.ndarray,
+        new_object_pose: np.ndarray,
+        new_ee_pos: np.ndarray,
+    ) -> np.ndarray:
+        """
+        Update state tokens after a rollout step.
+
+        Updates:
+            - manipulated_object token (index 1): x, y, sin(theta), cos(theta)
+            - end_effector token (index 0): x, y
+            - Shifts history window: drop oldest frame, append updated frame
+
+        Args:
+            current_state: [B, H, N, D]
+            new_object_pose: [B, 3] = [x, y, theta]
+            new_ee_pos: [B, 2] = [x, y]
+
+        Returns:
+            updated_state: [B, H, N, D]
+        """
+        B, H, N, D = current_state.shape
+        updated = current_state.copy()
+
+        # Shift history: drop oldest, duplicate newest
+        updated[:, :-1] = updated[:, 1:]
+        # Now the newest frame is at index H-1 (duplicate of what was H-2)
+        # We'll overwrite it with updated values
+
+        newest = updated[:, -1]  # [B, N, D]
+
+        # Update EE token
+        newest[:, IDX_EE, FEAT_X] = new_ee_pos[:, 0]
+        newest[:, IDX_EE, FEAT_Y] = new_ee_pos[:, 1]
+
+        # Update object token
+        newest[:, IDX_OBJ, FEAT_X] = new_object_pose[:, 0]
+        newest[:, IDX_OBJ, FEAT_Y] = new_object_pose[:, 1]
+        newest[:, IDX_OBJ, FEAT_SIN_THETA] = np.sin(new_object_pose[:, 2])
+        newest[:, IDX_OBJ, FEAT_COS_THETA] = np.cos(new_object_pose[:, 2])
+
+        # Clear velocities (we don't predict them)
+        newest[:, IDX_OBJ, FEAT_VX] = 0.0
+        newest[:, IDX_OBJ, FEAT_VY] = 0.0
+        newest[:, IDX_OBJ, FEAT_OMEGA] = 0.0
+
+        updated[:, -1] = newest
+
+        return updated
+
+    def make_cost_fn_for_cem(
+        self,
+        initial_state: np.ndarray,
+        goal_pose: np.ndarray,
+        weights: object | None = None,
+    ) -> callable:
+        """
+        Create a cost function compatible with CEMMPC.optimize().
+
+        Args:
+            initial_state: [H, N, D] current state history.
+            goal_pose: [3] target object pose.
+            weights: CostWeights or None for defaults.
+
+        Returns:
+            cost_fn(action_sequence) → float
+        """
+        from src.planners.cost_functions import CostWeights, rollout_cost
+
+        if weights is None:
+            weights = CostWeights()
+
+        initial_state = np.asarray(initial_state, dtype=np.float64)
+        goal_pose = np.asarray(goal_pose, dtype=np.float64)
+
+        def cost_fn(action_sequence: np.ndarray) -> float:
+            action_sequence = np.asarray(action_sequence, dtype=np.float64)
+
+            result = self.rollout_sequence(initial_state, action_sequence)
+
+            return rollout_cost(
+                predicted_object_poses=result.object_traj,
+                ee_positions=result.ee_traj,
+                action_sequence=action_sequence,
+                goal_pose=goal_pose,
+                weights=weights,
+            )
+
+        return cost_fn
+
+
+def load_learned_rollout_model(
+    checkpoint_path: str,
+    model_type: str = "flat",
+    device: str = "cpu",
+    normalizer_path: str | None = None,
+) -> LearnedRolloutModel:
+    """
+    Load a trained RIGWorldModel from checkpoint and wrap as LearnedRolloutModel.
+
+    Args:
+        checkpoint_path: Path to .pt checkpoint.
+        model_type: One of "flat", "object_centric", "causality_aware".
+        device: Torch device.
+        normalizer_path: Optional path to normalizer JSON.
+
+    Returns:
+        LearnedRolloutModel ready for rollout.
+    """
+    import torch
+    from src.models.rig_world import RIGWorldModel
+    from src.data.state_normalizer import StateNormalizer
+
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
+
+    # Infer model config from checkpoint or use defaults
+    model = RIGWorldModel(
+        model_type=model_type,
+        history_len=6,
+        num_tokens=6,
+        raw_token_dim=16,
+        action_dim=2,
+        gru_hidden=256,
+        head_hidden_dim=256,
+    )
+
+    model.load_state_dict(checkpoint["model_state_dict"])
+    model.to(device)
+    model.eval()
+
+    normalizer = None
+    if normalizer_path is not None:
+        normalizer = StateNormalizer.load(normalizer_path)
+
+    return LearnedRolloutModel(
+        model=model,
+        device=device,
+        normalizer=normalizer,
+    )
+
+==========================================
+FILE: configs/train/rig_world_shared.yaml
+==========================================
+# configs/train/rig_world_shared.yaml
+# Shared config for Paper 1 high-level representation training.
+# All three encoder variants (flat, object_centric, causality_aware)
+# must conform to these shared dimensions and interface contracts.
+
+version: "0.1"
+
+experiment:
+  seed: 42
+  purpose: "Paper 1 main training config"
+
+# === State Schema ===
+state:
+  shape: [6, 6, 16]           # [H, N, D] = [history_len, num_tokens, raw_token_dim]
+  history_len: 6
+  num_tokens: 6
+  raw_token_dim: 16
+  token_order:
+    0: end_effector
+    1: manipulated_object
+    2: goal
+    3: obstacle_1
+    4: obstacle_2
+    5: obstacle_3
+  # Token feature schema (D=16):
+  #   0  x
+  #   1  y
+  #   2  sin(theta)
+  #   3  cos(theta)
+  #   4  vx
+  #   5  vy
+  #   6  omega
+  #   7  size_x
+  #   8  size_y
+  #   9  shape_T
+  #  10  shape_L
+  #  11  shape_other
+  #  12  mass_norm
+  #  13  friction_norm
+  #  14  contact_flag
+  #  15  valid_flag
+  valid_flag_index: 15
+
+# === Action Schema ===
+action:
+  dim: 2
+  type: "planar_push_delta"
+  description: "[dx_ee, dy_ee] planar end-effector displacement"
+
+# === Model Interface Contract ===
+model:
+  z_dim: 256                  # encoder output dim, shared by all variants
+  gru_hidden: 256             # GRU hidden size
+  head_hidden_dim: 256        # dynamics/subgoal head hidden dim
+  action_emb_dim: 64          # not used in v0.1 (action concat directly)
+  dynamics_output_dim: 3      # [dx_obj, dy_obj, dtheta_obj]
+  subgoal_output_dim: 3       # [dx_goal, dy_goal, dtheta_goal]
+  frame_embed_dim: 128        # per-frame MLP embedding dim
+
+# === Normalizer ===
+normalizer:
+  enabled: true
+  fit_on: train_only
+  continuous_indices: [0, 1, 4, 5, 6, 7, 8, 12, 13]
+  valid_flag_index: 15
+
+# === Training ===
+train:
+  batch_size: 128
+  lr: 0.0003
+  weight_decay: 0.000001
+  grad_clip_norm: 1.0
+  device: cuda
+  num_workers: 0
+  epochs_smoke: 2
+  epochs_poc: 5
+  epochs_full: 50
+  w_dynamics: 1.0
+  w_subgoal: 0.2
+
+# === Eval ===
+eval:
+  metrics:
+    - dynamics_mse
+    - dynamics_rmse
+    - subgoal_mse
+    - subgoal_rmse
+  rollout_horizons: [1, 5, 10]
+
+==========================================
+FILE: configs/train/flat_high_level.yaml
+==========================================
+# configs/train/flat_high_level.yaml
+# Flat (non-causal) high-level encoder config.
+# Inherits shared dimensions from rig_world_shared.yaml.
+
+inherits: configs/train/rig_world_shared.yaml
+
+encoder:
+  type: flat
+  description: >
+    FlatEncoder: flatten all tokens per frame → MLP → GRU over history.
+    No object-centric structure, no causal decomposition.
+    Serves as lower-bound baseline.
+
+  # FlatEncoder-specific params
+  frame_embed_dim: 128
+  gru_hidden: 256
+
+# Output interface must match shared contract:
+#   z: [B, 256]
+#   pred_delta: [B, 3]
+#   pred_subgoal: [B, 3]
+
+==========================================
+FILE: configs/train/object_centric_noncausal.yaml
+==========================================
+# configs/train/object_centric_noncausal.yaml
+# Object-centric (non-causal) high-level encoder config.
+# Inherits shared dimensions from rig_world_shared.yaml.
+
+inherits: configs/train/rig_world_shared.yaml
+
+encoder:
+  type: object_centric
+  description: >
+    ObjectCentricEncoder: per-token MLP + token-type embedding +
+    Transformer over object tokens per frame + masked mean pooling +
+    GRU over history. Objects are treated independently, no causal
+    decomposition into stable/dynamics/affordance/nuisance slots.
+
+  d_model: 128
+  transformer_layers: 2
+  nhead: 4
+  ffn_dim: 256
+  gru_hidden: 256
+  valid_flag_index: 15
+  dropout: 0.1
+
+# Output interface must match shared contract:
+#   z: [B, 256]
+#   pred_delta: [B, 3]
+#   pred_subgoal: [B, 3]
+
+==========================================
+FILE: configs/train/causality_aware.yaml
+==========================================
+# configs/train/causality_aware.yaml
+# Causality-aware object-level high-level encoder config.
+# Inherits shared dimensions from rig_world_shared.yaml.
+
+inherits: configs/train/rig_world_shared.yaml
+
+encoder:
+  type: causality_aware
+  description: >
+    CausalityAwareEncoder: per-token MLP + token-type embedding +
+    Transformer with causal slot decomposition: z_stable, z_dynamics,
+    z_affordance, z_nuisance. Slots are concatenated to form z.
+    The causal decomposition is the key research hypothesis of Paper 1.
+
+  d_model: 128
+  transformer_layers: 2
+  nhead: 4
+  ffn_dim: 256
+  gru_hidden: 256
+  slot_dim: 32
+  valid_flag_index: 15
+  dropout: 0.1
+
+# Output interface must match shared contract:
+#   z: [B, 256]  (concat of 4 slots × 64 or gru_hidden)
+#   pred_delta: [B, 3]
+#   pred_subgoal: [B, 3]
+#
+# Diagnostic outputs (when return_slots=True):
+#   z_stable:     [B, 32]
+#   z_dynamics:   [B, 32]
+#   z_affordance: [B, 32]
+#   z_nuisance:   [B, 32]
+
+==========================================
+FILE: scripts/check_model_interfaces.py
+==========================================
+#!/usr/bin/env python3
+"""
+check_model_interfaces.py — Verify Paper 1 model interface contracts.
+
+Checks:
+    1. All three encoders produce same output shape [B, z_dim]
+    2. DynamicsHead output shape [B, 3]
+    3. SubgoalHead output shape [B, 3]
+    4. RIGWorldModel unified interface works for all variants
+    5. LearnedRolloutModel forward_step and rollout_sequence work
+
+Usage:
+    python scripts/check_model_interfaces.py
+"""
+
+import sys
+from pathlib import Path
+
+import numpy as np
+import torch
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+from src.models.rig_world import RIGWorldModel
+from src.models.encoders import FlatEncoder, ObjectCentricEncoder, CausalityAwareEncoder
+from src.models.heads import DynamicsHead, SubgoalHead
+
+
+def check_encoders():
+    """Check all three encoders produce same output shape."""
+    print("=" * 60)
+    print("CHECK 1: Encoder output shapes")
+    print("=" * 60)
+
+    B, H, N, D = 2, 6, 6, 16
+    x = torch.randn(B, H, N, D)
+    # Set valid flags (index 15) so ObjectCentric/CausalityAware encoders work
+    x[:, :, :, 15] = 1.0
+    z_dim = 256
+
+    encoders = {
+        "flat": FlatEncoder(history_len=H, num_tokens=N, raw_token_dim=D, gru_hidden=z_dim),
+        "object_centric": ObjectCentricEncoder(history_len=H, num_tokens=N, raw_token_dim=D, gru_hidden=z_dim),
+        "causality_aware": CausalityAwareEncoder(history_len=H, num_tokens=N, raw_token_dim=D, gru_hidden=z_dim),
+    }
+
+    all_pass = True
+    for name, enc in encoders.items():
+        enc.eval()
+        with torch.no_grad():
+            z = enc(x)
+        ok = z.shape == (B, z_dim)
+        status = "✅" if ok else "❌"
+        print(f"  {status} {name}: z.shape = {tuple(z.shape)} (expected [{B}, {z_dim}])")
+        if not ok:
+            all_pass = False
+
+    return all_pass
+
+
+def check_heads():
+    """Check dynamics and subgoal heads."""
+    print("\n" + "=" * 60)
+    print("CHECK 2: Head output shapes")
+    print("=" * 60)
+
+    B, z_dim, action_dim = 2, 256, 2
+    z = torch.randn(B, z_dim)
+    action = torch.randn(B, action_dim)
+
+    dyn_head = DynamicsHead(z_dim=z_dim, action_dim=action_dim)
+    sub_head = SubgoalHead(z_dim=z_dim)
+
+    dyn_head.eval()
+    sub_head.eval()
+
+    with torch.no_grad():
+        delta = dyn_head(z, action)
+        subgoal = sub_head(z)
+
+    ok_delta = delta.shape == (B, 3)
+    ok_subgoal = subgoal.shape == (B, 3)
+
+    print(f"  {'✅' if ok_delta else '❌'} DynamicsHead: delta.shape = {tuple(delta.shape)} (expected [{B}, 3])")
+    print(f"  {'✅' if ok_subgoal else '❌'} SubgoalHead: subgoal.shape = {tuple(subgoal.shape)} (expected [{B}, 3])")
+
+    return ok_delta and ok_subgoal
+
+
+def check_rig_world_model():
+    """Check RIGWorldModel unified interface for all variants."""
+    print("\n" + "=" * 60)
+    print("CHECK 3: RIGWorldModel unified interface")
+    print("=" * 60)
+
+    B, H, N, D, action_dim = 2, 6, 6, 16, 2
+    x = torch.randn(B, H, N, D)
+    x[:, :, :, 15] = 1.0  # Set valid flags
+    action = torch.randn(B, action_dim)
+
+    all_pass = True
+    for model_type in ["flat", "object_centric", "causality_aware"]:
+        model = RIGWorldModel(model_type=model_type, action_dim=action_dim)
+        model.eval()
+        with torch.no_grad():
+            out = model(x, action)
+
+        ok_z = out["z"].shape == (B, 256)
+        ok_delta = out["pred_delta"].shape == (B, 3)
+        ok_subgoal = out["pred_subgoal"].shape == (B, 3)
+        ok = ok_z and ok_delta and ok_subgoal
+
+        print(f"  {'✅' if ok else '❌'} {model_type}:")
+        print(f"      z.shape = {tuple(out['z'].shape)}")
+        print(f"      pred_delta.shape = {tuple(out['pred_delta'].shape)}")
+        print(f"      pred_subgoal.shape = {tuple(out['pred_subgoal'].shape)}")
+
+        if model_type == "causality_aware":
+            model.eval()
+            with torch.no_grad():
+                out_slots = model(x, action, return_slots=True)
+            for slot in ["z_stable", "z_dynamics", "z_affordance", "z_nuisance"]:
+                print(f"      {slot}.shape = {tuple(out_slots[slot].shape)}")
+
+        if not ok:
+            all_pass = False
+
+    return all_pass
+
+
+def check_learned_rollout():
+    """Check LearnedRolloutModel forward_step and rollout_sequence."""
+    print("\n" + "=" * 60)
+    print("CHECK 4: LearnedRolloutModel")
+    print("=" * 60)
+
+    from src.planners.rollout_model import LearnedRolloutModel
+
+    H, N, D, action_dim = 6, 6, 16, 2
+    state = np.random.randn(H, N, D).astype(np.float32)
+    # Set valid flags
+    state[:, :, 15] = 1.0
+
+    model = RIGWorldModel(model_type="flat", action_dim=action_dim)
+    model.eval()
+
+    rollout = LearnedRolloutModel(model=model, device="cpu")
+
+    # Test forward_step
+    action = np.array([0.01, -0.01], dtype=np.float32)
+    step_result = rollout.forward_step(state, action)
+    print(f"  ✅ forward_step:")
+    print(f"      delta_pose.shape = {step_result.delta_pose.shape}")
+    print(f"      pred_object_pose.shape = {step_result.pred_object_pose.shape}")
+
+    # Test rollout_sequence
+    horizon = 10
+    action_seq = np.random.randn(horizon, action_dim).astype(np.float32) * 0.01
+    result = rollout.rollout_sequence(state, action_seq)
+    print(f"  ✅ rollout_sequence (horizon={horizon}):")
+    print(f"      object_traj.shape = {result.object_traj.shape}")
+    print(f"      delta_traj.shape = {result.delta_traj.shape}")
+    print(f"      ee_traj.shape = {result.ee_traj.shape}")
+
+    # Verify shapes
+    ok_obj = result.object_traj.shape == (horizon + 1, 3)
+    ok_delta = result.delta_traj.shape == (horizon, 3)
+    ok_ee = result.ee_traj.shape == (horizon + 1, 2)
+    ok = ok_obj and ok_delta and ok_ee
+
+    print(f"  {'✅' if ok else '❌'} Shape verification: {'PASS' if ok else 'FAIL'}")
+
+    return ok
+
+
+def check_batch_rollout():
+    """Check batched rollout."""
+    print("\n" + "=" * 60)
+    print("CHECK 5: Batched rollout")
+    print("=" * 60)
+
+    from src.planners.rollout_model import LearnedRolloutModel
+
+    B, H, N, D, action_dim = 3, 6, 6, 16, 2
+    state = np.random.randn(B, H, N, D).astype(np.float32)
+    state[:, :, :, 15] = 1.0
+
+    model = RIGWorldModel(model_type="flat", action_dim=action_dim)
+    model.eval()
+
+    rollout = LearnedRolloutModel(model=model, device="cpu")
+
+    horizon = 5
+    action_seq = np.random.randn(B, horizon, action_dim).astype(np.float32) * 0.01
+    result = rollout.rollout_sequence(state, action_seq)
+
+    ok_obj = result.object_traj.shape == (B, horizon + 1, 3)
+    ok_delta = result.delta_traj.shape == (B, horizon, 3)
+    ok_ee = result.ee_traj.shape == (B, horizon + 1, 2)
+    ok = ok_obj and ok_delta and ok_ee
+
+    print(f"  {'✅' if ok else '❌'} Batch rollout (B={B}, horizon={horizon}):")
+    print(f"      object_traj.shape = {result.object_traj.shape}")
+    print(f"      delta_traj.shape = {result.delta_traj.shape}")
+    print(f"      ee_traj.shape = {result.ee_traj.shape}")
+
+    return ok
+
+
+def main():
+    print("Paper 1 Model Interface Check")
+    print("=" * 60)
+
+    results = {
+        "encoders": check_encoders(),
+        "heads": check_heads(),
+        "rig_world": check_rig_world_model(),
+        "rollout_single": check_learned_rollout(),
+        "rollout_batch": check_batch_rollout(),
+    }
+
+    print("\n" + "=" * 60)
+    print("SUMMARY")
+    print("=" * 60)
+    all_pass = True
+    for name, ok in results.items():
+        status = "✅ PASS" if ok else "❌ FAIL"
+        print(f"  {status}: {name}")
+        if not ok:
+            all_pass = False
+
+    if all_pass:
+        print("\n🎉 ALL CHECKS PASSED")
+    else:
+        print("\n⚠️ SOME CHECKS FAILED")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
+
+==========================================
+FILE: scripts/audit_state16_dataset.py
+==========================================
+#!/usr/bin/env python3
+"""
+audit_state16_dataset.py — Audit state16 dataset for Paper 1.
+
+Scans data/sim/layout_ood_state16_* directories and reports:
+    - Episode count by split/family/shape/success
+    - Sample count per dataset
+    - Which datasets can be used for training smoke
+    - Which datasets cannot be used for main results
+
+Usage:
+    python scripts/audit_state16_dataset.py [--max-print 20]
+"""
+
+import argparse
+import json
+from collections import Counter, defaultdict
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+def scan_dataset(base_dir: Path) -> dict:
+    """Scan a state16 dataset directory."""
+    meta_path = base_dir / "metadata" / "episodes.jsonl"
+    ep_dir = base_dir / "episodes"
+
+    if not meta_path.exists():
+        return {"path": str(base_dir), "error": "no episodes.jsonl"}
+
+    with open(meta_path) as f:
+        episodes = [json.loads(line) for line in f if line.strip()]
+
+    # Count .npz files
+    npz_files = list(ep_dir.glob("*.npz")) if ep_dir.exists() else []
+
+    # Statistics
+    families = Counter(ep.get("family", "unknown") for ep in episodes)
+    splits = Counter(ep.get("split_name", "unknown") for ep in episodes)
+    successes = Counter(ep.get("success", False) for ep in episodes)
+    obstacles = Counter(ep.get("num_obstacles", 0) for ep in episodes)
+
+    # Sample count (approximate)
+    total_transitions = sum(ep.get("num_transitions", 0) for ep in episodes)
+
+    return {
+        "path": str(base_dir),
+        "episodes": len(episodes),
+        "npz_files": len(npz_files),
+        "families": dict(families),
+        "splits": dict(splits),
+        "success_true": successes.get(True, 0),
+        "success_false": successes.get(False, 0),
+        "obstacles": dict(obstacles),
+        "total_transitions": total_transitions,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max-print", type=int, default=20)
+    args = parser.parse_args()
+
+    # Find all state16 datasets
+    sim_dir = REPO_ROOT / "data" / "sim"
+    datasets = sorted(sim_dir.glob("layout_ood_state16_*"))
+
+    if not datasets:
+        print("No layout_ood_state16_* datasets found in data/sim/")
+        return
+
+    print("=" * 80)
+    print("STATE16 DATASET AUDIT")
+    print("=" * 80)
+
+    for ds_dir in datasets:
+        info = scan_dataset(ds_dir)
+        print(f"\n📁 {ds_dir.name}")
+        print(f"   Episodes: {info.get('episodes', 0)}")
+        print(f"   NPZ files: {info.get('npz_files', 0)}")
+        print(f"   Transitions: {info.get('total_transitions', 0)}")
+
+        if "error" in info:
+            print(f"   ❌ Error: {info['error']}")
+            continue
+
+        print(f"   Families: {info['families']}")
+        print(f"   Splits: {info['splits']}")
+        print(f"   Success: True={info['success_true']}, False={info['success_false']}")
+        print(f"   Obstacles: {info['obstacles']}")
+
+        # Usability assessment
+        n_ep = info["episodes"]
+        n_success = info["success_true"]
+
+        if n_ep >= 50 and n_success > 0:
+            print(f"   ✅ Usable for training + eval")
+        elif n_ep >= 10:
+            print(f"   ⚠️ Usable for smoke test only ({n_ep} episodes, {n_success} success)")
+        else:
+            print(f"   ❌ Too small for meaningful use ({n_ep} episodes)")
+
+    # Summary
+    print("\n" + "=" * 80)
+    print("SUMMARY")
+    print("=" * 80)
+
+    total_eps = 0
+    total_success = 0
+    for ds_dir in datasets:
+        info = scan_dataset(ds_dir)
+        if "error" not in info:
+            total_eps += info["episodes"]
+            total_success += info["success_true"]
+
+    print(f"  Total episodes: {total_eps}")
+    print(f"  Total success: {total_success}")
+    print(f"  Datasets: {len(datasets)}")
+
+    if total_eps < 100:
+        print(f"\n  ⚠️ DATA INSUFFICIENT for main results")
+        print(f"  Need: ~500+ episodes per split for meaningful training")
+        print(f"  Have: {total_eps} episodes total")
+
+    if total_success == 0:
+        print(f"\n  ⚠️ NO SUCCESSFUL EPISODES")
+        print(f"  All data has success=False")
+        print(f"  Training on failed episodes may still learn dynamics,")
+        print(f"  but cannot evaluate task success.")
+
+
+if __name__ == "__main__":
+    main()
+
+==========================================
+FILE: scripts/audit_runs_summary.py
+==========================================
+#!/usr/bin/env python3
+"""
+audit_runs_summary.py — Audit existing runs for Paper 1.
+
+Scans runs/ directory and reports:
+    - Available run types (oracle_mpc, training, mppi, etc.)
+    - Key metrics from manifest.csv / summary files
+    - Whether each run can serve as a main result or just debug
+
+Usage:
+    python scripts/audit_runs_summary.py [--max-print 20]
+"""
+
+import argparse
+import csv
+from collections import defaultdict
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+
+
+def classify_run(run_dir: Path) -> str:
+    """Classify run type based on directory name."""
+    name = run_dir.name.lower()
+    if "mppi" in name:
+        return "mppi_sweep"
+    if "horizon140" in name:
+        return "oracle_mpc_sweep"
+    if "speed_horizon" in name:
+        return "oracle_mpc_sweep"
+    if "dual_obstacle" in name:
+        return "oracle_mpc_sweep"
+    if "heavy_pusher" in name:
+        return "oracle_mpc_sweep"
+    if "best_bh" in name or "best_config" in name:
+        return "oracle_mpc_sweep"
+    if "planner_trio" in name:
+        return "oracle_mpc_sweep"
+    if "train_state16" in name:
+        return "training"
+    if "layout_ood" in name:
+        return "data_collection"
+    if "obstacle" in name:
+        return "obstacle_debug"
+    if "video" in name or "render" in name:
+        return "visualization"
+    if "debug" in name:
+        return "debug"
+    return "unknown"
+
+
+def read_manifest(run_dir: Path) -> list[dict]:
+    """Read manifest.csv if it exists."""
+    manifest_path = run_dir / "manifest.csv"
+    if not manifest_path.exists():
+        return []
+
+    rows = []
+    with open(manifest_path) as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            rows.append(row)
+    return rows
+
+
+def summarize_manifest(rows: list[dict]) -> dict:
+    """Compute summary stats from manifest rows."""
+    if not rows:
+        return {}
+
+    n = len(rows)
+    successes = sum(1 for r in rows if str(r.get("status", "")).lower() == "true"
+                    or str(r.get("success", "")).lower() == "true")
+
+    # Try to get best_dist
+    best_dists = []
+    for r in rows:
+        try:
+            d = float(r.get("best_dist", r.get("best_pos_dist_m", "nan")))
+            if d == d:  # not nan
+                best_dists.append(d)
+        except (ValueError, TypeError):
+            pass
+
+    return {
+        "total_runs": n,
+        "successes": successes,
+        "success_rate": successes / n if n > 0 else 0,
+        "best_dist_min": min(best_dists) if best_dists else None,
+        "best_dist_mean": sum(best_dists) / len(best_dists) if best_dists else None,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max-print", type=int, default=20)
+    args = parser.parse_args()
+
+    runs_dir = REPO_ROOT / "runs"
+    if not runs_dir.exists():
+        print("No runs/ directory found.")
+        return
+
+    # Collect all run directories
+    run_dirs = sorted([d for d in runs_dir.iterdir() if d.is_dir()])
+
+    print("=" * 80)
+    print("RUNS AUDIT SUMMARY")
+    print("=" * 80)
+
+    # Group by type
+    by_type = defaultdict(list)
+    for rd in run_dirs:
+        run_type = classify_run(rd)
+        by_type[run_type].append(rd)
+
+    for run_type, dirs in sorted(by_type.items()):
+        print(f"\n📁 {run_type} ({len(dirs)} runs)")
+
+        for rd in dirs[:args.max_print]:
+            manifest = read_manifest(rd)
+            summary = summarize_manifest(manifest)
+
+            line = f"  {rd.name}"
+            if summary:
+                line += f" | runs={summary['total_runs']}"
+                line += f" | success_rate={summary['success_rate']:.1%}"
+                if summary["best_dist_min"] is not None:
+                    line += f" | best_dist_min={summary['best_dist_min']:.4f}"
+            else:
+                # Check for other files
+                has_csv = any(rd.glob("*.csv"))
+                has_json = any(rd.glob("*.json"))
+                has_log = any(rd.glob("*.log"))
+                extras = []
+                if has_csv:
+                    extras.append("csv")
+                if has_json:
+                    extras.append("json")
+                if has_log:
+                    extras.append("log")
+                if extras:
+                    line += f" | files: {','.join(extras)}"
+
+            print(line)
+
+        if len(dirs) > args.max_print:
+            print(f"  ... and {len(dirs) - args.max_print} more")
+
+    # Usability assessment
+    print("\n" + "=" * 80)
+    print("USABILITY ASSESSMENT")
+    print("=" * 80)
+
+    print("\n  Can serve as Oracle-MPC capacity evidence:")
+    for rd in by_type.get("oracle_mpc_sweep", []):
+        manifest = read_manifest(rd)
+        summary = summarize_manifest(manifest)
+        if summary and summary["success_rate"] > 0:
+            print(f"    ✅ {rd.name} ({summary['success_rate']:.0%} success)")
+
+    print("\n  Can serve as training pipeline evidence:")
+    for rd in by_type.get("training", []):
+        gate_report = rd / "gate_report.md"
+        if gate_report.exists():
+            print(f"    ✅ {rd.name} (gate report exists)")
+
+    print("\n  Can serve as MPPI planner evidence:")
+    for rd in by_type.get("mppi_sweep", []):
+        manifest = read_manifest(rd)
+        summary = summarize_manifest(manifest)
+        if summary and summary["success_rate"] > 0.5:
+            print(f"    ✅ {rd.name} ({summary['success_rate']:.0%} success)")
+
+    print("\n  ⚠️ NOT usable as main results (debug only):")
+    for run_type in ["debug", "visualization", "obstacle_debug", "data_collection"]:
+        for rd in by_type.get(run_type, []):
+            print(f"    ❌ {rd.name}")
+
+
+if __name__ == "__main__":
+    main()
+
+==========================================
+FILE: scripts/run_learned_mpc_eval.py
+==========================================
+#!/usr/bin/env python3
+"""
+run_learned_mpc_eval.py — Evaluate learned rollout + CEM-MPC on Paper 1.
+
+Loads a trained RIGWorldModel checkpoint, constructs a LearnedRolloutModel,
+and evaluates it with CEM-MPC on ID/open_space templates.
+
+Usage:
+    python scripts/run_learned_mpc_eval.py \
+        --checkpoint runs/train_state16_poc/flat/checkpoints/best.pt \
+        --model-type flat \
+        --normalizer runs/train_state16_poc/normalizer_state16.pkl \
+        --split train_sim_id \
+        --max-templates 3 \
+        --out runs/learned_mpc_eval/flat_smoke.json
+"""
+
+import argparse
+import json
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+from src.planners.cem_mpc import CEMMPC
+from src.planners.rollout_model import LearnedRolloutModel, load_learned_rollout_model
+from src.planners.cost_functions import CostWeights
+from src.envs.mujoco_push_env import MujocoPushEnv
+
+
+def load_state16_episode(npz_path: str, history_len: int = 6) -> np.ndarray:
+    """Load a state16 episode and return the initial history window."""
+    data = np.load(npz_path, allow_pickle=True)
+    states = data["states"]  # [T, N, D]
+    if len(states) < history_len:
+        # Pad by repeating first frame
+        pad = np.tile(states[0:1], (history_len - len(states), 1, 1))
+        states = np.concatenate([pad, states], axis=0)
+    return states[:history_len]  # [H, N, D]
+
+
+def get_goal_pose(npz_path: str) -> np.ndarray:
+    """Load goal pose from episode."""
+    data = np.load(npz_path, allow_pickle=True)
+    return data["goal_pose"]  # [3]
+
+
+def run_single_template(
+    rollout_model: LearnedRolloutModel,
+    cem: CEMMPC,
+    state16_path: str,
+    goal_pose: np.ndarray,
+    max_mpc_steps: int = 30,
+    execute_steps: int = 20,
+    pos_threshold: float = 0.02,
+    theta_threshold_deg: float = 10.0,
+) -> dict:
+    """Run learned MPC on a single template/episode."""
+    initial_state = load_state16_episode(state16_path)
+
+    # Build cost function for CEM
+    cost_fn = rollout_model.make_cost_fn_for_cem(
+        initial_state=initial_state,
+        goal_pose=goal_pose,
+        weights=CostWeights(),
+    )
+
+    # Run MPC loop
+    current_state = initial_state.copy()
+    best_dist = float("inf")
+    final_dist = float("inf")
+    mpc_steps_taken = 0
+    collision_count = 0
+
+    for step in range(max_mpc_steps):
+        # Plan
+        first_action, cem_result = cem.plan(cost_fn)
+
+        # Execute: update state based on predicted dynamics
+        # We use the learned model to predict next state
+        step_result = rollout_model.forward_step(current_state, first_action)
+
+        # Update current state
+        current_state = rollout_model._update_state(
+            current_state[np.newaxis],
+            step_result.pred_object_pose[np.newaxis],
+            (current_state[-1, 0, :2] + first_action)[np.newaxis],
+        )[0]
+
+        # Compute distance to goal
+        pred_pose = step_result.pred_object_pose
+        dist = np.sqrt(np.sum((pred_pose[:2] - goal_pose[:2]) ** 2))
+        theta_err = abs(np.arctan2(
+            np.sin(pred_pose[2] - goal_pose[2]),
+            np.cos(pred_pose[2] - goal_pose[2])
+        ))
+
+        best_dist = min(best_dist, dist)
+        final_dist = dist
+        mpc_steps_taken = step + 1
+
+        # Check success
+        if dist < pos_threshold and np.degrees(theta_err) < theta_threshold_deg:
+            break
+
+    return {
+        "final_pos_dist_m": float(final_dist),
+        "best_pos_dist_m": float(best_dist),
+        "final_theta_error_deg": float(np.degrees(theta_err)) if 'theta_err' in dir() else 0.0,
+        "mpc_steps": mpc_steps_taken,
+        "success": bool(final_dist < pos_threshold and np.degrees(theta_err) < theta_threshold_deg),
+        "collision_count": collision_count,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--checkpoint", required=True, help="Path to model checkpoint .pt")
+    parser.add_argument("--model-type", required=True, choices=["flat", "object_centric", "causality_aware"])
+    parser.add_argument("--normalizer", default=None, help="Path to normalizer .pkl")
+    parser.add_argument("--split", default="train_sim_id", help="Split to evaluate")
+    parser.add_argument("--max-templates", type=int, default=3, help="Max templates to evaluate")
+    parser.add_argument("--horizon", type=int, default=10, help="CEM horizon")
+    parser.add_argument("--num-samples", type=int, default=256, help="CEM samples per iteration")
+    parser.add_argument("--num-elites", type=int, default=32, help="CEM elites")
+    parser.add_argument("--num-iterations", type=int, default=5, help="CEM iterations")
+    parser.add_argument("--max-mpc-steps", type=int, default=30, help="Max MPC replanning steps")
+    parser.add_argument("--out", required=True, help="Output JSON path")
+    args = parser.parse_args()
+
+    print(f"Loading model from {args.checkpoint}...")
+    rollout_model = load_learned_rollout_model(
+        checkpoint_path=args.checkpoint,
+        model_type=args.model_type,
+        device="cpu",
+        normalizer_path=args.normalizer,
+    )
+
+    # Build CEM planner
+    cem = CEMMPC(
+        horizon=args.horizon,
+        action_dim=2,
+        num_samples=args.num_samples,
+        num_elites=args.num_elites,
+        num_iterations=args.num_iterations,
+        action_low=-0.02,
+        action_high=0.02,
+        init_std=0.7,
+        smoothing=0.2,
+        seed=42,
+    )
+
+    # Find episodes
+    # For smoke test, use layout_ood_state16_v0 data
+    data_dir = REPO_ROOT / "data" / "sim" / "layout_ood_state16_v0"
+    ep_dir = data_dir / "episodes"
+    meta_path = data_dir / "metadata" / "episodes.jsonl"
+
+    if not meta_path.exists():
+        print(f"No episodes found at {meta_path}")
+        print("This is expected if data collection hasn't run yet.")
+        print("Creating minimal smoke test report.")
+
+        out_path = Path(args.out)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        report = {
+            "checkpoint": args.checkpoint,
+            "model_type": args.model_type,
+            "status": "no_data",
+            "message": "No state16 episodes found. Run data collection first.",
+        }
+        with open(out_path, "w") as f:
+            json.dump(report, f, indent=2)
+        print(f"Report saved to {out_path}")
+        return
+
+    with open(meta_path) as f:
+        episodes = [json.loads(line) for line in f if line.strip()]
+
+    # Filter by split (if available) or use all
+    episodes = episodes[:args.max_templates]
+
+    print(f"Evaluating {len(episodes)} episodes...")
+
+    results = []
+    for i, ep in enumerate(episodes):
+        ep_id = ep["episode_id"]
+        npz_path = str(ep_dir / f"{ep_id}.npz")
+
+        if not Path(npz_path).exists():
+            print(f"  [{i+1}] {ep_id}: NPZ not found, skipping")
+            continue
+
+        goal_pose = get_goal_pose(npz_path)
+
+        t0 = time.time()
+        result = run_single_template(
+            rollout_model=rollout_model,
+            cem=cem,
+            state16_path=npz_path,
+            goal_pose=goal_pose,
+            max_mpc_steps=args.max_mpc_steps,
+        )
+        elapsed = time.time() - t0
+
+        result["episode_id"] = ep_id
+        result["family"] = ep.get("family", "unknown")
+        result["runtime_sec"] = elapsed
+        results.append(result)
+
+        status = "✅" if result["success"] else "❌"
+        print(f"  [{i+1}] {ep_id}: {status} dist={result['final_pos_dist_m']:.4f}m "
+              f"best={result['best_pos_dist_m']:.4f}m steps={result['mpc_steps']} "
+              f"time={elapsed:.1f}s")
+
+    # Summary
+    if results:
+        success_count = sum(1 for r in results if r["success"])
+        final_dists = [r["final_pos_dist_m"] for r in results]
+        best_dists = [r["best_pos_dist_m"] for r in results]
+
+        summary = {
+            "checkpoint": args.checkpoint,
+            "model_type": args.model_type,
+            "num_episodes": len(results),
+            "success_count": success_count,
+            "success_rate": success_count / len(results),
+            "mean_final_dist": float(np.mean(final_dists)),
+            "mean_best_dist": float(np.mean(best_dists)),
+            "min_best_dist": float(np.min(best_dists)),
+            "mean_runtime_sec": float(np.mean([r["runtime_sec"] for r in results])),
+        }
+    else:
+        summary = {
+            "checkpoint": args.checkpoint,
+            "model_type": args.model_type,
+            "status": "no_results",
+        }
+
+    # Save
+    out_path = Path(args.out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    report = {
+        "summary": summary,
+        "episodes": results,
+    }
+    with open(out_path, "w") as f:
+        json.dump(report, f, indent=2)
+
+    print(f"\nReport saved to {out_path}")
+    print(f"Summary: {summary}")
+
+
+if __name__ == "__main__":
+    main()
+
+==========================================
+FILE: src/models/rig_world.py (已有，被 rollout_model 调用)
+==========================================
+from __future__ import annotations
+
+from typing import Literal
+
+import torch
+import torch.nn as nn
+
+from src.models.encoders import (
+    FlatEncoder,
+    ObjectCentricEncoder,
+    CausalityAwareEncoder,
+)
+from src.models.heads import DynamicsHead, SubgoalHead
+
+
+ModelType = Literal["flat", "object_centric", "causality_aware"]
+
+
+class RIGWorldModel(nn.Module):
+    """
+    Unified high-level world model wrapper for Paper 1.
+
+    RIG = Representation Interface for Generalization.
+
+    This wrapper provides a single interface for:
+
+        FlatEncoder
+        ObjectCentricEncoder
+        CausalityAwareEncoder
+
+    Shared output:
+
+        {
+            "z": [B, 256],
+            "pred_delta": [B, 3],
+            "pred_subgoal": [B, 3],
+        }
+
+    For causality_aware model, it can also return diagnostic slots:
+
+        {
+            "z_stable": [B, 32],
+            "z_dynamics": [B, 32],
+            "z_affordance": [B, 32],
+            "z_nuisance": [B, 32],
+        }
+
+    Important:
+        This wrapper is not itself the research comparison.
+        The comparison is between the encoder variants under the same heads,
+        same loss, same planner, and same data protocol.
+    """
+
+    def __init__(
+        self,
+        model_type: ModelType = "flat",
+        history_len: int = 6,
+        num_tokens: int = 6,
+        raw_token_dim: int = 16,
+        action_dim: int = 2,
+        frame_embed_dim: int = 128,
+        d_model: int = 128,
+        transformer_layers: int = 2,
+        nhead: int = 4,
+        ffn_dim: int = 256,
+        gru_hidden: int = 256,
+        head_hidden_dim: int = 256,
+        slot_dim: int = 32,
+        valid_flag_index: int = 15,
+        dropout: float = 0.1,
+    ):
+        super().__init__()
+
+        self.model_type = model_type
+        self.history_len = history_len
+        self.num_tokens = num_tokens
+        self.raw_token_dim = raw_token_dim
+        self.action_dim = action_dim
+        self.z_dim = gru_hidden
+        self.slot_dim = slot_dim
+
+        if model_type == "flat":
+            self.encoder = FlatEncoder(
+                history_len=history_len,
+                num_tokens=num_tokens,
+                raw_token_dim=raw_token_dim,
+                frame_embed_dim=frame_embed_dim,
+                gru_hidden=gru_hidden,
+            )
+
+        elif model_type == "object_centric":
+            self.encoder = ObjectCentricEncoder(
+                history_len=history_len,
+                num_tokens=num_tokens,
+                raw_token_dim=raw_token_dim,
+                d_model=d_model,
+                transformer_layers=transformer_layers,
+                nhead=nhead,
+                ffn_dim=ffn_dim,
+                gru_hidden=gru_hidden,
+                valid_flag_index=valid_flag_index,
+                dropout=dropout,
+            )
+
+        elif model_type == "causality_aware":
+            self.encoder = CausalityAwareEncoder(
+                history_len=history_len,
+                num_tokens=num_tokens,
+                raw_token_dim=raw_token_dim,
+                d_model=d_model,
+                transformer_layers=transformer_layers,
+                nhead=nhead,
+                ffn_dim=ffn_dim,
+                gru_hidden=gru_hidden,
+                slot_dim=slot_dim,
+                valid_flag_index=valid_flag_index,
+                dropout=dropout,
+            )
+
+        else:
+            raise ValueError(
+                f"Unknown model_type={model_type}. "
+                "Expected one of: flat, object_centric, causality_aware."
+            )
+
+        self.dynamics_head = DynamicsHead(
+            z_dim=gru_hidden,
+            action_dim=action_dim,
+            hidden_dim=head_hidden_dim,
+        )
+
+        self.subgoal_head = SubgoalHead(
+            z_dim=gru_hidden,
+            hidden_dim=head_hidden_dim,
+        )
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        action: torch.Tensor,
+        mask: torch.Tensor | None = None,
+        return_slots: bool = False,
+    ) -> dict[str, torch.Tensor]:
+        """
+        Args:
+            x:
+                Structured state tensor with shape [B, H, N, D_raw].
+
+            action:
+                Action tensor with shape [B, action_dim].
+
+            mask:
+                Optional valid-token mask with shape [B, H, N].
+                1 / True = valid token.
+                0 / False = invalid padding token.
+
+            return_slots:
+                If True and model_type == "causality_aware",
+                also return diagnostic causal slots.
+
+        Returns:
+            Dictionary with at least:
+                z:            [B, 256]
+                pred_delta:   [B, 3]
+                pred_subgoal: [B, 3]
+
+            If model_type == "causality_aware" and return_slots=True,
+            also returns:
+                z_stable:     [B, slot_dim]
+                z_dynamics:   [B, slot_dim]
+                z_affordance: [B, slot_dim]
+                z_nuisance:   [B, slot_dim]
+        """
+        if x.dim() != 4:
+            raise ValueError(
+                f"Expected x with shape [B, H, N, D_raw], got {tuple(x.shape)}"
+            )
+
+        if x.shape[1] != self.history_len:
+            raise ValueError(
+                f"Expected history_len={self.history_len}, got {x.shape[1]}"
+            )
+
+        if x.shape[2] != self.num_tokens:
+            raise ValueError(
+                f"Expected num_tokens={self.num_tokens}, got {x.shape[2]}"
+            )
+
+        if x.shape[3] != self.raw_token_dim:
+            raise ValueError(
+                f"Expected raw_token_dim={self.raw_token_dim}, got {x.shape[3]}"
+            )
+
+        if action.dim() != 2:
+            raise ValueError(
+                f"Expected action with shape [B, action_dim], got {tuple(action.shape)}"
+            )
+
+        if x.shape[0] != action.shape[0]:
+            raise ValueError(
+                f"Batch size mismatch: x batch={x.shape[0]}, "
+                f"action batch={action.shape[0]}"
+            )
+
+        if action.shape[-1] != self.action_dim:
+            raise ValueError(
+                f"Expected action_dim={self.action_dim}, got {action.shape[-1]}"
+            )
+
+        if mask is not None and mask.shape != x.shape[:3]:
+            raise ValueError(
+                f"Expected mask shape {tuple(x.shape[:3])}, got {tuple(mask.shape)}"
+            )
+
+        if self.model_type == "causality_aware" and return_slots:
+            enc_out = self.encoder(x, mask=mask, return_slots=True)
+            z = enc_out["z"]
+        else:
+            z = self.encoder(x, mask=mask)
+            enc_out = None
+
+        pred_delta = self.dynamics_head(z, action)
+        pred_subgoal = self.subgoal_head(z)
+
+        out = {
+            "z": z,
+            "pred_delta": pred_delta,
+            "pred_subgoal": pred_subgoal,
+        }
+
+        if enc_out is not None:
+            out.update(
+                {
+                    "z_stable": enc_out["z_stable"],
+                    "z_dynamics": enc_out["z_dynamics"],
+                    "z_affordance": enc_out["z_affordance"],
+                    "z_nuisance": enc_out["z_nuisance"],
+                }
+            )
+
+        return out
+==========================================
+FILE: src/models/heads.py (已有，被 rollout_model 调用)
+==========================================
+import torch
+import torch.nn as nn
+
+
+class DynamicsHead(nn.Module):
+    def __init__(self, z_dim: int = 256, action_dim: int = 2, hidden_dim: int = 256):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(z_dim + action_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 3),
+        )
+
+    def forward(self, z, action):
+        x = torch.cat([z, action], dim=-1)
+        return self.net(x)
+
+
+class SubgoalHead(nn.Module):
+    def __init__(self, z_dim: int = 256, hidden_dim: int = 256):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(z_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 3),
+        )
+
+    def forward(self, z):
+        return self.net(z)
+==========================================
+FILE: src/models/losses.py (已有，训练用)
+==========================================
+# src/models/losses.py
+
+from __future__ import annotations
+
+from typing import Optional
+
+import torch
+import torch.nn.functional as F
+
+
+def _check_same_shape(pred: torch.Tensor, target: torch.Tensor, name: str) -> None:
+    if pred.shape != target.shape:
+        raise ValueError(
+            f"{name}: pred and target must have the same shape, "
+            f"got pred={tuple(pred.shape)}, target={tuple(target.shape)}"
+        )
+
+
+def _wrap_angle_error(angle_error: torch.Tensor) -> torch.Tensor:
+    """
+    Wrap angle error to [-pi, pi].
+    Useful when the last dimension contains raw theta / delta_theta.
+    """
+    return torch.atan2(torch.sin(angle_error), torch.cos(angle_error))
+
+
+def pose_mse_loss(
+    pred: torch.Tensor,
+    target: torch.Tensor,
+    weights: Optional[torch.Tensor] = None,
+    angle_index: int = 2,
+) -> torch.Tensor:
+    """
+    MSE loss for pose-like vectors [dx, dy, dtheta].
+    The angle dimension is wrapped without in-place modification.
+    """
+    if pred.shape != target.shape:
+        raise ValueError(f"Shape mismatch: pred={pred.shape}, target={target.shape}")
+
+    diff = pred - target
+
+    before = diff[..., :angle_index]
+    angle = _wrap_angle_error(diff[..., angle_index : angle_index + 1])
+    after = diff[..., angle_index + 1 :]
+
+    diff = torch.cat([before, angle, after], dim=-1)
+
+    sq = diff.pow(2)
+
+    if weights is not None:
+        weights = weights.to(device=sq.device, dtype=sq.dtype)
+        sq = sq * weights
+
+    return sq.mean()
+
+
+def dynamics_loss(
+    pred_delta: torch.Tensor,
+    target_delta: torch.Tensor,
+    weights: Optional[torch.Tensor] = None,
+) -> torch.Tensor:
+    return pose_mse_loss(
+        pred=pred_delta,
+        target=target_delta,
+        weights=weights,
+        angle_index=2,
+    )
+
+
+def subgoal_loss(
+    pred_subgoal: torch.Tensor,
+    target_subgoal: torch.Tensor,
+    weights: Optional[torch.Tensor] = None,
+) -> torch.Tensor:
+    return pose_mse_loss(
+        pred=pred_subgoal,
+        target=target_subgoal,
+        weights=weights,
+        angle_index=2,
+    )
+
+
+def total_high_level_loss(
+    pred_delta: torch.Tensor,
+    target_delta: torch.Tensor,
+    pred_subgoal: torch.Tensor,
+    target_subgoal: torch.Tensor,
+    lambda_dyn: float = 1.0,
+    lambda_subgoal: float = 1.0,
+    pose_weights: Optional[torch.Tensor] = None,
+) -> dict[str, torch.Tensor]:
+    """
+    Total supervised high-level loss for Paper 1 v0.1.
+
+    v0.1:
+        loss = lambda_dyn * dynamics_loss + lambda_subgoal * subgoal_loss
+
+    Later v0.2 can add:
+        affordance loss
+        invariance / causal regularization
+    """
+    l_dyn = dynamics_loss(pred_delta, target_delta, weights=pose_weights)
+    l_sub = subgoal_loss(pred_subgoal, target_subgoal, weights=pose_weights)
+
+    total = lambda_dyn * l_dyn + lambda_subgoal * l_sub
+
+    return {
+        "loss": total,
+        "loss_dyn": l_dyn.detach(),
+        "loss_sub": l_sub.detach(),
+    }
+==========================================
+FILE: src/planners/cem_mpc.py (已有，learned MPC 用)
+==========================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Callable
+
+import numpy as np
+
+
+CostFunction = Callable[[np.ndarray], float]
+
+
+@dataclass
+class CEMResult:
+    action_sequence: np.ndarray
+    best_cost: float
+    mean: np.ndarray
+    std: np.ndarray
+    cost_history: list[float]
+
+
+class CEMMPC:
+    """
+    Minimal CEM optimizer for action-sequence planning.
+
+    This class does not know about MuJoCo or robot states.
+    It only solves:
+
+        minimize cost_fn(action_sequence)
+
+    where:
+        action_sequence: [horizon, action_dim]
+    """
+
+    def __init__(
+        self,
+        horizon: int = 15,
+        action_dim: int = 2,
+        num_samples: int = 1024,
+        num_elites: int = 64,
+        num_iterations: int = 5,
+        action_low: float | list[float] | np.ndarray = -1.0,
+        action_high: float | list[float] | np.ndarray = 1.0,
+        init_std: float = 0.7,
+        smoothing: float = 0.2,
+        seed: int | None = None,
+    ):
+        if horizon <= 0:
+            raise ValueError(f"horizon must be positive, got {horizon}")
+
+        if action_dim <= 0:
+            raise ValueError(f"action_dim must be positive, got {action_dim}")
+
+        if num_samples <= 0:
+            raise ValueError(f"num_samples must be positive, got {num_samples}")
+
+        if num_elites <= 0 or num_elites > num_samples:
+            raise ValueError(
+                f"num_elites must be in [1, num_samples], got "
+                f"num_elites={num_elites}, num_samples={num_samples}"
+            )
+
+        if num_iterations <= 0:
+            raise ValueError(f"num_iterations must be positive, got {num_iterations}")
+
+        if not (0.0 <= smoothing <= 1.0):
+            raise ValueError(f"smoothing must be in [0,1], got {smoothing}")
+
+        self.horizon = horizon
+        self.action_dim = action_dim
+        self.num_samples = num_samples
+        self.num_elites = num_elites
+        self.num_iterations = num_iterations
+        self.smoothing = smoothing
+
+        self.rng = np.random.default_rng(seed)
+
+        self.action_low = self._to_action_array(action_low)
+        self.action_high = self._to_action_array(action_high)
+
+        if np.any(self.action_low >= self.action_high):
+            raise ValueError(
+                f"action_low must be < action_high, got "
+                f"{self.action_low}, {self.action_high}"
+            )
+
+        self.init_std = float(init_std)
+
+        if not np.isfinite(self.init_std) or self.init_std <= 0:
+            raise ValueError(
+                f"init_std must be positive and finite, got {self.init_std}"
+            )
+
+    def _to_action_array(self, value: float | list[float] | np.ndarray) -> np.ndarray:
+        arr = np.asarray(value, dtype=np.float64)
+
+        if arr.ndim == 0:
+            arr = np.full((self.action_dim,), float(arr), dtype=np.float64)
+
+        if arr.shape != (self.action_dim,):
+            raise ValueError(
+                f"Expected action bound shape {(self.action_dim,)}, got {arr.shape}"
+            )
+
+        if not np.isfinite(arr).all():
+            raise ValueError(f"Action bound must be finite, got {arr}")
+
+        return arr
+
+    def optimize(
+        self,
+        cost_fn: CostFunction,
+        init_mean: np.ndarray | None = None,
+        init_std: np.ndarray | None = None,
+    ) -> CEMResult:
+        """
+        Run CEM optimization.
+
+        Args:
+            cost_fn:
+                Function mapping action_sequence [H, A] to scalar cost.
+
+            init_mean:
+                Optional [H, A] initial action mean.
+
+            init_std:
+                Optional [H, A] initial std.
+        """
+        if init_mean is None:
+            mean = np.zeros((self.horizon, self.action_dim), dtype=np.float64)
+        else:
+            mean = np.asarray(init_mean, dtype=np.float64).copy()
+
+        if mean.shape != (self.horizon, self.action_dim):
+            raise ValueError(
+                f"Expected init_mean shape {(self.horizon, self.action_dim)}, "
+                f"got {mean.shape}"
+            )
+
+        if not np.isfinite(mean).all():
+            raise ValueError("init_mean contains non-finite values.")
+
+        if init_std is None:
+            std = np.full(
+                (self.horizon, self.action_dim),
+                self.init_std,
+                dtype=np.float64,
+            )
+        else:
+            std = np.asarray(init_std, dtype=np.float64).copy()
+
+        if std.shape != (self.horizon, self.action_dim):
+            raise ValueError(
+                f"Expected init_std shape {(self.horizon, self.action_dim)}, "
+                f"got {std.shape}"
+            )
+
+        if not np.isfinite(std).all() or np.any(std <= 0):
+            raise ValueError("init_std must contain positive finite values.")
+
+        best_sequence = mean.copy()
+        best_cost = float("inf")
+        cost_history: list[float] = []
+
+        low = self.action_low.reshape(1, 1, self.action_dim)
+        high = self.action_high.reshape(1, 1, self.action_dim)
+
+        for _ in range(self.num_iterations):
+            samples = self.rng.normal(
+                loc=mean[None, :, :],
+                scale=std[None, :, :],
+                size=(self.num_samples, self.horizon, self.action_dim),
+            )
+
+            samples = np.clip(samples, low, high)
+
+            costs = np.asarray([cost_fn(seq) for seq in samples], dtype=np.float64)
+
+            if not np.isfinite(costs).all():
+                raise ValueError("CEM received non-finite costs.")
+
+            elite_idx = np.argsort(costs)[: self.num_elites]
+            elites = samples[elite_idx]
+
+            elite_mean = elites.mean(axis=0)
+            elite_std = elites.std(axis=0) + 1e-6
+
+            if not np.isfinite(elite_mean).all():
+                raise ValueError("CEM elite_mean contains non-finite values.")
+
+            if not np.isfinite(elite_std).all() or np.any(elite_std <= 0):
+                raise ValueError("CEM elite_std must contain positive finite values.")
+
+            mean = self.smoothing * mean + (1.0 - self.smoothing) * elite_mean
+            std = self.smoothing * std + (1.0 - self.smoothing) * elite_std
+
+            if not np.isfinite(mean).all():
+                raise ValueError("CEM mean became non-finite.")
+
+            if not np.isfinite(std).all() or np.any(std <= 0):
+                raise ValueError("CEM std became non-positive or non-finite.")
+
+            iter_best_idx = int(np.argmin(costs))
+            iter_best_cost = float(costs[iter_best_idx])
+
+            if iter_best_cost < best_cost:
+                best_cost = iter_best_cost
+                best_sequence = samples[iter_best_idx].copy()
+
+            cost_history.append(best_cost)
+
+        return CEMResult(
+            action_sequence=best_sequence,
+            best_cost=best_cost,
+            mean=mean,
+            std=std,
+            cost_history=cost_history,
+        )
+
+    def plan(
+        self,
+        cost_fn: CostFunction,
+        init_mean: np.ndarray | None = None,
+        init_std: np.ndarray | None = None,
+    ) -> tuple[np.ndarray, CEMResult]:
+        """
+        Return first action and full CEM result.
+        """
+        result = self.optimize(
+            cost_fn=cost_fn,
+            init_mean=init_mean,
+            init_std=init_std,
+        )
+
+        first_action = result.action_sequence[0].copy()
+
+        return first_action, result
+==========================================
+FILE: src/planners/cost_functions.py (已有，cost 计算)
+==========================================
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+
+
+@dataclass
+class CostWeights:
+    """
+    Cost weights for Paper 1 planner.
+
+    v0.1:
+        final goal cost is the main objective.
+        reach / no_contact / push_alignment are shaping terms for sparse-contact pushing.
+        subgoal cost is included but should remain disabled until the learned rollout path is stable.
+
+    Collision cost (v0.2):
+        collision_cost = w_collision * max(collision_flags) + w_collision_step * sum(collision_flags)
+        w_collision:    one-time penalty if ANY collision occurs (existence signal)
+        w_collision_step: per-timestep penalty for each collision step (severity signal)
+
+    Later:
+        Compare w_subgoal = 0.0 vs w_subgoal > 0.0 as a small ablation.
+    """
+
+    w_pos: float = 10.0
+    w_theta: float = 2.0
+    w_reach: float = 5.0
+    w_no_contact: float = 2.0
+    w_push_alignment: float = 1.0
+    w_collision: float = 20.0
+    w_collision_step: float = 1.0
+    w_proximity: float = 5.0
+    w_action: float = 0.05
+    w_smooth: float = 0.1
+    w_subgoal: float = 0.0
+
+
+def wrap_angle(angle: np.ndarray | float) -> np.ndarray | float:
+    """
+    Wrap angle to [-pi, pi].
+    """
+    return np.arctan2(np.sin(angle), np.cos(angle))
+
+
+def pose_error(
+    pose: np.ndarray,
+    target_pose: np.ndarray,
+) -> tuple[float, float]:
+    """
+    Compute planar pose error for a single 2D pose.
+
+    Args:
+        pose:
+            Shape (3,), representing [x, y, theta].
+
+        target_pose:
+            Shape (3,), representing [x, y, theta].
+
+    Returns:
+        pos_error_sq:
+            Squared x-y position error.
+
+        theta_error_sq:
+            Squared wrapped theta error.
+
+    Note:
+        This function intentionally does not support batched input.
+        For rollout cost, pass one selected pose such as predicted_object_poses[-1].
+    """
+    pose = np.asarray(pose, dtype=np.float64)
+    target_pose = np.asarray(target_pose, dtype=np.float64)
+
+    if pose.shape != (3,) or target_pose.shape != (3,):
+        raise ValueError(
+            f"Expected pose and target_pose shape (3,), "
+            f"got {pose.shape}, {target_pose.shape}"
+        )
+
+    if not np.isfinite(pose).all() or not np.isfinite(target_pose).all():
+        raise ValueError("pose_error received non-finite pose values.")
+
+    dxy = pose[:2] - target_pose[:2]
+    dtheta = wrap_angle(pose[2] - target_pose[2])
+
+    pos_error_sq = float(np.sum(dxy ** 2))
+    theta_error_sq = float(dtheta ** 2)
+
+    return pos_error_sq, theta_error_sq
+
+
+def action_regularization_cost(action_sequence: np.ndarray) -> float:
+    """
+    Penalize large actions.
+
+    Args:
+        action_sequence:
+            [H, action_dim]
+    """
+    action_sequence = np.asarray(action_sequence, dtype=np.float64)
+
+    if action_sequence.ndim != 2:
+        raise ValueError(f"Expected action_sequence [H,A], got {action_sequence.shape}")
+
+    if not np.isfinite(action_sequence).all():
+        raise ValueError("action_sequence contains non-finite values.")
+
+    return float(np.mean(action_sequence ** 2))
+
+
+def action_smoothness_cost(action_sequence: np.ndarray) -> float:
+    """
+    Penalize action changes.
+
+    Args:
+        action_sequence:
+            [H, action_dim]
+    """
+    action_sequence = np.asarray(action_sequence, dtype=np.float64)
+
+    if action_sequence.ndim != 2:
+        raise ValueError(f"Expected action_sequence [H,A], got {action_sequence.shape}")
+
+    if not np.isfinite(action_sequence).all():
+        raise ValueError("action_sequence contains non-finite values.")
+
+    if action_sequence.shape[0] <= 1:
+        return 0.0
+
+    diff = action_sequence[1:] - action_sequence[:-1]
+    return float(np.mean(diff ** 2))
+
+
+def reach_cost(
+    ee_positions: np.ndarray,
+    object_positions: np.ndarray,
+) -> float:
+    """
+    Encourage end-effector to get close to the object.
+
+    Args:
+        ee_positions:
+            [T, 2]
+
+        object_positions:
+            [T, 2]
+
+    Returns:
+        minimum EE-object distance squared over the rollout.
+    """
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    object_positions = np.asarray(object_positions, dtype=np.float64)
+
+    if ee_positions.shape != object_positions.shape:
+        raise ValueError(
+            f"Expected ee_positions and object_positions with same shape, "
+            f"got {ee_positions.shape}, {object_positions.shape}"
+        )
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected positions [T,2], got {ee_positions.shape}")
+
+    if not np.isfinite(ee_positions).all() or not np.isfinite(object_positions).all():
+        raise ValueError("reach_cost received non-finite positions.")
+
+    d = ee_positions - object_positions
+    dist_sq = np.sum(d ** 2, axis=-1)
+
+    return float(np.min(dist_sq))
+
+
+def no_contact_cost(
+    contact_flags: np.ndarray | None = None,
+    ee_positions: np.ndarray | None = None,
+    object_positions: np.ndarray | None = None,
+    contact_distance_threshold: float = 0.035,
+) -> float:
+    """
+    Penalize no-contact rollouts.
+
+    If contact_flags is provided:
+        no_contact_cost = 1 - max(contact_flags)
+
+    Otherwise use distance proxy:
+        contact if min EE-object distance < threshold.
+    """
+    if contact_flags is not None:
+        contact_flags = np.asarray(contact_flags, dtype=np.float64)
+
+        if not np.isfinite(contact_flags).all():
+            raise ValueError("contact_flags contains non-finite values.")
+
+        has_contact = float(np.max(contact_flags) > 0.5)
+        return 1.0 - has_contact
+
+    if ee_positions is None or object_positions is None:
+        return 0.0
+
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    object_positions = np.asarray(object_positions, dtype=np.float64)
+
+    if ee_positions.shape != object_positions.shape:
+        raise ValueError(
+            f"Expected ee_positions and object_positions with same shape, "
+            f"got {ee_positions.shape}, {object_positions.shape}"
+        )
+
+    if not np.isfinite(ee_positions).all() or not np.isfinite(object_positions).all():
+        raise ValueError("no_contact_cost received non-finite positions.")
+
+    d = ee_positions - object_positions
+    min_dist = float(np.min(np.linalg.norm(d, axis=-1)))
+
+    has_contact = float(min_dist < contact_distance_threshold)
+    return 1.0 - has_contact
+
+
+def push_alignment_cost(
+    object_initial_pose: np.ndarray,
+    object_final_pose: np.ndarray,
+    goal_pose: np.ndarray,
+    eps: float = 1e-8,
+) -> float:
+    """
+    Encourage object motion direction to align with object→goal direction.
+
+    Returns:
+        0 when aligned;
+        around 1 when orthogonal;
+        around 2 when opposite.
+    """
+    object_initial_pose = np.asarray(object_initial_pose, dtype=np.float64)
+    object_final_pose = np.asarray(object_final_pose, dtype=np.float64)
+    goal_pose = np.asarray(goal_pose, dtype=np.float64)
+
+    if not (
+        np.isfinite(object_initial_pose).all()
+        and np.isfinite(object_final_pose).all()
+        and np.isfinite(goal_pose).all()
+    ):
+        raise ValueError("push_alignment_cost received non-finite poses.")
+
+    move_vec = object_final_pose[:2] - object_initial_pose[:2]
+    goal_vec = goal_pose[:2] - object_initial_pose[:2]
+
+    move_norm = float(np.linalg.norm(move_vec))
+    goal_norm = float(np.linalg.norm(goal_vec))
+
+    if move_norm < eps or goal_norm < eps:
+        return 1.0
+
+    cos_sim = float(np.dot(move_vec, goal_vec) / (move_norm * goal_norm + eps))
+    cos_sim = float(np.clip(cos_sim, -1.0, 1.0))
+
+    return 1.0 - cos_sim
+
+
+def collision_cost(
+    collision_flags: np.ndarray | None,
+) -> tuple[float, float, float]:
+    """
+    Compute collision summary from per-timestep collision flags.
+
+    Args:
+        collision_flags:
+            Optional [T], 0/1 flags per timestep. 1 = collision.
+
+    Returns:
+        collision_any: 1.0 if any timestep has collision, else 0.0
+        collision_count: number of timesteps with collision
+        collision_rate: fraction of timesteps with collision
+    """
+    if collision_flags is None:
+        return 0.0, 0.0, 0.0
+
+    collision_flags = np.asarray(collision_flags, dtype=np.float64)
+
+    if not np.isfinite(collision_flags).all():
+        raise ValueError("collision_cost received non-finite collision_flags.")
+
+    t = len(collision_flags)
+    if t == 0:
+        return 0.0, 0.0, 0.0
+
+    collision_any = float(np.max(collision_flags))
+    collision_count = float(np.sum(collision_flags))
+    collision_rate = float(np.mean(collision_flags))
+
+    return collision_any, collision_count, collision_rate
+
+
+def obstacle_proximity_cost(
+    ee_positions: np.ndarray,
+    obstacle_positions: np.ndarray,
+    obstacle_radii: np.ndarray,
+    margin: float = 0.03,
+) -> float:
+    """
+    Smooth repulsive field around obstacles. Gives directional gradient signal
+    even when no collision occurs — guides CEM/MPPI samples away from obstacles.
+
+    Args:
+        ee_positions: [T, 2] end-effector trajectory.
+        obstacle_positions: [N, 2] obstacle centers.
+        obstacle_radii: [N] obstacle radii.
+        margin: extra clearance beyond obstacle radius.
+
+    Returns:
+        Sum of squared penetrations into the margin zone.
+    """
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    obstacle_positions = np.asarray(obstacle_positions, dtype=np.float64)
+    obstacle_radii = np.asarray(obstacle_radii, dtype=np.float64)
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected ee_positions [T,2], got {ee_positions.shape}")
+
+    if obstacle_positions.ndim != 2 or obstacle_positions.shape[-1] != 2:
+        raise ValueError(
+            f"Expected obstacle_positions [N,2], got {obstacle_positions.shape}"
+        )
+
+    n_obs = len(obstacle_positions)
+    if obstacle_radii.shape != (n_obs,):
+        raise ValueError(
+            f"Expected obstacle_radii [{n_obs}], got {obstacle_radii.shape}"
+        )
+
+    total = 0.0
+    for i in range(n_obs):
+        diff = ee_positions - obstacle_positions[i]
+        dist = np.linalg.norm(diff, axis=-1)
+        penetration = (obstacle_radii[i] + margin) - dist
+        total += float(np.sum(np.maximum(penetration, 0.0) ** 2))
+
+    return total
+
+
+def rollout_cost(
+    predicted_object_poses: np.ndarray,
+    ee_positions: np.ndarray,
+    action_sequence: np.ndarray,
+    goal_pose: np.ndarray,
+    weights: CostWeights | None = None,
+    contact_flags: np.ndarray | None = None,
+    collision_flags: np.ndarray | None = None,
+    subgoal_pose: np.ndarray | None = None,
+    subgoal_index: int | None = None,
+    obstacle_positions: np.ndarray | None = None,
+    obstacle_radii: np.ndarray | None = None,
+    proximity_margin: float = 0.03,
+) -> float:
+    """
+    Compute planner cost for one rollout.
+
+    Args:
+        predicted_object_poses:
+            [T, 3] object poses along the rollout.
+            predicted_object_poses[0] should be the current / initial object pose.
+            predicted_object_poses[-1] is used for final goal cost.
+
+        ee_positions:
+            [T, 2] predicted end-effector positions.
+
+        action_sequence:
+            [H, action_dim]
+
+        goal_pose:
+            [3]
+
+        contact_flags:
+            Optional [T], 1 means contact.
+
+        collision_flags:
+            Optional [T], 1 means collision.
+
+        subgoal_pose:
+            Optional [3]. Used only when weights.w_subgoal > 0.
+
+        subgoal_index:
+            Which predicted timestep to compare to subgoal.
+    """
+    if weights is None:
+        weights = CostWeights()
+
+    predicted_object_poses = np.asarray(predicted_object_poses, dtype=np.float64)
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    action_sequence = np.asarray(action_sequence, dtype=np.float64)
+    goal_pose = np.asarray(goal_pose, dtype=np.float64)
+
+    if predicted_object_poses.ndim != 2 or predicted_object_poses.shape[-1] != 3:
+        raise ValueError(
+            f"Expected predicted_object_poses [T,3], got {predicted_object_poses.shape}"
+        )
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected ee_positions [T,2], got {ee_positions.shape}")
+
+    if action_sequence.ndim != 2:
+        raise ValueError(f"Expected action_sequence [H,A], got {action_sequence.shape}")
+
+    if len(predicted_object_poses) != len(ee_positions):
+        raise ValueError(
+            f"Expected predicted_object_poses and ee_positions to have same T, "
+            f"got {len(predicted_object_poses)} and {len(ee_positions)}"
+        )
+
+    if not (
+        np.isfinite(predicted_object_poses).all()
+        and np.isfinite(ee_positions).all()
+        and np.isfinite(action_sequence).all()
+        and np.isfinite(goal_pose).all()
+    ):
+        raise ValueError("rollout_cost received non-finite inputs.")
+
+    object_initial_pose = predicted_object_poses[0]
+    object_final_pose = predicted_object_poses[-1]
+
+    pos_error_sq, theta_error_sq = pose_error(object_final_pose, goal_pose)
+
+    object_positions = predicted_object_poses[:, :2]
+
+    total = 0.0
+    total += weights.w_pos * pos_error_sq
+    total += weights.w_theta * theta_error_sq
+    total += weights.w_reach * reach_cost(ee_positions, object_positions)
+    total += weights.w_no_contact * no_contact_cost(
+        contact_flags=contact_flags,
+        ee_positions=ee_positions,
+        object_positions=object_positions,
+    )
+    total += weights.w_push_alignment * push_alignment_cost(
+        object_initial_pose=object_initial_pose,
+        object_final_pose=object_final_pose,
+        goal_pose=goal_pose,
+    )
+    total += weights.w_action * action_regularization_cost(action_sequence)
+    total += weights.w_smooth * action_smoothness_cost(action_sequence)
+
+    if collision_flags is not None:
+        collision_any, collision_count, _ = collision_cost(collision_flags)
+        total += weights.w_collision * collision_any
+        total += weights.w_collision_step * collision_count
+
+    if obstacle_positions is not None and obstacle_radii is not None and weights.w_proximity > 0.0:
+        total += weights.w_proximity * obstacle_proximity_cost(
+            ee_positions=ee_positions,
+            obstacle_positions=obstacle_positions,
+            obstacle_radii=obstacle_radii,
+            margin=proximity_margin,
+        )
+
+    if subgoal_pose is not None and weights.w_subgoal > 0.0:
+        subgoal_pose = np.asarray(subgoal_pose, dtype=np.float64)
+
+        if not np.isfinite(subgoal_pose).all():
+            raise ValueError("subgoal_pose contains non-finite values.")
+
+        if subgoal_index is None:
+            subgoal_index = max(0, len(predicted_object_poses) // 2)
+
+        subgoal_index = int(np.clip(subgoal_index, 0, len(predicted_object_poses) - 1))
+        sub_pos_error_sq, sub_theta_error_sq = pose_error(
+            predicted_object_poses[subgoal_index],
+            subgoal_pose,
+        )
+        total += weights.w_subgoal * (sub_pos_error_sq + 0.2 * sub_theta_error_sq)
+
+    if not np.isfinite(total):
+        raise ValueError(f"Non-finite rollout cost: {total}")
+
+    return float(total)
+==========================================
+FILE: src/data/state_normalizer.py (已有，数据归一化)
+==========================================
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Iterable, Optional
+
+import numpy as np
+
+
+class StateNormalizer:
+    """
+    Normalizer for Paper 1 structured object-state tensors.
+
+    Expected input shape:
+        [..., D_raw] where D_raw = 16
+
+    Token feature schema:
+        0  x
+        1  y
+        2  sin(theta)
+        3  cos(theta)
+        4  vx
+        5  vy
+        6  omega
+        7  size_x
+        8  size_y
+        9  shape_T
+        10 shape_L
+        11 shape_other
+        12 mass
+        13 friction
+        14 contact_flag
+        15 valid_flag
+
+    v0.1 rule:
+        Normalize continuous scalar fields only.
+        Do not normalize sin/cos, one-hot shape fields, contact_flag, valid_flag.
+        Invalid / padding tokens must remain exactly zero after transform.
+    """
+
+    def __init__(
+        self,
+        continuous_indices: Optional[Iterable[int]] = None,
+        valid_flag_index: int = 15,
+        eps: float = 1e-6,
+    ):
+        if continuous_indices is None:
+            continuous_indices = [0, 1, 4, 5, 6, 7, 8, 12, 13]
+
+        self.continuous_indices = list(continuous_indices)
+        self.valid_flag_index = valid_flag_index
+        self.eps = eps
+
+        self.mean_: Optional[np.ndarray] = None
+        self.std_: Optional[np.ndarray] = None
+        self.fitted_: bool = False
+
+    def fit(self, states: np.ndarray) -> "StateNormalizer":
+        """
+        Fit mean/std on valid tokens only.
+
+        states shape:
+            [B, H, N, D] or [num_samples, D]
+        """
+        states = np.asarray(states, dtype=np.float32)
+
+        required_last_dim = max(self.continuous_indices + [self.valid_flag_index]) + 1
+        if states.shape[-1] < required_last_dim:
+            raise ValueError(
+                f"Last dim too small for schema: got {states.shape[-1]}, "
+                f"required at least {required_last_dim}"
+            )
+
+        flat = states.reshape(-1, states.shape[-1])
+        valid_mask = flat[:, self.valid_flag_index] > 0.5
+
+        if valid_mask.sum() == 0:
+            raise ValueError("No valid tokens found when fitting StateNormalizer.")
+
+        valid_flat = flat[valid_mask]
+        cont = valid_flat[:, self.continuous_indices]
+
+        mean = cont.mean(axis=0)
+        std = cont.std(axis=0)
+        std = np.where(std < self.eps, 1.0, std)
+
+        self.mean_ = mean.astype(np.float32)
+        self.std_ = std.astype(np.float32)
+        self.fitted_ = True
+
+        return self
+
+    def transform(self, states: np.ndarray) -> np.ndarray:
+        """
+        Normalize continuous fields for valid tokens.
+
+        Invalid / padding tokens are forced to exactly zero.
+        """
+        if not self.fitted_:
+            raise RuntimeError("StateNormalizer must be fitted before transform().")
+
+        states = np.asarray(states, dtype=np.float32)
+        out = states.copy()
+
+        flat = out.reshape(-1, out.shape[-1])
+        valid_mask = flat[:, self.valid_flag_index] > 0.5
+
+        if valid_mask.any():
+            valid_tokens = flat[valid_mask].copy()
+            valid_tokens[:, self.continuous_indices] = (
+                valid_tokens[:, self.continuous_indices] - self.mean_
+            ) / self.std_
+            flat[valid_mask] = valid_tokens
+
+        # Critical for padded obstacle tokens:
+        # invalid tokens must remain exactly zero.
+        flat[~valid_mask] = 0.0
+
+        return out
+
+    def inverse_transform(self, normalized_states: np.ndarray) -> np.ndarray:
+        """
+        Recover original continuous fields for valid tokens.
+
+        Invalid / padding tokens are kept exactly zero.
+        """
+        if not self.fitted_:
+            raise RuntimeError("StateNormalizer must be fitted before inverse_transform().")
+
+        normalized_states = np.asarray(normalized_states, dtype=np.float32)
+        out = normalized_states.copy()
+
+        flat = out.reshape(-1, out.shape[-1])
+        valid_mask = flat[:, self.valid_flag_index] > 0.5
+
+        if valid_mask.any():
+            valid_tokens = flat[valid_mask].copy()
+            valid_tokens[:, self.continuous_indices] = (
+                valid_tokens[:, self.continuous_indices] * self.std_
+            ) + self.mean_
+            flat[valid_mask] = valid_tokens
+
+        # Keep invalid / padding tokens exactly zero.
+        flat[~valid_mask] = 0.0
+
+        return out
+
+    def save(self, path: str | Path) -> None:
+        if not self.fitted_:
+            raise RuntimeError("Cannot save an unfitted StateNormalizer.")
+
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        payload = {
+            "continuous_indices": self.continuous_indices,
+            "valid_flag_index": self.valid_flag_index,
+            "eps": self.eps,
+            "mean": self.mean_.tolist(),
+            "std": self.std_.tolist(),
+        }
+
+        with path.open("w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+
+    @classmethod
+    def load(cls, path: str | Path) -> "StateNormalizer":
+        path = Path(path)
+
+        with path.open("r", encoding="utf-8") as f:
+            payload = json.load(f)
+
+        obj = cls(
+            continuous_indices=payload["continuous_indices"],
+            valid_flag_index=payload["valid_flag_index"],
+            eps=payload["eps"],
+        )
+
+        obj.mean_ = np.asarray(payload["mean"], dtype=np.float32)
+        obj.std_ = np.asarray(payload["std"], dtype=np.float32)
+        obj.fitted_ = True
+
+        return obj
+==========================================
+FILE: src/data/episode_loader.py (已有，数据加载)
+==========================================
+# src/data/episode_loader.py
+"""Dataset loader for Paper 1 state16 proof-of-concept."""
+
+from __future__ import annotations
+import json, math, random
+from pathlib import Path
+from typing import Optional
+
+import numpy as np
+import torch
+from torch.utils.data import Dataset
+
+
+def _wrap_to_pi(angle: np.ndarray) -> np.ndarray:
+    return np.arctan2(np.sin(angle), np.cos(angle))
+
+
+def _wrap_pose_delta(delta: np.ndarray) -> np.ndarray:
+    """Wrap theta component (index 2) to [-pi, pi]."""
+    out = delta.copy()
+    out[..., 2] = _wrap_to_pi(out[..., 2])
+    return out
+
+
+class State16Dataset(Dataset):
+    """Loads .npz episodes, constructs supervised samples for high-level model."""
+
+    def __init__(
+        self,
+        metadata_path: str,
+        episode_root: str,
+        history_len: int = 6,
+        token_count: int = 6,
+        state_dim: int = 16,
+        action_dim: int = 2,
+        split: str = "train",
+        train_ratio: float = 0.8,
+        val_ratio: float = 0.2,
+        limit_samples: Optional[int] = None,
+        seed: int = 0,
+    ):
+        self.history_len = history_len
+        self.token_count = token_count
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+        self.split = split
+        self.train_ratio = train_ratio
+        self.val_ratio = val_ratio
+
+        # Read metadata
+        meta_path = Path(metadata_path)
+        with meta_path.open("r") as f:
+            all_episodes = [json.loads(line) for line in f if line.strip()]
+
+        # Check for split info
+        has_split = any("split_name" in ep for ep in all_episodes)
+        
+        if has_split:
+            episodes = [ep for ep in all_episodes if ep.get("split_name") == split]
+            # If split produces empty result (e.g. all train, no val), fall back to random
+            if not episodes:
+                has_split = False
+        
+        if not has_split:
+            # Random split by episode
+            rng = random.Random(seed)
+            rng.shuffle(all_episodes)
+            n = len(all_episodes)
+            n_train = max(1, int(n * train_ratio))
+            n_val = max(1, int(n * val_ratio)) if n > 1 else 1
+            if split == "train":
+                episodes = all_episodes[:n_train]
+            elif split == "val":
+                start = n_train
+                end = min(n_train + n_val, n)
+                episodes = all_episodes[start:end]
+            else:
+                episodes = []
+
+        self.episodes = episodes
+        self.episode_root = Path(episode_root)
+
+        # Build sample index
+        self.samples = []
+        for ep in episodes:
+            npz_path = self.episode_root / f"{ep['episode_id']}.npz"
+            if not npz_path.exists():
+                continue
+            data = np.load(npz_path, allow_pickle=True)
+            n_steps = len(data["states"])
+            for t in range(history_len, n_steps - 1):
+                self.samples.append({
+                    "episode_id": ep["episode_id"],
+                    "t": t,
+                    "npz_path": str(npz_path),
+                    "family": ep.get("family", "unknown"),
+                    "split_name": ep.get("split_name", split),
+                })
+
+        if limit_samples and limit_samples < len(self.samples):
+            rng = random.Random(seed)
+            self.samples = rng.sample(self.samples, limit_samples)
+
+    def __len__(self):
+        return len(self.samples)
+
+    def __getitem__(self, idx):
+        s = self.samples[idx]
+        data = np.load(s["npz_path"], allow_pickle=True)
+        t = s["t"]
+        H, N, D = self.history_len, self.token_count, self.state_dim
+
+        # History states [H, N, D]
+        history = data["states"][t - H : t].astype(np.float32)
+
+        # Action [2]
+        action = data["actions_physical"][t].astype(np.float32)
+
+        # Targets
+        current_pose = data["object_poses"][t].astype(np.float32)
+        next_pose = data["next_object_poses"][t].astype(np.float32)
+        goal_pose = data["goal_pose"].astype(np.float32)
+
+        dynamics_target = _wrap_pose_delta(next_pose - current_pose)
+        subgoal_target = _wrap_pose_delta(goal_pose - current_pose)
+
+        return {
+            "history": torch.from_numpy(history),
+            "action": torch.from_numpy(action),
+            "dynamics_target": torch.from_numpy(dynamics_target),
+            "subgoal_target": torch.from_numpy(subgoal_target),
+            "episode_id": s["episode_id"],
+            "t": t,
+            "family": s["family"],
+        }
+
+==========================================
+FILE: scripts/train_high_level.py (已有，训练脚本)
+==========================================
+#!/usr/bin/env python3
+"""train_high_level.py — Train Paper 1 high-level representation models."""
+
+import argparse, json, os, sys, time
+from pathlib import Path
+
+import torch
+import torch.nn as nn
+import yaml
+
+# Ensure repo root on path
+REPO_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO_ROOT))
+
+from src.data.episode_loader import State16Dataset
+from src.data.state_normalizer import StateNormalizer
+from src.models.rig_world import RIGWorldModel
+from src.models.losses import total_high_level_loss
+
+
+def set_seed(seed: int):
+    import random, numpy as np
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def collate_fn(batch):
+    history = torch.stack([b["history"] for b in batch])
+    action = torch.stack([b["action"] for b in batch])
+    dyn_target = torch.stack([b["dynamics_target"] for b in batch])
+    sub_target = torch.stack([b["subgoal_target"] for b in batch])
+    return history, action, dyn_target, sub_target
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", required=True)
+    parser.add_argument("--model", required=True, choices=["flat", "object_centric", "causality_aware"])
+    parser.add_argument("--smoke", action="store_true")
+    args = parser.parse_args()
+
+    # Load config
+    with open(args.config) as f:
+        cfg = yaml.safe_load(f)
+
+    set_seed(cfg["experiment"]["seed"])
+
+    # Device
+    device_str = cfg["train"].get("device", "cuda")
+    if device_str == "cuda" and not torch.cuda.is_available():
+        print("[INFO] CUDA not available, falling back to CPU")
+        device_str = "cpu"
+    device = torch.device(device_str)
+    print(f"[INFO] Using device: {device}")
+
+    # Paths
+    run_dir = Path(cfg["outputs"]["run_dir"]) / args.model
+    ckpt_dir = run_dir / "checkpoints"
+    ckpt_dir.mkdir(parents=True, exist_ok=True)
+    log_path = run_dir / "train_log.jsonl"
+
+    # Data
+    dc = cfg["data"]
+    nc = cfg["normalizer"]
+    tc = cfg["train"]
+    mc = cfg["models"]
+
+    train_ds = State16Dataset(
+        metadata_path=dc["metadata"],
+        episode_root=f"{dc['root']}/episodes",
+        history_len=dc["history_len"],
+        token_count=dc["token_count"],
+        state_dim=dc["state_dim"],
+        split="train",
+        train_ratio=dc["train_ratio_if_no_split"],
+        val_ratio=dc["val_ratio_if_no_split"],
+        seed=cfg["experiment"]["seed"],
+    )
+    val_ds = State16Dataset(
+        metadata_path=dc["metadata"],
+        episode_root=f"{dc['root']}/episodes",
+        history_len=dc["history_len"],
+        token_count=dc["token_count"],
+        state_dim=dc["state_dim"],
+        split="val",
+        train_ratio=dc["train_ratio_if_no_split"],
+        val_ratio=dc["val_ratio_if_no_split"],
+        seed=cfg["experiment"]["seed"],
+    )
+
+    import numpy as np
+    print(f"[INFO] Train samples: {len(train_ds)}, Val samples: {len(val_ds)}")
+
+    # Normalizer
+    if nc["enabled"]:
+        normalizer = StateNormalizer()
+        # Fit on train only: collect all history states from train dataset
+        all_train_states = []
+        for i in range(min(len(train_ds), 2000)):
+            sample = train_ds[i]
+            all_train_states.append(sample["history"].numpy())
+        all_train_states = np.array(all_train_states).reshape(-1, train_ds.state_dim)
+        # Use only valid tokens
+        valid = all_train_states[:, normalizer.valid_flag_index] > 0.5
+        if valid.sum() > 0:
+            normalizer.fit(all_train_states)
+            print(f"[INFO] Normalizer fitted on train tokens")
+        else:
+            print("[WARN] No valid train tokens for normalizer, skipping fit")
+        
+        # Save
+        save_path = Path(nc["save_path"])
+        save_path.parent.mkdir(parents=True, exist_ok=True)
+        normalizer.save(str(save_path))
+    else:
+        normalizer = None
+
+    # Model
+    model = RIGWorldModel(
+        model_type=args.model,
+        history_len=dc["history_len"],
+        num_tokens=dc["token_count"],
+        raw_token_dim=dc["state_dim"],
+        action_dim=2,
+        gru_hidden=mc["gru_hidden"],
+        d_model=mc["d_model"],
+        head_hidden_dim=mc["z_dim"],
+        frame_embed_dim=128,
+    ).to(device)
+
+    n_params = sum(p.numel() for p in model.parameters())
+    print(f"[INFO] Model {args.model}: {n_params:,} parameters")
+
+    # Optimizer
+    optimizer = torch.optim.Adam(
+        model.parameters(),
+        lr=tc["lr"],
+        weight_decay=tc["weight_decay"],
+    )
+
+    # Dataloaders
+    def make_loader(ds, batch_size, shuffle=False):
+        return torch.utils.data.DataLoader(
+            ds, batch_size=batch_size, shuffle=shuffle,
+            collate_fn=collate_fn, num_workers=tc["num_workers"],
+        )
+
+    epochs = tc["epochs_smoke"] if args.smoke else tc["epochs_poc"]
+    batch_size = min(tc["batch_size"], len(train_ds) // 2)
+    if batch_size < 2:
+        batch_size = 2
+
+    train_loader = make_loader(train_ds, batch_size, shuffle=True)
+    val_loader = make_loader(val_ds, batch_size, shuffle=False)
+
+    best_val_loss = float("inf")
+    log_entries = []
+
+    for epoch in range(1, epochs + 1):
+        model.train()
+        train_loss_sum = 0.0
+        train_n = 0
+
+        for history, action, dyn_target, sub_target in train_loader:
+            history = history.to(device)
+            action = action.to(device)
+            dyn_target = dyn_target.to(device)
+            sub_target = sub_target.to(device)
+
+            # Normalize if enabled
+            if normalizer is not None:
+                history_np = history.cpu().numpy()
+                B, H, N, D = history_np.shape
+                history_np = normalizer.transform(history_np.reshape(-1, D)).reshape(B, H, N, D)
+                history = torch.from_numpy(history_np).to(device)
+
+            out = model(history, action)
+            losses = total_high_level_loss(
+                out["pred_delta"], dyn_target,
+                out["pred_subgoal"], sub_target,
+                lambda_dyn=tc["w_dynamics"],
+                lambda_subgoal=tc["w_subgoal"],
+            )
+
+            optimizer.zero_grad()
+            losses["loss"].backward()
+            if tc["grad_clip_norm"] > 0:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), tc["grad_clip_norm"])
+            optimizer.step()
+
+            train_loss_sum += losses["loss"].item() * history.size(0)
+            train_n += history.size(0)
+
+        avg_train_loss = train_loss_sum / max(train_n, 1)
+
+        # Validation
+        model.eval()
+        val_loss_sum = 0.0
+        val_n = 0
+        with torch.no_grad():
+            for history, action, dyn_target, sub_target in val_loader:
+                history = history.to(device)
+                action = action.to(device)
+                dyn_target = dyn_target.to(device)
+                sub_target = sub_target.to(device)
+                if normalizer is not None:
+                    history_np = history.cpu().numpy()
+                    B, H, N, D = history_np.shape
+                    history_np = normalizer.transform(history_np.reshape(-1, D)).reshape(B, H, N, D)
+                    history = torch.from_numpy(history_np).to(device)
+                out = model(history, action)
+                losses = total_high_level_loss(
+                    out["pred_delta"], dyn_target,
+                    out["pred_subgoal"], sub_target,
+                    lambda_dyn=tc["w_dynamics"],
+                    lambda_subgoal=tc["w_subgoal"],
+                )
+                val_loss_sum += losses["loss"].item() * history.size(0)
+                val_n += history.size(0)
+
+        avg_val_loss = val_loss_sum / max(val_n, 1)
+
+        log_entry = {
+            "epoch": epoch,
+            "train_loss": round(avg_train_loss, 6),
+            "val_loss": round(avg_val_loss, 6),
+            "timestamp": time.time(),
+        }
+        log_entries.append(log_entry)
+
+        # Check for NaN
+        if not torch.isfinite(torch.tensor(avg_train_loss)):
+            print(f"[ERROR] NaN train_loss at epoch {epoch}")
+            break
+
+        # Save best
+        if avg_val_loss < best_val_loss:
+            best_val_loss = avg_val_loss
+            torch.save({
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "val_loss": avg_val_loss,
+            }, ckpt_dir / "best.pt")
+
+        print(f"[Epoch {epoch:3d}/{epochs}] train_loss={avg_train_loss:.6f} val_loss={avg_val_loss:.6f}")
+
+    # Save final log
+    with open(log_path, "w") as f:
+        for entry in log_entries:
+            f.write(json.dumps(entry) + "\n")
+
+    print(f"[DONE] Best val_loss={best_val_loss:.6f}, log saved to {log_path}")
+    print(f"[DONE] Checkpoint: {ckpt_dir / 'best.pt'}")
+
+
+if __name__ == "__main__":
+    main()

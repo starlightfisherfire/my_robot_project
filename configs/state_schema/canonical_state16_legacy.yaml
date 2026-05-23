@@ -1,0 +1,63 @@
+# configs/state_schema/canonical_state16_legacy.yaml
+# Legacy canonical_state16 schema for reference.
+# This is the current Paper 1 baseline.
+
+version: "0.1"
+name: canonical_state16_legacy
+description: "Paper 1 baseline: 6 tokens × 16 features"
+
+shape: [6, 6, 16]  # [history_len=6, num_tokens=6, feature_dim=16]
+
+tokens:
+  - idx: 0
+    role: end_effector
+    features:
+      - {idx: 0, name: x, type: continuous, source: proprio}
+      - {idx: 1, name: y, type: continuous, source: proprio}
+      - {idx: 2, name: sin_theta, type: bounded, source: computed}
+      - {idx: 3, name: cos_theta, type: bounded, source: computed}
+      - {idx: 4, name: vx, type: continuous, source: temporal_diff}
+      - {idx: 5, name: vy, type: continuous, source: temporal_diff}
+      - {idx: 6, name: omega, type: continuous, source: temporal_diff}
+      - {idx: 7, name: size_x, type: static, source: model}
+      - {idx: 8, name: size_y, type: static, source: model}
+      - {idx: 9, name: shape_T, type: categorical, source: model}
+      - {idx: 10, name: shape_L, type: categorical, source: model}
+      - {idx: 11, name: shape_other, type: categorical, source: model}
+      - {idx: 12, name: mass, type: static, source: model}
+      - {idx: 13, name: friction, type: static, source: model}
+      - {idx: 14, name: contact_flag, type: binary, source: proprio}
+      - {idx: 15, name: valid_flag, type: mask, source: computed}
+
+  - idx: 1
+    role: manipulated_object
+    features:
+      - {idx: 0, name: x, type: continuous, source: vision_proxy}
+      - {idx: 1, name: y, type: continuous, source: vision_proxy}
+      - {idx: 2, name: sin_theta, type: bounded, source: vision_proxy}
+      - {idx: 3, name: cos_theta, type: bounded, source: vision_proxy}
+      - {idx: 4, name: vx, type: continuous, source: temporal_diff}
+      - {idx: 5, name: vy, type: continuous, source: temporal_diff}
+      - {idx: 6, name: omega, type: continuous, source: temporal_diff}
+      - {idx: 7, name: size_x, type: static, source: model}
+      - {idx: 8, name: size_y, type: static, source: model}
+      - {idx: 9, name: shape_T, type: categorical, source: model}
+      - {idx: 10, name: shape_L, type: categorical, source: model}
+      - {idx: 11, name: shape_other, type: categorical, source: model}
+      - {idx: 12, name: mass, type: static, source: model}
+      - {idx: 13, name: friction, type: static, source: model}
+      - {idx: 14, name: contact_flag, type: binary, source: computed}
+      - {idx: 15, name: valid_flag, type: mask, source: computed}
+
+  - idx: 2
+    role: goal
+    features:
+      - {idx: 0, name: x, type: continuous, source: task_given}
+      - {idx: 1, name: y, type: continuous, source: task_given}
+      - {idx: 2, name: sin_theta, type: bounded, source: task_given}
+      - {idx: 3, name: cos_theta, type: bounded, source: task_given}
+      - {idx: 15, name: valid_flag, type: mask, source: computed}
+
+  - {idx: 3, role: obstacle_1}
+  - {idx: 4, role: obstacle_2}
+  - {idx: 5, role: obstacle_3}

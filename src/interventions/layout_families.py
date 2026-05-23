@@ -236,9 +236,59 @@ def sample_edge_goal(rng: random.Random) -> dict:
     }
 
 
+def sample_non_blocking(rng: random.Random) -> dict:
+    """
+    ID layout with non-blocking obstacle.
+
+    Same object/goal as open_space, but one obstacle is placed in the
+    workspace corner far from the pushing path.  The obstacle is visible
+    in the scene but should NOT interfere with ee → object → goal.
+
+    Purpose: evaluate whether a learned model can ignore irrelevant obstacles.
+    """
+    object_pose = make_pose(
+        x=_jitter(rng, 0.20, 0.03),
+        y=_jitter(rng, 0.18, 0.03),
+        theta=rng.uniform(-0.25, 0.25),
+    )
+
+    goal_pose = make_pose(
+        x=_jitter(rng, 0.45, 0.04),
+        y=_jitter(rng, 0.28, 0.04),
+        theta=rng.uniform(-0.25, 0.25),
+    )
+
+    ee_pose = make_pose(
+        x=object_pose["x"] - 0.10,
+        y=object_pose["y"],
+        theta=0.0,
+    )
+
+    # Place obstacle in upper-right corner, far from typical pushing path.
+    # Typical path: x ∈ [0.10, 0.50], y ∈ [0.15, 0.35]
+    # Obstacle center: (0.55, 0.42) — well outside this band.
+    obstacle = make_obstacle(
+        obstacle_id="obs_non_blocking_0",
+        x=_jitter(rng, 0.55, 0.02),
+        y=_jitter(rng, 0.42, 0.02),
+        size_x=0.06,
+        size_y=0.12,
+        theta=rng.uniform(-0.3, 0.3),
+    )
+
+    return {
+        "layout_family": "non_blocking",
+        "object_initial_pose": object_pose,
+        "goal_pose": goal_pose,
+        "ee_initial_pose": ee_pose,
+        "obstacles": [obstacle],
+    }
+
+
 LAYOUT_SAMPLERS = {
     "open_space": sample_open_space,
     "mild_offset": sample_mild_offset,
+    "non_blocking": sample_non_blocking,
     "blocking": sample_blocking,
     "narrow_passage": sample_narrow_passage,
     "edge_goal": sample_edge_goal,

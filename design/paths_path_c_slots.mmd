@@ -1,0 +1,35 @@
+flowchart TB
+    subgraph INPUT_C["Input at t"]
+        OBS_C["z_obs_t = [z_robot, z_objA, z_objB]"]
+        ACT_C["act_{t-1}"]
+    end
+
+    subgraph STATE_C["Persistent Object States"]
+        direction LR
+        S_Rt1["S_robot_{t-1}"]
+        S_At1["S_objA_{t-1}"]
+        S_Bt1["S_objB_{t-1}"]
+    end
+
+    subgraph UPDATE_C["Slot-Level State Update"]
+        direction TB
+        FUSE_C["Per-Slot Update<br/>S_i_{t-1} + z_i_t + act → S_i_t"]
+        INTERACT["Cross-Slot Self-Attention<br/>objA attends to objB (Is B approaching?)<br/>robot attends to all (Which to push?)"]
+        S_T_C["Updated States:<br/>S_robot_t, S_objA_t, S_objB_t"]
+    end
+
+    subgraph HEADS_C["Prediction"]
+        NL_C["Per-Slot Next-Latent<br/>S_i_t → ẑ_i_{t+1}"]
+        GLOBAL_C["Global Pooling<br/>→ Global State (for planner heads)"]
+    end
+
+    OBS_C --> FUSE_C
+    ACT_C --> FUSE_C
+    STATE_C --> FUSE_C
+    FUSE_C --> INTERACT
+    INTERACT --> S_T_C
+    S_T_C --> NL_C
+    S_T_C --> GLOBAL_C
+
+    style INTERACT fill:#e3f2fd
+    style S_T_C fill:#ffe0b2,stroke:#ff9800

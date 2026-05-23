@@ -1,0 +1,39 @@
+flowchart TB
+    subgraph INPUT_D["Input at t"]
+        OBS_D["z_obs_t = [z_robot, z_objA, z_objB]"]
+        ACT_D["act_{t-1}"]
+        GOAL_D["goal_embedding"]
+    end
+
+    subgraph TWO_STREAMS["Dual-Stream Architecture"]
+        subgraph GLOBAL_STREAM["Global Stream"]
+            G_PREV["State_{t-1}^G ∈ ℝ^128<br/>Global: task, physics, context"]
+            G_UPDATE["Update<br/>State_{t-1}^G + pooled obs → State_t^G"]
+        end
+        
+        subgraph OBJECT_STREAM["Object Stream"]
+            O_PREV["[S_robot, S_objA, S_objB]_{t-1}<br/>Per-object: dynamics, pose"]
+            O_UPDATE["Update<br/>S_i_{t-1} + z_i + act → S_i_t"]
+        end
+        
+        INTERACT_D["Cross-Stream Attention<br/>Global to Objects: Goal vs obstacle check<br/>Objects to Global: dynamics update physics belief"]
+    end
+
+    subgraph OUTPUT_D["Output"]
+        FUSED["Fused State<br/>State_t^G + pooled obj states<br/>→ planner-facing vector"]
+    end
+
+    GOAL_D --> G_UPDATE
+    OBS_D --> G_UPDATE
+    OBS_D --> O_UPDATE
+    ACT_D --> G_UPDATE
+    ACT_D --> O_UPDATE
+    G_PREV --> G_UPDATE
+    O_PREV --> O_UPDATE
+    G_UPDATE --> INTERACT_D
+    O_UPDATE --> INTERACT_D
+    INTERACT_D --> FUSED
+
+    style GLOBAL_STREAM fill:#e8f5e9
+    style OBJECT_STREAM fill:#e3f2fd
+    style INTERACT_D fill:#fff3e0

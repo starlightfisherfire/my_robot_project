@@ -211,6 +211,13 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--camera",
+        type=str,
+        default="topdown",
+        help="Camera name for rendering (default: topdown). Falls back to programmatic top-down if not found.",
+    )
+
+    parser.add_argument(
         "--pusher-radius",
         type=float,
         default=None,
@@ -231,11 +238,18 @@ def parse_args() -> argparse.Namespace:
         help="Pusher z position in meters (default: 0.016).",
     )
 
+    parser.add_argument(
+        "--max-speed-mps",
+        type=float,
+        default=0.05,
+        help="Pusher max speed in m/s (default: 0.05).",
+    )
+
     return parser.parse_args()
 
 
-def setup_renderer(env: MujocoPushEnv, width: int, height: int):
-    """Initialize MuJoCo renderer with fixed top-down camera."""
+def setup_renderer(env: MujocoPushEnv, width: int, height: int, camera_name: str = "topdown"):
+    """Initialize MuJoCo renderer, preferring named camera over programmatic camera."""
     gl_backend = os.environ.get("MUJOCO_GL", "not set")
     print(f"MUJOCO_GL backend: {gl_backend}")
 
@@ -247,7 +261,14 @@ def setup_renderer(env: MujocoPushEnv, width: int, height: int):
         renderer = mujoco.Renderer(env.model, height=height, width=width)
         print(f"✓ Renderer initialized: {width}x{height}")
 
-        # Setup fixed top-down camera for planar pushing visualization
+        # Try named camera first
+        cam_id = mujoco.mj_name2id(env.model, mujoco.mjtObj.mjOBJ_CAMERA, camera_name)
+        if cam_id >= 0:
+            print(f"Using named camera: {camera_name} (id={cam_id})")
+            return renderer, cam_id
+
+        # Fallback: programmatic top-down camera
+        print(f"WARNING: Camera '{camera_name}' not found, using programmatic top-down camera")
         camera = mujoco.MjvCamera()
         mujoco.mjv_defaultCamera(camera)
         camera.lookat[:] = [0.35, 0.25, 0.0]
@@ -491,8 +512,8 @@ def run_closed_loop_with_rendering(
             frames.append(frame)
 
             # Strict pose early stop: both pos AND theta must be satisfied
-            _pos_ok = current_dist < success_pos_threshold
-            _theta_ok = current_theta_error_deg < success_theta_threshold_deg
+            _pos_ok = current_dist <= success_pos_threshold
+            _theta_ok = current_theta_error_deg <= success_theta_threshold_deg
             if _pos_ok and _theta_ok:
                 success = True
                 print(f"\n✓ STRICT POSE STOP at step {total_env_step}! dist={current_dist*1000:.2f}mm theta={current_theta_error_deg:.1f}deg")
@@ -514,6 +535,13 @@ def run_closed_loop_with_rendering(
 
 def main() -> None:
     args = parse_args()
+
+    # Handle --strict-pose-stop: auto-set thresholds if user didn't specify
+    if args.strict_pose_stop:
+        if args.success_pos_threshold >= 0.05:
+            args.success_pos_threshold = 0.0015
+        if args.success_theta_threshold_deg >= 180.0:
+            args.success_theta_threshold_deg = 3.0
 
     template_path = Path(args.templates)
     if not template_path.exists():
@@ -554,14 +582,14 @@ def main() -> None:
 
     env = MujocoPushEnv(
         control_dt=0.1,
-        max_speed_mps=0.05,
+        max_speed_mps=args.max_speed_mps,
         pusher_radius=pusher_radius,
         pusher_halfheight=pusher_halfheight,
         pusher_z=pusher_z,
     )
     env.reset_from_template(template)
 
-    renderer, camera = setup_renderer(env, args.width, args.height)
+    renderer, camera = setup_renderer(env, args.width, args.height, camera_name=args.camera)
 
     frames = run_closed_loop_with_rendering(
         env=env,

@@ -1,0 +1,44 @@
+# configs/experiments/train_mppi_stage2c_state16_pilot_object_centric.yaml
+experiment:
+  name: train_mppi_stage2c_state16_pilot_object_centric
+  seed: 42
+  purpose: "Pilot training: flat encoder on mppi_stage2c_state16"
+
+data:
+  root: data/sim/mppi_stage2c_state16
+  metadata: data/sim/mppi_stage2c_state16/metadata/episodes.jsonl
+  history_len: 6
+  token_count: 6
+  state_dim: 16
+  train_ratio_if_no_split: 0.7
+  val_ratio_if_no_split: 0.15
+
+normalizer:
+  enabled: true
+  fit_on: train_only
+  save_path: runs/pilot_state16_mppi_stage2c/train_object_centric/normalizer_state16.json
+
+models:
+  names: [flat]
+  d_model: 128
+  z_dim: 256
+  gru_hidden: 256
+
+train:
+  batch_size: 128
+  epochs_smoke: 2
+  epochs_poc: 10
+  lr: 0.0003
+  weight_decay: 0.000001
+  device: cuda
+  num_workers: 0
+  grad_clip_norm: 1.0
+  w_dynamics: 1.0
+  w_subgoal: 0.2
+
+eval:
+  metrics: [dynamics_mse, dynamics_rmse, subgoal_mse, subgoal_rmse]
+  rollout_horizons: [1, 5, 10]
+
+outputs:
+  run_dir: runs/pilot_state16_mppi_stage2c/train_object_centric

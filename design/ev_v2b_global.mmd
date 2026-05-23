@@ -1,0 +1,9 @@
+flowchart TB
+    subgraph GLOBAL["Global Stream"]
+        G_PREV["State^G_{t-1}"] --> G_UPDATE["Update → State^G_t"]
+    end
+    subgraph OBJECT["Object Stream"]
+        O_PREV["[S_i]_{t-1}"] --> O_UPDATE["Update → [S_i]_t"]
+    end
+    G_UPDATE --> INTERACT_D["Cross-Stream Attention<br/>Global ↔ Objects"]
+    O_UPDATE --> INTERACT_D

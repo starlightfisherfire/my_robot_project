@@ -1,0 +1,110 @@
+# configs/state_schema/state_profiles.yaml
+# Profile definitions for v2 ablation experiments.
+# Each profile defines which features from visual_structured_state_v2.yaml are included.
+
+version: "0.1"
+
+profiles:
+  # --- Legacy baseline ---
+  state16_minimal_legacy:
+    description: "Legacy canonical_state16 [6,6,16] baseline"
+    includes:
+      - obj_x, obj_y, obj_sin_theta, obj_cos_theta
+      - obj_vx, obj_vy, obj_omega
+      - obj_size_x, obj_size_y
+      - obj_shape_T, obj_shape_L
+      - ee_x, ee_y
+      - goal_x, goal_y, goal_sin_theta, goal_cos_theta
+      - obs_x, obs_y, obs_size_x, obs_size_y
+    excludes:
+      - object_mass, object_friction  # in state16 but ablated here
+      - contact_proxy, motion_alignment
+      - temporal features
+      - nuisance features
+      - privileged_physics features
+    note: "16D baseline for backward compatibility"
+
+  # --- Visual object state ---
+  visual_object_state_v2:
+    description: "Full v2 object tokens, no relations"
+    includes:
+      - obj_x, obj_y, obj_sin_theta, obj_cos_theta
+      - obj_vx, obj_vy, obj_omega
+      - obj_size_x, obj_size_y
+      - obj_shape_T, obj_shape_L
+      - ee_x, ee_y, ee_vx, ee_vy
+      - prev_action_dx, prev_action_dy
+      - goal_x, goal_y, goal_sin_theta, goal_cos_theta
+      - obs_x, obs_y, obs_size_x, obs_size_y
+    excludes:
+      - relation_tokens (all)
+      - temporal_tokens (all)
+      - nuisance (all)
+      - privileged_physics (all)
+
+  # --- Full visual + relations ---
+  visual_object_relation_state_v2:
+    description: "Full v2 object + relation tokens (main v2 profile)"
+    includes:
+      - obj_x, obj_y, obj_sin_theta, obj_cos_theta
+      - obj_vx, obj_vy, obj_omega
+      - obj_size_x, obj_size_y
+      - obj_shape_T, obj_shape_L
+      - ee_x, ee_y, ee_vx, ee_vy
+      - prev_action_dx, prev_action_dy
+      - goal_x, goal_y, goal_sin_theta, goal_cos_theta
+      - obs_x, obs_y, obs_size_x, obs_size_y
+      # Relations
+      - ee_obj_dist, ee_obj_dx, ee_obj_dy
+      - obj_goal_dist, obj_goal_dx, obj_goal_dy
+      - obj_obs1_dist, obj_obs1_dx, obj_obs1_dy
+      - contact_proxy, motion_alignment
+    excludes:
+      - temporal_tokens
+      - nuisance
+      - privileged_physics
+
+  # --- Full v2 + history ---
+  history_dynamics_state_v2:
+    description: "Full v2 + temporal history"
+    includes:
+      - visual_object_relation_state_v2 (all)
+      - action_h1_dx, action_h1_dy
+      - obj_moved_h1, contact_h1
+      - stuck_proxy
+    excludes:
+      - nuisance
+      - privileged_physics
+
+  # --- Nuisance randomized ---
+  nuisance_randomized_state_v2:
+    description: "Full v2 object+relation + randomized nuisance"
+    includes:
+      - visual_object_relation_state_v2 (all)
+      - obj_color_r, obj_color_g, obj_color_b
+      - light_pos_x, light_pos_y
+      - ambient_light, camera_fovy
+    excludes:
+      - privileged_physics
+    note: "Nuisance values are randomized at collection time; model should learn invariance"
+
+  # --- Privileged physics oracle ---
+  privileged_physics_oracle:
+    description: "Full v2 + privileged physics (upper bound only)"
+    includes:
+      - visual_object_relation_state_v2 (all)
+      - object_mass, object_friction
+      - true_contact_flag
+      - contact_force_x, contact_force_y
+      - contact_mu
+    excludes:
+      - nuisance
+    note: "UPPER BOUND ONLY — not for main claim"
+
+  # --- Forbidden ---
+  solver_internal_forbidden:
+    description: "Solver internal state — EXPLICITLY FORBIDDEN for all experiments"
+    includes: []
+    excludes: [all]
+    note: "MuJoCo solver internals (qM, solref, solimp, efc_*) are NEVER input to any model. Listed here for documentation completeness."
+    status: FORBIDDEN

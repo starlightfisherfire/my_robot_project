@@ -197,6 +197,13 @@ def build_report(result: dict, config: dict, category: str) -> dict:
         "success_pose_1cm_5deg": result.get("success_pose_1cm_5deg"),
         "success_pose_0p5cm_5deg": result.get("success_pose_0p5cm_5deg"),
         "success_pose_0p15cm_3deg": result.get("success_pose_0p15cm_3deg"),
+        # Semantic aliases (paper naming)
+        "primary_success": result.get("primary_success"),
+        "coarse_success": result.get("coarse_success"),
+        "precision_success": result.get("precision_success"),
+        "strict_completion": result.get("strict_completion"),
+        "legacy_pos_5cm": result.get("legacy_pos_5cm"),
+        "success_definition": result.get("success_definition", "success_pose_1cm_5deg"),
         # Reach flags
         "reach_5cm": fr.get("5cm", {}).get("reached", False),
         "reach_3cm": fr.get("3cm", {}).get("reached", False),
@@ -251,6 +258,14 @@ def summarize_reports(reports: list[dict]) -> dict:
         "success_pose_1cm_5deg_rate": _rate([r["success_pose_1cm_5deg"] for r in reports]),
         "success_pose_0p5cm_5deg_rate": _rate([r["success_pose_0p5cm_5deg"] for r in reports]),
         "success_pose_0p15cm_3deg_rate": _rate([r["success_pose_0p15cm_3deg"] for r in reports]),
+        # Semantic success rates (paper naming)
+        "success_rate_definition": "success_pose_1cm_5deg",
+        "success_rate": _rate([r["primary_success"] for r in reports]),
+        "primary_success_rate": _rate([r["primary_success"] for r in reports]),
+        "coarse_success_rate": _rate([r["coarse_success"] for r in reports]),
+        "precision_success_rate": _rate([r["precision_success"] for r in reports]),
+        "strict_completion_rate": _rate([r["strict_completion"] for r in reports]),
+        "legacy_pos_5cm_rate": _rate([r["legacy_pos_5cm"] for r in reports]),
         "reach_5cm_rate": _rate([r["reach_5cm"] for r in reports]),
         "reach_1cm_rate": _rate([r["reach_1cm"] for r in reports]),
         "reach_0p5cm_rate": _rate([r["reach_0p5cm"] for r in reports]),
@@ -312,6 +327,12 @@ def write_compact_summary(
         lines.append(f"  success_pose_0p15cm_3deg_rate = {fmt(summary['success_pose_0p15cm_3deg_rate'],3)}")
         lines.append(f"  success_pose_1cm_5deg_rate    = {fmt(summary['success_pose_1cm_5deg_rate'],3)}")
         lines.append(f"  strict_pose_early_stop_rate   = {fmt(summary['strict_pose_early_stop_rate'],3)}")
+        lines.append(f"  --- Paper success metrics (definition=success_pose_1cm_5deg) ---")
+        lines.append(f"  primary_success_rate          = {fmt(summary['primary_success_rate'],3)}")
+        lines.append(f"  coarse_success_rate           = {fmt(summary['coarse_success_rate'],3)}")
+        lines.append(f"  precision_success_rate        = {fmt(summary['precision_success_rate'],3)}")
+        lines.append(f"  strict_completion_rate        = {fmt(summary['strict_completion_rate'],3)}")
+        lines.append(f"  legacy_pos_5cm_rate           = {fmt(summary['legacy_pos_5cm_rate'],3)}")
         lines.append(f"  mean_first_reach_1p5mm_3deg_steps = {fmt(summary['mean_first_reach_1p5mm_3deg_steps'],1)}")
         lines.append(f"  mean_total_env_steps          = {fmt(summary['mean_total_env_steps'],1)}")
         lines.append("")
@@ -321,6 +342,11 @@ def write_compact_summary(
     _section("4. All 6 Templates Combined", all_reports, all_summary)
 
     lines.append("## 5. Key Findings")
+    lines.append(f"  primary_success_rate (all)               = {fmt(all_summary['primary_success_rate'],3)}  (definition=success_pose_1cm_5deg)")
+    lines.append(f"  coarse_success_rate (all)                = {fmt(all_summary['coarse_success_rate'],3)}")
+    lines.append(f"  precision_success_rate (all)             = {fmt(all_summary['precision_success_rate'],3)}")
+    lines.append(f"  strict_completion_rate (all)             = {fmt(all_summary['strict_completion_rate'],3)}")
+    lines.append(f"  legacy_pos_5cm_rate (all)                = {fmt(all_summary['legacy_pos_5cm_rate'],3)}")
     lines.append(f"  success_pose_0p15cm_3deg_rate (all)      = {fmt(all_summary['success_pose_0p15cm_3deg_rate'],3)}")
     lines.append(f"  mean_final_pos_error (all)               = {fmt(all_summary['mean_final_pos_error']*1000,2)} mm")
     lines.append(f"  mean_final_theta_error_deg (all)         = {fmt(all_summary['mean_final_theta_error_deg'],2)} deg")
@@ -507,6 +533,12 @@ def main() -> None:
         f"run_dir: {run_dir}",
         f"timestamp: {ts}",
         f"n_templates: {len(all_reports)}",
+        f"success_rate_definition: success_pose_1cm_5deg",
+        f"primary_success_rate (all):               {fmt(all_summary.get('primary_success_rate'),3)}",
+        f"coarse_success_rate (all):                {fmt(all_summary.get('coarse_success_rate'),3)}",
+        f"precision_success_rate (all):             {fmt(all_summary.get('precision_success_rate'),3)}",
+        f"strict_completion_rate (all):             {fmt(all_summary.get('strict_completion_rate'),3)}",
+        f"legacy_pos_5cm_rate (all):                {fmt(all_summary.get('legacy_pos_5cm_rate'),3)}",
         f"success_pose_0p15cm_3deg_rate (all):      {fmt(all_summary.get('success_pose_0p15cm_3deg_rate'),3)}",
         f"success_pose_1cm_5deg_rate (all):         {fmt(all_summary.get('success_pose_1cm_5deg_rate'),3)}",
         f"mean_final_pos_error (all):               {fmt(all_summary.get('mean_final_pos_error',0)*1000,2)} mm",

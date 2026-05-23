@@ -1,0 +1,335 @@
+[
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260513,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1623507397586069,
+      "y": 0.21934589366466076,
+      "theta": -0.016528004388441542
+    },
+    "goal_pose": {
+      "x": 0.5068693261329407,
+      "y": 0.32302493154731216,
+      "theta": -0.1561331225587398
+    },
+    "ee_initial_pose": {
+      "x": 0.06235073975860689,
+      "y": 0.21934589366466076,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34421828116473907,
+          "y": 0.26026869595296487,
+          "theta": -0.42826359598190966
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260523,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18312321557103367,
+      "y": 0.18894257091206723,
+      "theta": -0.05220253757083765
+    },
+    "goal_pose": {
+      "x": 0.5072780135617994,
+      "y": 0.2959165289850795,
+      "theta": -0.21650411381529783
+    },
+    "ee_initial_pose": {
+      "x": 0.08312321557103367,
+      "y": 0.18894257091206723,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33497008669626344,
+          "y": 0.22522730472195163,
+          "theta": -0.41466587096123075
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260533,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17276346504440027,
+      "y": 0.17534987438469124,
+      "theta": -0.08038536722375472
+    },
+    "goal_pose": {
+      "x": 0.47814616619683387,
+      "y": 0.28052821980297377,
+      "theta": 0.24611390924781162
+    },
+    "ee_initial_pose": {
+      "x": 0.07276346504440026,
+      "y": 0.17534987438469124,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33127420087577475,
+          "y": 0.23538420260192172,
+          "theta": 0.4225507378002499
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_wide__passage_wide__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_wide",
+    "layout_family": "passage_wide",
+    "shape_family": "T_shape",
+    "seed": 20260543,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1934485020334263,
+      "y": 0.199296061353529,
+      "theta": 0.0010142668478037575
+    },
+    "goal_pose": {
+      "x": 0.470608351977613,
+      "y": 0.22141891013462325,
+      "theta": -0.23503226870127997
+    },
+    "ee_initial_pose": {
+      "x": 0.0934485020334263,
+      "y": 0.199296061353529,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3469259541240394,
+          "y": 0.28535748574407616,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.33579609129290966,
+          "y": 0.13535748574407613,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.33202842700551966,
+      "y": 0.21035748574407614
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_medium__passage_medium__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_medium",
+    "layout_family": "passage_medium",
+    "shape_family": "T_shape",
+    "seed": 20260553,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18353749617957762,
+      "y": 0.19386145824918383,
+      "theta": -0.15023071876854788
+    },
+    "goal_pose": {
+      "x": 0.5114409445087684,
+      "y": 0.21846952129500255,
+      "theta": -0.003205517493500898
+    },
+    "ee_initial_pose": {
+      "x": 0.08353749617957762,
+      "y": 0.19386145824918383,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3378625914119696,
+          "y": 0.2711654897720932,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.33448598385818956,
+          "y": 0.1411654897720932,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.347489220344173,
+      "y": 0.2061654897720932
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_hard_5cm__passage_hard_5cm__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_hard_5cm",
+    "layout_family": "passage_hard_5cm",
+    "shape_family": "T_shape",
+    "seed": 20260563,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2004187392338043,
+      "y": 0.17808774389814508,
+      "theta": 0.22325028672110686
+    },
+    "goal_pose": {
+      "x": 0.46792367019053,
+      "y": 0.20587045074312246,
+      "theta": 0.02039618916076641
+    },
+    "ee_initial_pose": {
+      "x": 0.10041873923380429,
+      "y": 0.17808774389814508,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3334452747956278,
+          "y": 0.24697909732063378,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.32404721575765366,
+          "y": 0.1369790973206338,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.33417120471216716,
+      "y": 0.19197909732063378
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06
+  }
+]

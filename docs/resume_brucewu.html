@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bruce Wu — 机器人世界模型 / 因果推理研究</title>
+<style>
+  :root {
+    --primary: #1a1a2e;
+    --accent: #2d6a9f;
+    --light: #f0f4f8;
+    --text: #333;
+    --muted: #666;
+    --border: #e0e0e0;
+    --tag-bg~: #e8f0fe;
+    --tag-text: #1a56db;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--text);
+    line-height: 1.7;
+    background: #fafbfc;
+  }
+  .page {
+    max-width: 820px;
+    margin: 40px auto;
+    background: #fff;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #162447 50%, #1f4068 100%);
+    color: #fff;
+    padding: 48px 56px 40px;
+  }
+  .header h1 { font-size: 32px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+  .header .subtitle { font-size: 15px; opacity: 0.85; font-weight: 400; margin-bottom: 20px; }
+  .header .contact {
+    display: flex; flex-wrap: wrap; gap: 20px; font-size: 13px; opacity: 0.8;
+  }
+  .header .contact span { display: flex; align-items: center; gap: 6px; }
+  .header .contact .icon { font-size: 15px; }
+
+  /* Sections */
+  .content { padding: 40px 56px 48px; }
+  .section { margin-bottom: 36px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-title {
+    font-size: 18px; font-weight: 700; color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 8px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .emoji { font-size: 20px; }
+
+  /* Project cards */
+  .project { margin-bottom: 24px; }
+  .project-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px; flex-wrap: wrap; gap: 8px;
+  }
+  .project-header h3 { font-size: 16px; font-weight: 600; color: var(--primary); }
+  .project-header .meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .project p { font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  .project ul { padding-left: 20px; font-size: 13.5px; color: var(--text); }
+  .project ul li { margin-bottom: 4px; }
+  .project ul li::marker { color: var(--accent); }
+
+  /* Tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tag {
+    display: inline-block; font-size: 11px; padding: 2px 10px;
+    background: var(--tag-bg); color: var(--tag-text);
+    border-radius: 12px; font-weight: 500;
+  }
+
+  /* Skills grid */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .skill-cat { font-size: 13px; }
+  .skill-cat strong { display: block; margin-bottom: 4px; color: var(--primary); }
+  .skill-cat span { color: var(--muted); font-size: 12px; }
+
+  /* Papers */
+  .paper { margin-bottom: 14px; padding: 12px 16px; background: var(--light); border-radius: 6px; border-left: 3px solid var(--accent); }
+  .paper .status { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; }
+  .paper h4 { font-size: 14px; margin: 2px 0; font-weight: 600; }
+  .paper .authors { font-size: 12px; color: var(--muted); }
+
+  /* Highlights */
+  .highlight-box {
+    background: linear-gradient(135deg, #f8faff 0%, #eef3ff 100%);
+    border: 1px solid #d0ddf5; border-radius: 8px; padding: 16px 20px;
+    font-size: 13px; color: var(--text);
+  }
+  .highlight-box strong { color: var(--primary); }
+
+  .stat-line { display: flex; gap: 32px; flex-wrap: wrap; margin: 12px 0; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat .label { font-size: 11px; color: var(--muted); }
+
+  @media print {
+    body { background: #fff; }
+    .page { box-shadow: none; max-width: 100%; margin: 0; }
+  }
+  @media (max-width: 600px) {
+    .header { padding: 32px 24px 28px; }
+    .content { padding: 28px 24px; }
+    .header h1 { font-size: 24px; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Bruce Wu</h1>
+    <div class="subtitle">机器人世界模型 · 因果表征学习 · 模型预测控制</div>
+    <div class="contact">
+      <span>📍 中国·南京</span>
+      <span>📧 [your_email]</span>
+      <span>🔗 [GitHub]</span>
+      <span>📱 [手机号]</span>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Education -->
+    <div class="section">
+      <div class="section-title"><span class="emoji">🎓</span> 教育背景</div>
+      <div class="project">
+        <div class="project-header">
+          <h3>[大学名称] — [硕士 / 博士 / 本科] · [专业]</h3>
+          <span class="meta">20XX – 20XX</span>
+        </div>
+        <p>研究方向：机器人操作、世界模型、因果表征学习。多项目独立研究，覆盖仿真实验设计、模型架构开发、大规模数据采集与分析。</p>
+      </div>
+    </div>
+
+    <!-- Research -->
+    <div class="section">
+      <div class="section-title"><span class="emoji">🔬</span> 核心研究项目</div>
+
+      <!-- Project 1 -->
+      <div class="project">
+        <div class="project-header">
+          <h3>因果感知世界模型 — 机器人操作的结构化 OOD 泛化</h3>
+          <span class="meta">独立研究 · 2025 – 至今</span>
+        </div>
+        <p>核心问题：<strong>世界模型的潜空间表征结构是否决定了模型的物理理解力？</strong>设计并实现了三种编码器变体（Flat / Object-Centric / Causality-Aware），在相同规划器和数据协议下公平对比。</p>
+        <ul>
+          <li>提出 <strong>CausalityAwareEncoder</strong>，将潜空间分解为 z<sub>stable</sub>（场景结构）、z<sub>dynamics</sub>（运动）、z<sub>affordance</sub>（可行性）三个因果因子</li>
+          <li>设计 RIGWorldModel 统一架构，联合训练 DynamicsHead（前向物理预测）和 SubgoalHead（子目标预测），使潜空间同时支撑推演和规划引导</li>
+        </ul>
+
+        <!-- Gate Table -->
+        <p style="margin:14px 0 8px;"><strong>🔬 Oracle-MPC 能力验证管线（关卡体系）</strong></p>
+        <table style="width:100%; font-size:12px; border-collapse:collapse; margin-bottom:12px;">
+          <thead>
+            <tr style="background:#f0f4f8;">
+              <th style="padding:6px 10px; text-align:left; border-bottom:1px solid #e0e0e0;">关卡</th>
+              <th style="padding:6px 10px; text-align:left; border-bottom:1px solid #e0e0e0;">内容</th>
+              <th style="padding:6px 10px; text-align:center; border-bottom:1px solid #e0e0e0; width:80px;">状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;">Gate 0–3</td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;">Repo 骨架 · Reset Template · Toy Oracle-MPC</td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">✅</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;">Gate 4–6</td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;">MuJoCo Env · Oracle Rollout · MPC 接口</td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">✅</td>
+            </tr>
+            <tr style="background:#fffbe6;">
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;"><strong>Gate 7</strong></td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;"><strong>Oracle-MPC 任务能力验证（毫米级精度）</strong></td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">✅</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;">Gate 8</td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0;">Obstacle 布局容量（blocking / narrow / edge）</td>
+              <td style="padding:5px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">🔄</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 10px;">Gate 9–12</td>
+              <td style="padding:5px 10px;">数据收集 → 模型训练 → Learned MPC → OOD 对比</td>
+              <td style="padding:5px 10px; text-align:center;">⬜</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- MPC Config -->
+        <p style="margin:14px 0 8px;"><strong>⚙️ MPC 主配置（c23_precise）</strong></p>
+        <table style="width:100%; font-size:12px; border-collapse:collapse; margin-bottom:12px;">
+          <thead>
+            <tr style="background:#f0f4f8;">
+              <th style="padding:6px 10px; text-align:left; border-bottom:1px solid #e0e0e0;">参数</th>
+              <th style="padding:6px 10px; text-align:center; border-bottom:1px solid #e0e0e0;">值</th>
+              <th style="padding:6px 10px; text-align:left; border-bottom:1px solid #e0e0e0;">参数</th>
+              <th style="padding:6px 10px; text-align:center; border-bottom:1px solid #e0e0e0;">值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0;">Horizon</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">80</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0;">CEM Samples</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">1024</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0;">Execute Steps</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">20</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0;">CEM Elites</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">96</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0;">Max MPC Steps</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">25</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0;">CEM Iterations</td>
+              <td style="padding:4px 10px; border-bottom:1px solid #f0f0f0; text-align:center;">5</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 10px;">总执行预算</td>
+              <td style="padding:4px 10px; text-align:center;"><strong>500 env steps</strong></td>
+              <td style="padding:4px 10px;">精度</td>
+              <td style="padding:4px 10px; text-align:center;"><strong>mean_pos_error ≈ 2.7mm</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ul>
+          <li>在 MuJoCo push-T 任务上完成 <strong>310+ 条配置的系统性 sweep</strong>（CEM / MPPI / MultimodalCEM × 7 speeds × 3 horizons × 4 budgets × 6 obstacle layouts）</li>
+          <li>设计 <strong>Layout OOD 实验</strong>：单障碍物 blocking 布局训练 → 双障碍物 passage 布局零样本泛化，检验潜空间的组合泛化能力</li>
+          <li>发现 blocking_hard 最优配置：700g pusher + 0.50 m/s + horizon 120 + budget 600 → <strong>49s / 10 MPC steps / 0.0002m 精度</strong></li>
+          <li style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;">
+            <div style="min-width:200px;">
+              🎬 <strong>Oracle-MPC 示范视频</strong><br>
+              <span style="font-size:12px;color:var(--muted);">MPPI + 障碍物避让推T · <strong>19 秒完成</strong><br>blocking_hard · temp 0.5 · sigma 0.2 · horizon 140</span>
+            </div>
+            <video controls width="280" style="border-radius:6px;box-shadow:0 1px 6px rgba(0,0,0,0.12);" preload="metadata">
+              <source src="blocking_demo.mp4" type="video/mp4">
+            </video>
+          </li>
+        </ul>
+        <div class="tags">
+          <span class="tag">PyTorch</span><span class="tag">MuJoCo</span><span class="tag">CEM-MPC</span><span class="tag">MPPI</span>
+          <span class="tag">因果表征学习</span><span class="tag">世界模型</span><span class="tag">OOD 泛化</span>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project">
+        <div class="project-header">
+          <h3>视觉物体世界模型</h3>
+          <span class="meta">独立研究 · 2025 – 至今</span>
+        </div>
+        <p>探索从视觉观测直接构建物体级世界模型的方法，研究如何从像素中提取结构化物体表征用于下游规划任务。</p>
+        <div class="tags"><span class="tag">视觉表征</span><span class="tag">物体中心学习</span><span class="tag">Sim-to-Real</span></div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="project">
+        <div class="project-header">
+          <h3>世界模型-执行器标准化接口</h3>
+          <span class="meta">独立研究 · 2025 – 至今</span>
+        </div>
+        <p>设计世界模型输出与机器人执行器之间的标准化接口，使规划器可以跨不同仿真环境和硬件平台复用，打通从模型到执行的完整链路。</p>
+        <div class="tags"><span class="tag">机器人控制</span><span class="tag">接口设计</span><span class="tag">模块化</span></div>
+      </div>
+    </div>
+
+    <!-- Key Numbers -->
+    <div class="highlight-box" style="margin-bottom:36px;">
+      <strong>📊 实验规模一览</strong>
+      <div class="stat-line">
+        <div class="stat"><div class="num">310+</div><div class="label">blocking_hard 分析</div></div>
+        <div class="stat"><div class="num">3</div><div class="label">规划器对比 (CEM/MPPI/MM-CEM)</div></div>
+        <div class="stat"><div class="num">6</div><div class="label">障碍物布局类型</div></div>
+        <div class="stat"><div class="num">32</div><div class="label">核并行计算</div></div>
+        <div class="stat"><div class="num">30%</div><div class="label">Hard 任务成功率</div></div>
+      </div>
+    </div>
+
+    <!-- Technical Skills -->
+    <div class="section">
+      <div class="section-title"><span class="emoji">🛠</span> 技术能力</div>
+      <div class="skills-grid">
+        <div class="skill-cat"><strong>语言</strong><span>Python (主力), Bash, LaTeX</span></div>
+        <div class="skill-cat"><strong>深度学习</strong><span>PyTorch, 自编码器, 因果表征学习</span></div>
+        <div class="skill-cat"><strong>仿真引擎</strong><span>MuJoCo, 刚体动力学, 碰撞检测</span></div>
+        <div class="skill-cat"><strong>规划控制</strong><span>CEM-MPC, MPPI, 并行轨迹采样</span></div>
+        <div class="skill-cat"><strong>工程工具</strong><span>Git, Linux, Conda, 多核并行</span></div>
+        <div class="skill-cat"><strong>数据分析</strong><span>NumPy, Pandas, 大规模 sweep 分析</span></div>
+      </div>
+    </div>
+
+    <!-- Papers -->
+    <div class="section">
+      <div class="section-title"><span class="emoji">📝</span> 论文 / 进行中的工作</div>
+      <div class="paper">
+        <div class="status">⏳ 进行中 · 第一作者</div>
+        <h4>Causality-Aware Object-Level Representations Improve Structural OOD Generalization in World Models</h4>
+        <div class="authors">比较 Flat / Object-Centric / Causality-Aware 三种表征在 layout OOD 下的泛化表现，固定 CEM-MPC 执行器作为公平测试平台。</div>
+      </div>
+      <div class="paper">
+        <div class="status">📋 计划中 · 第一作者</div>
+        <h4>From Single to Double: Compositional Layout Generalization via Factorized Latent World Models</h4>
+        <div class="authors">单障碍物训练 → 双障碍物零样本泛化，证明潜空间的组合性。提出 subgoal-guided planning 以实现人类式的高效轨迹搜索。</div>
+      </div>
+    </div>
+
+    <!-- Self-assessment -->
+    <div class="section">
+      <div class="section-title"><span class="emoji">💡</span> 核心竞争力</div>
+      <div class="highlight-box">
+        <strong>独立闭环：</strong>从问题定义、假设提出、实验设计、代码实现、大规模数据采集，到洞察提炼和论文撰写，全流程独立完成。<br><br>
+        <strong>系统思维：</strong>不满足于"模型训出来了"，追求理解 <em>为什么</em> — 从 310+ sweep 中识别最优配置规律、MPPI 温度敏感性、成功/失败数据的物理意义。<br><br>
+        <strong>架构眼光：</strong>在代码实现前预留消融接口（如 w_subgoal 参数），使实验设计天然支持多维度对比。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

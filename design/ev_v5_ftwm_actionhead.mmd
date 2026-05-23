@@ -1,0 +1,5 @@
+flowchart TB
+    CONTEXT["Context Window (t-4:t)"] --> SA["Slot Attention Encoder"]
+    SA --> SLOTS["K slots [s_0, ..., s_K]"]
+    SLOTS --> PRED["Predictor"]
+    PRED --> LOSS["JEPA Loss: MSE(pred_slot, target_slot)"]

@@ -1,0 +1,110 @@
+# configs/state_schema/visual_structured_state_v2.yaml
+# Visual Structured State v2 — full schema definition.
+# Each feature must have: source, use_in_main, use_in_ablation, use_as_label, leakage_risk, real_robot_recoverable
+
+version: "0.1"
+name: visual_structured_state_v2
+description: "Full v2 schema: object tokens, relation tokens, temporal history, proprio, nuisance, privileged physics"
+
+# === Object Tokens ===
+object_tokens:
+  roles: [manipulated_object]
+  features:
+    - {name: obj_x, type: continuous, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_y, type: continuous, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_sin_theta, type: bounded, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_cos_theta, type: bounded, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_vx, type: continuous, source: temporal_diff, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_vy, type: continuous, source: temporal_diff, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_omega, type: continuous, source: temporal_diff, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_size_x, type: static, source: model, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_size_y, type: static, source: model, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_shape_T, type: categorical, source: model, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_shape_L, type: categorical, source: model, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    # Appearance (optional, for nuisance)
+    - {name: obj_color_r, type: categorical, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_color_g, type: categorical, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_color_b, type: categorical, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Proprio/Action Tokens ===
+proprio_action_tokens:
+  features:
+    - {name: ee_x, type: continuous, source: proprio, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: ee_y, type: continuous, source: proprio, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: ee_vx, type: continuous, source: proprio, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: ee_vy, type: continuous, source: proprio, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: prev_action_dx, type: continuous, source: proprio, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: prev_action_dy, type: continuous, source: proprio, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Relation Tokens ===
+relation_tokens:
+  features:
+    - {name: ee_obj_dist, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: ee_obj_dx, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: ee_obj_dy, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_goal_dist, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_goal_dx, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_goal_dy, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_obs1_dist, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_obs1_dx, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_obs1_dy, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    # Contact proxy
+    - {name: contact_proxy, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: motion_alignment, type: continuous, source: geometry_derived, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Temporal Tokens ===
+temporal_tokens:
+  features:
+    - {name: action_h1_dx, type: continuous, source: temporal, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: action_h1_dy, type: continuous, source: temporal, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obj_moved_h1, type: continuous, source: temporal, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: contact_h1, type: continuous, source: temporal, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: stuck_proxy, type: continuous, source: temporal, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Goals ===
+goal_features:
+  features:
+    - {name: goal_x, type: continuous, source: task_given, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: goal_y, type: continuous, source: task_given, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: goal_sin_theta, type: bounded, source: task_given, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: goal_cos_theta, type: bounded, source: task_given, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Obstacles ===
+obstacle_features:
+  max_obstacles: 3
+  features:
+    - {name: obs_x, type: continuous, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obs_y, type: continuous, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obs_size_x, type: static, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: obs_size_y, type: static, source: vision_proxy, use_in_main: true, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Visual Nuisance (NOT main input) ===
+visual_nuisance:
+  features:
+    - {name: light_pos_x, type: continuous, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: false}
+    - {name: light_pos_y, type: continuous, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: false}
+    - {name: ambient_light, type: continuous, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: false}
+    - {name: camera_fovy, type: continuous, source: nuisance, use_in_main: false, use_in_ablation: true, use_as_label: false, leakage_risk: LOW, real_robot_recoverable: true}
+
+# === Privileged Physics (NOT main input) ===
+privileged_physics:
+  features:
+    - {name: object_mass, type: static, source: privileged, use_in_main: false, use_in_ablation: true, use_as_label: true, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: object_friction, type: static, source: privileged, use_in_main: false, use_in_ablation: true, use_as_label: true, leakage_risk: MEDIUM, real_robot_recoverable: false}
+    - {name: true_contact_flag, type: binary, source: privileged, use_in_main: false, use_in_ablation: true, use_as_label: true, leakage_risk: LOW, real_robot_recoverable: true}
+    - {name: contact_force_x, type: continuous, source: privileged, use_in_main: false, use_in_ablation: true, use_as_label: true, leakage_risk: MEDIUM, real_robot_recoverable: true}
+    - {name: contact_force_y, type: continuous, source: privileged, use_in_main: false, use_in_ablation: true, use_as_label: true, leakage_risk: MEDIUM, real_robot_recoverable: true}
+    - {name: contact_mu, type: continuous, source: privileged, use_in_main: false, use_in_ablation: true, use_as_label: true, leakage_risk: HIGH, real_robot_recoverable: false}
+
+# === Targets ===
+targets:
+  - {name: delta_x, type: continuous, source: computed}
+  - {name: delta_y, type: continuous, source: computed}
+  - {name: delta_theta, type: bounded, source: computed}
+
+# === Masks ===
+masks:
+  - {name: object_valid, type: mask, source: computed}
+  - {name: relation_valid, type: mask, source: computed}
+  - {name: visibility_mask, type: mask, source: computed}
+  - {name: privileged_access_mask, type: mask, source: computed}

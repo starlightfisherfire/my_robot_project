@@ -1,0 +1,19 @@
+flowchart TB
+    subgraph ENC["Observation Encoding"]
+        OBS["obs_t → Encoder → z_obs_t"]
+    end
+
+    subgraph CORE["SCWM Core: Self-Contained World State"]
+        S_PREV["State_{t-1} (256 dim)"]
+        UPDATE["State Update (Causal Transformer)<br/>Query: State_{t-1}<br/>Key/Value: z_obs_t + act_{t-1}"]
+        S_NEW["State_t (256 dim)<br/>Self-Contained World State"]
+    end
+
+    subgraph HEADS["Prediction Heads"]
+        NL["Next-Latent Head<br/>State_t → z_obs_{t+1}"]
+        DYN["Dynamics Head<br/>(State_t, act) → delta_pose"]
+        SG["Subgoal Head<br/>State_t → subgoal"]
+    end
+
+    ENC --> CORE
+    CORE --> HEADS

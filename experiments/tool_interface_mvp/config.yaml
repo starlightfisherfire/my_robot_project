@@ -1,0 +1,79 @@
+# Tool Interface MVP — 配置文件
+
+# 环境
+env:
+  name: "push_t_simple"
+  obs_dim: 4        # [obj_x, obj_y, target_x, target_y]
+  act_dim: 2        # [dx, dy] (末端执行器位移)
+  max_steps: 100    # 每 episode 最多步数
+  success_thresh: 0.05  # 成功判断阈值 (m)
+
+# 数据
+data:
+  n_episodes_simple: 1000    # 简单场景
+  n_episodes_complex: 1000   # 复杂场景
+  n_episodes_mixed: 500      # 混合场景 (训练 Tool Interface)
+  history_len: 5             # 历史观测帧数
+  save_dir: "./data"
+
+# WM (简化为 RNN State Encoder)
+wm:
+  type: "gru"
+  obs_dim: 4
+  state_dim: 128
+  num_layers: 2
+  dropout: 0.1
+
+# Tool A: MLP Controller
+tool_mlp:
+  state_dim: 128
+  act_dim: 2
+  hidden_dims: [128, 64]
+  dropout: 0.1
+
+# Tool B: Diffusion Policy
+tool_diffusion:
+  state_dim: 128
+  act_dim: 2
+  cond_dim: 128
+  hidden_dim: 256
+  n_diffusion_steps: 100     # 训练时
+  n_inference_steps: 10      # DDIM 推理时
+  beta_start: 0.0001
+  beta_end: 0.02
+  scheduler: "cosine"
+
+# Tool Selector
+selector:
+  state_dim: 128
+  hidden_dim: 64
+  temperature: 1.0            # Gumbel-Softmax temperature
+  hard: false                 # 训练时用 soft，推理时用 hard
+
+# 训练
+training:
+  batch_size: 64
+  lr_mlp: 0.001
+  lr_diffusion: 0.0003
+  lr_selector: 0.0005
+  lr_wm: 0.0001
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  
+  # Phase 1: 分别训练专家
+  phase1_epochs_mlp: 50
+  phase1_epochs_diffusion: 50
+  
+  # Phase 2: 联合训练 Tool Interface
+  phase2_epochs: 100
+  
+  # Loss weights
+  lambda_task: 1.0
+  lambda_select: 0.5          # Tool selection supervision
+  lambda_entropy: 0.01        # Entropy bonus (鼓励确定性)
+
+# 评估
+eval:
+  n_episodes: 100
+  render: true
+  save_video: true

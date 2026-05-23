@@ -1,0 +1,26 @@
+flowchart TB
+    subgraph INPUT["Input"]
+        CAM["Visual Perceiver → Object tokens × T frames"]
+        GE["Goal Encoder → goal_embedding"]
+    end
+
+    subgraph TRANSFORMER["Object-Centric Causal Transformer"]
+        PE["Position + Object + Temporal Embedding"]
+        SA["Multi-Head Self-Attention<br/>Cross-time + Cross-object + State-to-goal"]
+        FFN["Feed-Forward Network"]
+        SC["Self-Contained Representation"]
+    end
+
+    subgraph OUTPUT["Autoregressive Action Generation"]
+        AH["Action Head"]
+        SEQ["[a0 (big step), a1 (medium), a2 (fine), STOP]"]
+    end
+
+    subgraph ENV["Environment Loop"]
+        EXEC["Executor → Physical World → New State → Encoder"]
+    end
+
+    INPUT --> TRANSFORMER
+    TRANSFORMER --> OUTPUT
+    OUTPUT --> ENV
+    ENV --> INPUT

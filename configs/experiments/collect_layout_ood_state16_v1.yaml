@@ -1,0 +1,57 @@
+# configs/experiments/collect_layout_ood_state16_v1.yaml
+experiment:
+  name: collect_layout_ood_state16_v1
+  state_schema: state16_original
+  output_dir: data/sim/layout_ood_state16_v1
+  template_file: data/sim/metadata/reset_templates_obstacle_10family_v0.json
+  seed: 0
+
+planner:
+  mode: mppi
+  max_speed_mps: 0.3
+  temperature: 0.1
+  horizon: 140
+  num_samples: 1024
+  num_iterations: 5
+  init_std: 0.7
+  smoothing: 0.2
+  execute_steps: 10
+  max_mpc_steps: 100
+  pusher_mass: 0.300
+  strict_pose_stop: true
+
+episode:
+  max_steps: 250
+  save_success: true
+  save_failure: true
+  save_video: false
+
+noise:
+  zero_noise_prob: 0.5
+  low_noise_prob: 0.3
+  high_noise_prob: 0.2
+
+splits:
+  train_sim_id:
+    open: 50
+    blocking_easy: 50
+    blocking_medium: 50
+    blocking_hard: 50
+  val_sim_id:
+    open: 2
+    blocking_easy: 2
+    blocking_medium: 2
+    blocking_hard: 2
+  test_sim_id:
+    open: 3
+    blocking_easy: 3
+    blocking_medium: 3
+    blocking_hard: 3
+  test_sim_layout_ood_direct:
+    passage_direct_wide: 20
+    passage_direct_medium: 20
+    passage_direct_narrow: 20
+  test_sim_layout_ood_bypass:
+    passage_bypass_wide: 8
+    passage_bypass_medium: 8
+    passage_bypass_narrow: 8

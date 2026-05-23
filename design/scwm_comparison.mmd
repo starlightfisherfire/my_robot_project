@@ -1,0 +1,21 @@
+flowchart LR
+    subgraph CJEPA["C-JEPA Baseline"]
+        direction TB
+        C_CTX["context(t-4:t)<br/>Encode last 5 frames"]
+        C_PRED["Predictor"]
+        C_TGT["target(t+1)<br/>Encode next frame<br/><br/>No persistent state<br/>Encodes from scratch<br/>Limited by context window"]
+        C_CTX --> C_PRED --> C_TGT
+    end
+
+    subgraph SCWM_V["SCWM Ours"]
+        direction TB
+        S_INIT["State_{t-1}<br/>(compresses all history)"]
+        S_UPD["State Update<br/>(Transformer)"]
+        S_NEW2["State_t<br/><br/>Persistent state<br/>Incremental update<br/>Long-range dependency"]
+        S_INIT --> S_UPD --> S_NEW2
+    end
+
+    CJEPA -.- |"Compare: Who is more robust under OOD?"| SCWM_V
+
+    style CJEPA fill:#fce4ec
+    style SCWM_V fill:#e8f5e9

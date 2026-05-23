@@ -1801,10 +1801,10 @@
   },
   {
     "schema_version": "reset_template_v0.1",
-    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000000",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000000",
     "domain": "sim",
-    "split": "test_sim_layout_ood_blocking",
-    "layout_family": "blocking",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
     "shape_family": "T_shape",
     "seed": 102,
     "object_shape": "T",
@@ -1813,27 +1813,887 @@
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.16240856031935416,
-      "y": 0.20579826435381118,
+      "x": 0.17889027238322502,
+      "y": 0.18695791722457342,
       "theta": -0.1651570888071664
     },
     "goal_pose": {
-      "x": 0.49487548631626455,
-      "y": 0.30754827449302297,
+      "x": 0.46700055579001665,
+      "y": 0.28862659942059776,
       "theta": -0.05783126394151472
     },
     "ee_initial_pose": {
-      "x": 0.062408560319354156,
-      "y": 0.20579826435381118,
+      "x": 0.07889027238322502,
+      "y": 0.18695791722457342,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5546999053445788,
+          "y": 0.42265009748378796,
+          "theta": -0.2740666476295934
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 103,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22874300720436647,
+      "y": 0.17737789657751088,
+      "theta": 0.10942351705011821
+    },
+    "goal_pose": {
+      "x": 0.46879089940682717,
+      "y": 0.2571921334797651,
+      "theta": -0.21098101544243797
+    },
+    "ee_initial_pose": {
+      "x": 0.12874300720436646,
+      "y": 0.17737789657751088,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5541097294506856,
+          "y": 0.40487678010890726,
+          "theta": -0.0706640193112146
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 104,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22759765581169733,
+      "y": 0.20231182122135435,
+      "theta": 0.11595264736834193
+    },
+    "goal_pose": {
+      "x": 0.4282097926086362,
+      "y": 0.266451386217322,
+      "theta": 0.10690531181213564
+    },
+    "ee_initial_pose": {
+      "x": 0.12759765581169732,
+      "y": 0.20231182122135435,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5622683765940986,
+          "y": 0.40066893038525486,
+          "theta": -0.19998375577510208
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 105,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22268596094458956,
+      "y": 0.1709471188101422,
+      "theta": 0.14536182995299868
+    },
+    "goal_pose": {
+      "x": 0.4861269992601776,
+      "y": 0.26497750075104043,
+      "theta": 0.1341609789821298
+    },
+    "ee_initial_pose": {
+      "x": 0.12268596094458956,
+      "y": 0.1709471188101422,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5433879477658075,
+          "y": 0.406551541939322,
+          "theta": -0.0910181604371176
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 106,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21264102398374957,
+      "y": 0.20406645364131193,
+      "theta": -0.24161816181467394
+    },
+    "goal_pose": {
+      "x": 0.48536505849771544,
+      "y": 0.30568027822739036,
+      "theta": -0.22165752219670698
+    },
+    "ee_initial_pose": {
+      "x": 0.11264102398374956,
+      "y": 0.20406645364131193,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5622531024394044,
+          "y": 0.4321798479747372,
+          "theta": -0.1873751931948295
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 107,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1847889175801615,
+      "y": 0.18487739582344678,
+      "theta": 0.23614050346282556
+    },
+    "goal_pose": {
+      "x": 0.4626234051139829,
+      "y": 0.2786016188640586,
+      "theta": -0.09550808013619078
+    },
+    "ee_initial_pose": {
+      "x": 0.0847889175801615,
+      "y": 0.18487739582344678,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5355126638485652,
+          "y": 0.439949587745661,
+          "theta": 0.1525978675064188
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 108,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1778312137940402,
+      "y": 0.19893806178195095,
+      "theta": 0.19022032119996057
+    },
+    "goal_pose": {
+      "x": 0.44080737991826224,
+      "y": 0.26212501965649976,
+      "theta": -0.15205915655934366
+    },
+    "ee_initial_pose": {
+      "x": 0.0778312137940402,
+      "y": 0.19893806178195095,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5332364840207824,
+          "y": 0.4085931358278795,
+          "theta": -0.17879356423981863
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 109,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1867749823163521,
+      "y": 0.17755673845859338,
+      "theta": 0.023615371651067973
+    },
+    "goal_pose": {
+      "x": 0.4181200469897144,
+      "y": 0.2801771864283327,
+      "theta": 0.22818505130249583
+    },
+    "ee_initial_pose": {
+      "x": 0.08677498231635208,
+      "y": 0.17755673845859338,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5525072535623774,
+          "y": 0.420754910134716,
+          "theta": 0.17395826981410806
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 110,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22605571776223837,
+      "y": 0.17328208377718116,
+      "theta": 0.160820598155836
+    },
+    "goal_pose": {
+      "x": 0.42982107663837454,
+      "y": 0.27856490177721605,
+      "theta": -0.11318790302394505
+    },
+    "ee_initial_pose": {
+      "x": 0.12605571776223837,
+      "y": 0.17328208377718116,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5516808219816823,
+          "y": 0.4029996641112329,
+          "theta": -0.049952170992493605
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 111,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21963023392053885,
+      "y": 0.16276578691057036,
+      "theta": 0.22125972180058984
+    },
+    "goal_pose": {
+      "x": 0.4495135773385816,
+      "y": 0.27180697227535927,
+      "theta": 0.058582338734228245
+    },
+    "ee_initial_pose": {
+      "x": 0.11963023392053884,
+      "y": 0.16276578691057036,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5367851765840446,
+          "y": 0.407744486837957,
+          "theta": -0.04701299715450985
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000010",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 112,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1988747980443985,
+      "y": 0.18996525343349624,
+      "theta": 0.059916847567473175
+    },
+    "goal_pose": {
+      "x": 0.46595545617638434,
+      "y": 0.3121810075169492,
+      "theta": 0.1259067455811631
+    },
+    "ee_initial_pose": {
+      "x": 0.0988747980443985,
+      "y": 0.18996525343349624,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5365030718930041,
+          "y": 0.4088369222063687,
+          "theta": -0.02712382513068673
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000011",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 113,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17183331921124245,
+      "y": 0.2020570822709346,
+      "theta": 0.1110380041399946
+    },
+    "goal_pose": {
+      "x": 0.4114299121370198,
+      "y": 0.2839949079441133,
+      "theta": -0.13066168339376294
+    },
+    "ee_initial_pose": {
+      "x": 0.07183331921124245,
+      "y": 0.2020570822709346,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.565270412573562,
+          "y": 0.4341419610583613,
+          "theta": -0.11900988611762314
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000012",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 114,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18445613007070968,
+      "y": 0.15587323367730552,
+      "theta": 0.08296304554850598
+    },
+    "goal_pose": {
+      "x": 0.42947793044226645,
+      "y": 0.2899412030266071,
+      "theta": -0.1732303331842121
+    },
+    "ee_initial_pose": {
+      "x": 0.08445613007070968,
+      "y": 0.15587323367730552,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5692327295335042,
+          "y": 0.4269895114056023,
+          "theta": -0.12350017019371237
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000013",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 115,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.223754142500421,
+      "y": 0.16181609978260875,
+      "theta": -0.1933106834540549
+    },
+    "goal_pose": {
+      "x": 0.41897925277621534,
+      "y": 0.30034431747964874,
+      "theta": 0.17900148611102906
+    },
+    "ee_initial_pose": {
+      "x": 0.123754142500421,
+      "y": 0.16181609978260875,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5696577955162595,
+          "y": 0.4271382981291461,
+          "theta": 0.08400352873295736
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000014",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 116,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21928145188637538,
+      "y": 0.1859883108196662,
+      "theta": 0.11106702051366024
+    },
+    "goal_pose": {
+      "x": 0.4106983976083074,
+      "y": 0.2917012912752833,
+      "theta": 0.11881217037208908
+    },
+    "ee_initial_pose": {
+      "x": 0.11928145188637537,
+      "y": 0.1859883108196662,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.549228730192038,
+          "y": 0.41935341088645484,
+          "theta": -0.15243035730374233
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000015",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 117,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1844061818039754,
+      "y": 0.15986414695223544,
+      "theta": -0.050075844514777146
+    },
+    "goal_pose": {
+      "x": 0.422692416047185,
+      "y": 0.2725325242887371,
+      "theta": -0.19132710354054994
+    },
+    "ee_initial_pose": {
+      "x": 0.08440618180397538,
+      "y": 0.15986414695223544,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5510896846496496,
+          "y": 0.4226501677426797,
+          "theta": -0.09070552979350943
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000016",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 118,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.21265893606777708,
+      "y": 0.16095231338389396,
+      "theta": -0.2004921447388091
+    },
+    "goal_pose": {
+      "x": 0.43898185032244175,
+      "y": 0.3014445257294118,
+      "theta": -0.0981203566045698
+    },
+    "ee_initial_pose": {
+      "x": 0.11265893606777708,
+      "y": 0.16095231338389396,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5654321247417671,
+          "y": 0.42431244626465553,
+          "theta": 0.004694719469086894
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000017",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 119,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22557877151042086,
+      "y": 0.16078913691871896,
+      "theta": 0.1420445439649236
+    },
+    "goal_pose": {
+      "x": 0.4530916420610777,
+      "y": 0.31825588390488135,
+      "theta": 0.026618625058473122
+    },
+    "ee_initial_pose": {
+      "x": 0.12557877151042085,
+      "y": 0.16078913691871896,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5473081815566189,
+          "y": 0.40317190107820877,
+          "theta": -0.04315109418033569
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000018",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 120,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20089627724046497,
+      "y": 0.16131889027892254,
+      "theta": 0.22645976355363845
+    },
+    "goal_pose": {
+      "x": 0.4608215264879827,
+      "y": 0.28717294852193903,
+      "theta": 0.22021214091203772
+    },
+    "ee_initial_pose": {
+      "x": 0.10089627724046496,
+      "y": 0.16131889027892254,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5336495391473608,
+          "y": 0.43171409702714714,
+          "theta": -0.16611113164790728
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_non_blocking__non_blocking__T_shape__000019",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_non_blocking",
+    "layout_family": "non_blocking",
+    "shape_family": "T_shape",
+    "seed": 121,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.175238089211949,
+      "y": 0.18502848515213713,
+      "theta": -0.05112425377326124
+    },
+    "goal_pose": {
+      "x": 0.4831728685953912,
+      "y": 0.28915849494878604,
+      "theta": 0.011262279664335462
+    },
+    "ee_initial_pose": {
+      "x": 0.075238089211949,
+      "y": 0.18502848515213713,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_non_blocking_0",
+        "pose": {
+          "x": 0.5675267697365597,
+          "y": 0.4114272097303341,
+          "theta": 0.20915603773503205
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ]
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking__blocking__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking",
+    "layout_family": "blocking",
+    "shape_family": "T_shape",
+    "seed": 122,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18050092533717396,
+      "y": 0.20484990435537898,
+      "theta": -0.09885090623221471
+    },
+    "goal_pose": {
+      "x": 0.5101022149992651,
+      "y": 0.3160816459034275,
+      "theta": 0.13050721667783372
+    },
+    "ee_initial_pose": {
+      "x": 0.08050092533717396,
+      "y": 0.20484990435537898,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.33334192866238804,
-          "y": 0.25932336690720503,
-          "theta": -0.36542219683945787
+          "x": 0.34362566844938913,
+          "y": 0.27388758261793456,
+          "theta": 0.18708483561922362
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -1849,34 +2709,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 103,
+    "seed": 123,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2039525060036387,
-      "y": 0.19781491381459243,
-      "theta": 0.10942351705011821
+      "x": 0.1576181799425472,
+      "y": 0.17935933387613162,
+      "theta": -0.04637911816480084
     },
     "goal_pose": {
-      "x": 0.4964420369809738,
-      "y": 0.28004311679479443,
-      "theta": -0.21098101544243797
+      "x": 0.4525390164456907,
+      "y": 0.32808392145661863,
+      "theta": -0.2309231669488388
     },
     "ee_initial_pose": {
-      "x": 0.1039525060036387,
-      "y": 0.19781491381459243,
+      "x": 0.0576181799425472,
+      "y": 0.17935933387613162,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.35430700094299183,
-          "y": 0.2238057954136007,
-          "theta": -0.09421869241495279
+          "x": 0.30652667979547604,
+          "y": 0.2470095356067623,
+          "theta": 0.2816692951434949
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -1892,34 +2752,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 104,
+    "seed": 124,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20299804650974776,
-      "y": 0.21859318435112865,
-      "theta": 0.11595264736834193
+      "x": 0.20303903783776162,
+      "y": 0.2024127654752645,
+      "theta": -0.16146025453737212
     },
     "goal_pose": {
-      "x": 0.4609335685325566,
-      "y": 0.28814496294015673,
-      "theta": 0.10690531181213564
+      "x": 0.5125843082677585,
+      "y": 0.2941332317111062,
+      "theta": 0.14376777173639477
     },
     "ee_initial_pose": {
-      "x": 0.10299804650974775,
-      "y": 0.21859318435112865,
+      "x": 0.10303903783776161,
+      "y": 0.2024127654752645,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.34423418411525064,
-          "y": 0.23403800403089758,
-          "theta": -0.2666450077001361
+          "x": 0.339075254661525,
+          "y": 0.2348920030208118,
+          "theta": 0.37443700022148385
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -1935,34 +2795,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 105,
+    "seed": 125,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19890496745382463,
-      "y": 0.1924559323417852,
-      "theta": 0.14536182995299868
+      "x": 0.20000291095778272,
+      "y": 0.1861266142980867,
+      "theta": 0.15402336269116024
     },
     "goal_pose": {
-      "x": 0.5116111243526554,
-      "y": 0.28685531315716034,
-      "theta": 0.1341609789821298
+      "x": 0.4660658524163364,
+      "y": 0.31660262370627207,
+      "theta": -0.07446576971266572
     },
     "ee_initial_pose": {
-      "x": 0.09890496745382463,
-      "y": 0.1924559323417852,
+      "x": 0.10000291095778271,
+      "y": 0.1861266142980867,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3486459936690475,
-          "y": 0.22620716468879482,
-          "theta": -0.12135754724949016
+          "x": 0.3373347102713815,
+          "y": 0.2559634891698663,
+          "theta": -0.3965917344370027
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -1978,34 +2838,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 106,
+    "seed": 126,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19053418665312463,
-      "y": 0.22005537803442662,
-      "theta": -0.24161816181467394
+      "x": 0.18362883696713206,
+      "y": 0.2039031947387293,
+      "theta": -0.021826374353868305
     },
     "goal_pose": {
-      "x": 0.510944426185501,
-      "y": 0.3224702434489665,
-      "theta": -0.22165752219670698
+      "x": 0.4901590412279102,
+      "y": 0.29802921937120436,
+      "theta": -0.013593106608888517
     },
     "ee_initial_pose": {
-      "x": 0.09053418665312463,
-      "y": 0.22005537803442662,
+      "x": 0.08362883696713205,
+      "y": 0.2039031947387293,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.36299240885871714,
-          "y": 0.28344265871643376,
-          "theta": -0.24983359092643936
+          "x": 0.3231757324169025,
+          "y": 0.23628413343658639,
+          "theta": 0.10102312855030915
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2021,34 +2881,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 107,
+    "seed": 127,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1673240979834679,
-      "y": 0.204064496519539,
-      "theta": 0.23614050346282556
+      "x": 0.15722878974391702,
+      "y": 0.206195144571549,
+      "theta": 0.03202558987777071
     },
     "goal_pose": {
-      "x": 0.49104547947473504,
-      "y": 0.29877641650605125,
-      "theta": -0.09550808013619078
+      "x": 0.4518649826321726,
+      "y": 0.2670885299799941,
+      "theta": 0.22006243170435857
     },
     "ee_initial_pose": {
-      "x": 0.06732409798346789,
-      "y": 0.204064496519539,
+      "x": 0.05722878974391701,
+      "y": 0.206195144571549,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.31469745257766657,
-          "y": 0.2713700442584561,
-          "theta": 0.20346382334189173
+          "x": 0.3008718805216458,
+          "y": 0.2286095787278568,
+          "theta": 0.13437004011457443
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2064,34 +2924,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 108,
+    "seed": 128,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1615260114950335,
-      "y": 0.2157817181516258,
-      "theta": 0.19022032119996057
+      "x": 0.2020017045175423,
+      "y": 0.1868324068954821,
+      "theta": 0.00575566427400559
     },
     "goal_pose": {
-      "x": 0.4719564574284794,
-      "y": 0.28435939219943723,
-      "theta": -0.15205915655934366
+      "x": 0.45438295084106806,
+      "y": 0.2670142593157702,
+      "theta": -0.17289506897844859
     },
     "ee_initial_pose": {
-      "x": 0.061526011495033506,
-      "y": 0.2157817181516258,
+      "x": 0.10200170451754229,
+      "y": 0.1868324068954821,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.2999777184825388,
-          "y": 0.23866369100341098,
-          "theta": -0.23839141898642488
+          "x": 0.33371151707864105,
+          "y": 0.21698778856388126,
+          "theta": 0.1345510993950737
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2107,34 +2967,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 109,
+    "seed": 129,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1689791519302934,
-      "y": 0.1979639487154945,
-      "theta": 0.023615371651067973
+      "x": 0.18430488842279788,
+      "y": 0.21410145182921458,
+      "theta": -0.11410135758603573
     },
     "goal_pose": {
-      "x": 0.45210504111600003,
-      "y": 0.3001550381247911,
-      "theta": 0.22818505130249583
+      "x": 0.5069058545222138,
+      "y": 0.32718540175731053,
+      "theta": 0.2275581560984315
     },
     "ee_initial_pose": {
-      "x": 0.06897915193029339,
-      "y": 0.1979639487154945,
+      "x": 0.08430488842279787,
+      "y": 0.21410145182921458,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.313049350085524,
-          "y": 0.24981440355485884,
-          "theta": 0.2319443597521441
+          "x": 0.35084007615315765,
+          "y": 0.2638194677005573,
+          "theta": 0.25602117915382483
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2150,34 +3010,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 110,
+    "seed": 130,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20171309813519864,
-      "y": 0.1944017364809843,
-      "theta": 0.160820598155836
+      "x": 0.180988897094676,
+      "y": 0.1886660843284862,
+      "theta": 0.12039933972134359
     },
     "goal_pose": {
-      "x": 0.4623434420585777,
-      "y": 0.298744289055064,
-      "theta": -0.11318790302394505
+      "x": 0.5008407089919632,
+      "y": 0.3103071490088213,
+      "theta": -0.2390316301645269
     },
     "ee_initial_pose": {
-      "x": 0.10171309813519863,
-      "y": 0.1944017364809843,
+      "x": 0.080988897094676,
+      "y": 0.1886660843284862,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.33370909207857047,
-          "y": 0.22957267687925706,
-          "theta": -0.06660289465665814
+          "x": 0.3305153236485124,
+          "y": 0.24302235740833156,
+          "theta": 0.3810914775112365
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2193,34 +3053,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 111,
+    "seed": 131,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1963585282671157,
-      "y": 0.18563815575880865,
-      "theta": 0.22125972180058984
+      "x": 0.17077175944017225,
+      "y": 0.21349341590255452,
+      "theta": -0.20620648416541532
     },
     "goal_pose": {
-      "x": 0.47957438017125886,
-      "y": 0.2928311007409393,
-      "theta": 0.058582338734228245
+      "x": 0.4650776718645375,
+      "y": 0.2923331427912275,
+      "theta": 0.19783817277546067
     },
     "ee_initial_pose": {
-      "x": 0.09635852826711569,
-      "y": 0.18563815575880865,
+      "x": 0.07077175944017225,
+      "y": 0.21349341590255452,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.32475163080323177,
-          "y": 0.226979115087831,
-          "theta": -0.06268399620601317
+          "x": 0.31184843624015884,
+          "y": 0.2566671742020964,
+          "theta": -0.31973562413493967
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2236,34 +3096,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 112,
+    "seed": 132,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.17906233170366542,
-      "y": 0.2083043778612469,
-      "theta": 0.059916847567473175
+      "x": 0.17562144136271393,
+      "y": 0.1953861050539652,
+      "theta": 0.19887921650331064
     },
     "goal_pose": {
-      "x": 0.4939610241543363,
-      "y": 0.3281583815773305,
-      "theta": 0.1259067455811631
+      "x": 0.5078663723387202,
+      "y": 0.2864970791978855,
+      "theta": 0.1742922543604985
     },
     "ee_initial_pose": {
-      "x": 0.07906233170366542,
-      "y": 0.2083043778612469,
+      "x": 0.07562144136271393,
+      "y": 0.1953861050539652,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3230147498220049,
-          "y": 0.2570683019256574,
-          "theta": -0.03616510017424901
+          "x": 0.3600733617473394,
+          "y": 0.25437866969184103,
+          "theta": -0.3800762876978098
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2279,34 +3139,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 113,
+    "seed": 133,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.15652776600936869,
-      "y": 0.21838090189244552,
-      "theta": 0.1110380041399946
+      "x": 0.1796916325220786,
+      "y": 0.19911769566026646,
+      "theta": 0.13447633614983356
     },
     "goal_pose": {
-      "x": 0.4462511731198923,
-      "y": 0.3034955444510991,
-      "theta": -0.13066168339376294
+      "x": 0.5015801494868399,
+      "y": 0.28870764525029624,
+      "theta": 0.022500595799151812
     },
     "ee_initial_pose": {
-      "x": 0.05652776600936868,
-      "y": 0.21838090189244552,
+      "x": 0.07969163252207859,
+      "y": 0.19911769566026646,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3166598821381925,
-          "y": 0.2750801842301336,
-          "theta": -0.1586798481568309
+          "x": 0.3454724135664087,
+          "y": 0.2522892148334361,
+          "theta": 0.3601636650103356
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2322,34 +3182,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 114,
+    "seed": 134,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.16704677505892473,
-      "y": 0.1798943613977546,
-      "theta": 0.08296304554850598
+      "x": 0.1792059378039571,
+      "y": 0.1849384109399486,
+      "theta": 0.241939736743348
     },
     "goal_pose": {
-      "x": 0.4620431891369831,
-      "y": 0.30869855264828117,
-      "theta": -0.1732303331842121
+      "x": 0.5087729396707166,
+      "y": 0.31722774255773123,
+      "theta": 0.1678349305940599
     },
     "ee_initial_pose": {
-      "x": 0.06704677505892473,
-      "y": 0.1798943613977546,
+      "x": 0.0792059378039571,
+      "y": 0.1849384109399486,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.33377771163145803,
-          "y": 0.2512859684286202,
-          "theta": -0.16466689359161651
+          "x": 0.3250649978930661,
+          "y": 0.2616038835042751,
+          "theta": -0.31164528150780274
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2365,34 +3225,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 115,
+    "seed": 135,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19979511875035083,
-      "y": 0.18484674981884064,
-      "theta": -0.1933106834540549
+      "x": 0.188476751809412,
+      "y": 0.20627343566838569,
+      "theta": 0.041387033746877244
     },
     "goal_pose": {
-      "x": 0.4528568461791884,
-      "y": 0.31780127779469264,
-      "theta": 0.17900148611102906
+      "x": 0.4791525758845746,
+      "y": 0.3224631584391505,
+      "theta": -0.18966214562766143
     },
     "ee_initial_pose": {
-      "x": 0.09979511875035083,
-      "y": 0.18484674981884064,
+      "x": 0.088476751809412,
+      "y": 0.20627343566838569,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.34598377798102903,
-          "y": 0.25846231193591274,
-          "theta": 0.11200470497727655
+          "x": 0.325131250583338,
+          "y": 0.2680996404518619,
+          "theta": -0.27802093998517247
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2408,34 +3268,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 116,
+    "seed": 136,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19606787657197947,
-      "y": 0.20499025901638854,
-      "theta": 0.11106702051366024
+      "x": 0.18378581040682151,
+      "y": 0.20140467623647507,
+      "theta": -0.03342179024534703
     },
     "goal_pose": {
-      "x": 0.44561109790726894,
-      "y": 0.31023862986587286,
-      "theta": 0.11881217037208908
+      "x": 0.4985015777060047,
+      "y": 0.2945883611491337,
+      "theta": -0.1800635748869686
     },
     "ee_initial_pose": {
-      "x": 0.09606787657197946,
-      "y": 0.20499025901638854,
+      "x": 0.08378581040682151,
+      "y": 0.20140467623647507,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3200682174316621,
-          "y": 0.25696785532758554,
-          "theta": -0.20324047640498977
+          "x": 0.34664239285672394,
+          "y": 0.22986397189957833,
+          "theta": 0.3961094144451245
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2451,34 +3311,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 117,
+    "seed": 137,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1670051515033128,
-      "y": 0.1832201224601962,
-      "theta": -0.050075844514777146
+      "x": 0.15861832871347353,
+      "y": 0.1955047560206229,
+      "theta": 0.24512735825942383
     },
     "goal_pose": {
-      "x": 0.45610586404128683,
-      "y": 0.2934659587526449,
-      "theta": -0.19132710354054994
+      "x": 0.461164557890477,
+      "y": 0.2894144246779872,
+      "theta": 0.16032231377393946
     },
     "ee_initial_pose": {
-      "x": 0.0670051515033128,
-      "y": 0.1832201224601962,
+      "x": 0.05861832871347353,
+      "y": 0.1955047560206229,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3126451924219493,
-          "y": 0.24099320834910032,
-          "theta": -0.12094070639134591
+          "x": 0.32588499129781684,
+          "y": 0.24306472928360204,
+          "theta": 0.36942935226965623
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2494,34 +3354,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 118,
+    "seed": 138,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19054911338981423,
-      "y": 0.18412692781991163,
-      "theta": -0.2004921447388091
+      "x": 0.16467181674461914,
+      "y": 0.19750531425584553,
+      "theta": 0.0990824747885975
     },
     "goal_pose": {
-      "x": 0.47035911903213645,
-      "y": 0.3187639600132353,
-      "theta": -0.0981203566045698
+      "x": 0.45957741742254765,
+      "y": 0.3253734686887221,
+      "theta": -0.12611367857053007
     },
     "ee_initial_pose": {
-      "x": 0.09054911338981422,
-      "y": 0.18412692781991163,
+      "x": 0.06467181674461914,
+      "y": 0.19750531425584553,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.34588624095274234,
-          "y": 0.255757890181229,
-          "theta": 0.006259625958782489
+          "x": 0.29797476999720907,
+          "y": 0.259161088316587,
+          "theta": -0.12717198283937664
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2537,34 +3397,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 119,
+    "seed": 139,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2013156429253507,
-      "y": 0.18399094743226582,
-      "theta": 0.1420445439649236
+      "x": 0.15507550863900854,
+      "y": 0.20974936396486782,
+      "theta": 0.019415056734536085
     },
     "goal_pose": {
-      "x": 0.482705186803443,
-      "y": 0.33347389841677116,
-      "theta": 0.026618625058473122
+      "x": 0.5073808304320557,
+      "y": 0.3308216410906141,
+      "theta": 0.07838429251095314
     },
     "ee_initial_pose": {
-      "x": 0.1013156429253507,
-      "y": 0.18399094743226582,
+      "x": 0.055075508639008536,
+      "y": 0.20974936396486782,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3393185964210157,
-          "y": 0.2419043240027273,
-          "theta": -0.05753479224044761
+          "x": 0.34118214488508514,
+          "y": 0.27217239514675107,
+          "theta": 0.020642220289292967
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2580,34 +3440,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 120,
+    "seed": 140,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18074689770038746,
-      "y": 0.1844324085657688,
-      "theta": 0.22645976355363845
+      "x": 0.19357954698491653,
+      "y": 0.17975062244765352,
+      "theta": -0.11656296246424924
     },
     "goal_pose": {
-      "x": 0.48946883567698485,
-      "y": 0.3062763299566966,
-      "theta": 0.22021214091203772
+      "x": 0.4822200794609327,
+      "y": 0.26871938152283276,
+      "theta": 0.11118474314474663
     },
     "ee_initial_pose": {
-      "x": 0.08074689770038745,
-      "y": 0.1844324085657688,
+      "x": 0.09357954698491652,
+      "y": 0.17975062244765352,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.31875740583604695,
-          "y": 0.25706846628837987,
-          "theta": -0.22148150886387638
+          "x": 0.31850196542593107,
+          "y": 0.21181511092553848,
+          "theta": 0.16538567174514995
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2623,34 +3483,34 @@
     "split": "test_sim_layout_ood_blocking",
     "layout_family": "blocking",
     "shape_family": "T_shape",
-    "seed": 121,
+    "seed": 141,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.15936507434329084,
-      "y": 0.20419040429344762,
-      "theta": -0.05112425377326124
+      "x": 0.18086604497533618,
+      "y": 0.17650937757653953,
+      "theta": 0.1420538778417505
     },
     "goal_pose": {
-      "x": 0.5090262600209673,
-      "y": 0.30801368308018773,
-      "theta": 0.011262279664335462
+      "x": 0.4574156528722815,
+      "y": 0.3138427142229788,
+      "theta": -0.24918365506416318
     },
     "ee_initial_pose": {
-      "x": 0.05936507434329083,
-      "y": 0.20419040429344762,
+      "x": 0.08086604497533617,
+      "y": 0.17650937757653953,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_blocking_0",
         "pose": {
-          "x": 0.3517224369186887,
-          "y": 0.24752925341715176,
-          "theta": 0.27887471698004285
+          "x": 0.3098983144803674,
+          "y": 0.24762527973347662,
+          "theta": 0.14822632658687207
         },
         "size_x": 0.06,
         "size_y": 0.12,
@@ -2666,32 +3526,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 122,
+    "seed": 142,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18050092533717396,
-      "y": 0.20484990435537898,
-      "theta": -0.09885090623221471
+      "x": 0.18412942196915888,
+      "y": 0.20900950679175256,
+      "theta": -0.006473026553747097
     },
     "goal_pose": {
-      "x": 0.5301022149992651,
-      "y": 0.2137842679172236,
-      "theta": 0.13050721667783372
+      "x": 0.4990223664789426,
+      "y": 0.19071978272104087,
+      "theta": 0.16684205752982295
     },
     "ee_initial_pose": {
-      "x": 0.08050092533717396,
-      "y": 0.20484990435537898,
+      "x": 0.08412942196915887,
+      "y": 0.20900950679175256,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3387430737108772,
+          "x": 0.33285692916184717,
           "y": 0.32,
           "theta": 0.0
         },
@@ -2703,7 +3563,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3500663556163985,
+          "x": 0.3279385697005832,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -2721,32 +3581,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 123,
+    "seed": 143,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1576181799425472,
-      "y": 0.17935933387613162,
-      "theta": -0.04637911816480084
+      "x": 0.2003185577630731,
+      "y": 0.21757001875077234,
+      "theta": -0.22709153959196382
     },
     "goal_pose": {
-      "x": 0.47253901644569074,
-      "y": 0.22407193267710168,
-      "theta": -0.2309231669488388
+      "x": 0.4808254978799522,
+      "y": 0.18467118848108557,
+      "theta": 0.1165459916342923
     },
     "ee_initial_pose": {
-      "x": 0.0576181799425472,
-      "y": 0.17935933387613162,
+      "x": 0.10031855776307311,
+      "y": 0.21757001875077234,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3410860612010178,
+          "x": 0.3398483483803523,
           "y": 0.32,
           "theta": 0.0
         },
@@ -2758,7 +3618,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3349659309552904,
+          "x": 0.34216106879581754,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -2776,32 +3636,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 124,
+    "seed": 144,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20303903783776162,
-      "y": 0.2024127654752645,
-      "theta": -0.16146025453737212
+      "x": 0.17741336108568348,
+      "y": 0.1977197651123666,
+      "theta": 0.222423180363245
     },
     "goal_pose": {
-      "x": 0.5325843082677585,
-      "y": 0.19497134146666248,
-      "theta": 0.14376777173639477
+      "x": 0.5155382426968205,
+      "y": 0.2185949854836275,
+      "theta": -0.20559914162748255
     },
     "ee_initial_pose": {
-      "x": 0.10303903783776161,
-      "y": 0.2024127654752645,
+      "x": 0.07741336108568347,
+      "y": 0.1977197651123666,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3259476862065737,
+          "x": 0.33728840861403375,
           "y": 0.32,
           "theta": 0.0
         },
@@ -2813,7 +3673,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3299642533207199,
+          "x": 0.34262947862622123,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -2831,32 +3691,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 125,
+    "seed": 145,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20000291095778272,
-      "y": 0.1861266142980867,
-      "theta": 0.15402336269116024
+      "x": 0.19852378612662447,
+      "y": 0.21530372404410125,
+      "theta": 0.20585034609948283
     },
     "goal_pose": {
-      "x": 0.48606585241633643,
-      "y": 0.21423082031966179,
-      "theta": -0.07446576971266572
+      "x": 0.4651177093453346,
+      "y": 0.17146846905228902,
+      "theta": -0.08958662400619394
     },
     "ee_initial_pose": {
-      "x": 0.10000291095778271,
-      "y": 0.1861266142980867,
+      "x": 0.09852378612662446,
+      "y": 0.21530372404410125,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3432252464382415,
+          "x": 0.348824265074118,
           "y": 0.32,
           "theta": 0.0
         },
@@ -2868,7 +3728,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3434491526257652,
+          "x": 0.3455990272735783,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -2886,32 +3746,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 126,
+    "seed": 146,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18362883696713206,
-      "y": 0.2039031947387293,
-      "theta": -0.021826374353868305
+      "x": 0.16166675833606553,
+      "y": 0.206166075292286,
+      "theta": 0.13630634847072715
     },
     "goal_pose": {
-      "x": 0.5101590412279102,
-      "y": 0.19831075946103233,
-      "theta": -0.013593106608888517
+      "x": 0.46956169285720645,
+      "y": 0.2038239240417571,
+      "theta": 0.19915336774444908
     },
     "ee_initial_pose": {
-      "x": 0.08362883696713205,
-      "y": 0.2039031947387293,
+      "x": 0.061666758336065525,
+      "y": 0.206166075292286,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3297113449895361,
+          "x": 0.3354107832481216,
           "y": 0.32,
           "theta": 0.0
         },
@@ -2923,7 +3783,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3289884447862147,
+          "x": 0.3261862724753408,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -2941,32 +3801,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 127,
+    "seed": 147,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.15722878974391702,
-      "y": 0.206195144571549,
-      "theta": 0.03202558987777071
+      "x": 0.18526199402009477,
+      "y": 0.18243987818322796,
+      "theta": 0.22242406157509703
     },
     "goal_pose": {
-      "x": 0.47186498263217264,
-      "y": 0.1717901685542807,
-      "theta": 0.22006243170435857
+      "x": 0.49576480241835397,
+      "y": 0.1969081681293719,
+      "theta": 0.06308916537454651
     },
     "ee_initial_pose": {
-      "x": 0.05722878974391701,
-      "y": 0.206195144571549,
+      "x": 0.08526199402009477,
+      "y": 0.18243987818322796,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3372437457502008,
+          "x": 0.34710149568703785,
           "y": 0.32,
           "theta": 0.0
         },
@@ -2978,7 +3838,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.33397580608906396,
+          "x": 0.349077244846671,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -2996,32 +3856,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 128,
+    "seed": 148,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2020017045175423,
-      "y": 0.1868324068954821,
-      "theta": 0.00575566427400559
+      "x": 0.17517508771379067,
+      "y": 0.20680151536886535,
+      "theta": 0.23513201207623458
     },
     "goal_pose": {
-      "x": 0.4743829508410681,
-      "y": 0.17172650798494593,
-      "theta": -0.17289506897844859
+      "x": 0.4677233146147959,
+      "y": 0.21074781465793196,
+      "theta": 0.23899235706658845
     },
     "ee_initial_pose": {
-      "x": 0.10200170451754229,
-      "y": 0.1868324068954821,
+      "x": 0.07517508771379067,
+      "y": 0.20680151536886535,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.34413939204950195,
+          "x": 0.33352321630851056,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3033,7 +3893,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.33254834159369134,
+          "x": 0.3281808140563028,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3051,32 +3911,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 129,
+    "seed": 149,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18430488842279788,
-      "y": 0.21410145182921458,
-      "theta": -0.11410135758603573
+      "x": 0.1585553753741486,
+      "y": 0.18758603721008207,
+      "theta": -0.1806362713299639
     },
     "goal_pose": {
-      "x": 0.5269058545222138,
-      "y": 0.22330177293483763,
-      "theta": 0.2275581560984315
+      "x": 0.4688472207002696,
+      "y": 0.21819418959811404,
+      "theta": 0.039002664533598075
     },
     "ee_initial_pose": {
-      "x": 0.08430488842279787,
-      "y": 0.21410145182921458,
+      "x": 0.058555375374148594,
+      "y": 0.18758603721008207,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.34392602851048887,
+          "x": 0.33700267166950254,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3088,7 +3948,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.33488203068047107,
+          "x": 0.32683726540992375,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3106,32 +3966,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 130,
+    "seed": 150,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.180988897094676,
-      "y": 0.1886660843284862,
-      "theta": 0.12039933972134359
+      "x": 0.1961903620982044,
+      "y": 0.2197604579474584,
+      "theta": -0.15606579472330762
     },
     "goal_pose": {
-      "x": 0.5208407089919632,
-      "y": 0.20883469915041825,
-      "theta": -0.2390316301645269
+      "x": 0.48627012801806574,
+      "y": 0.19869790739356638,
+      "theta": -0.1685478857901423
     },
     "ee_initial_pose": {
-      "x": 0.080988897094676,
-      "y": 0.1886660843284862,
+      "x": 0.09619036209820439,
+      "y": 0.2197604579474584,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3322003904538946,
+          "x": 0.32775294888936757,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3143,7 +4003,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3351518055547584,
+          "x": 0.34732330842906833,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3161,32 +4021,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 131,
+    "seed": 151,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.17077175944017225,
-      "y": 0.21349341590255452,
-      "theta": -0.20620648416541532
+      "x": 0.19032868676245873,
+      "y": 0.21729906606362845,
+      "theta": 0.22539283600469667
     },
     "goal_pose": {
-      "x": 0.48507767186453754,
-      "y": 0.19342840810676645,
-      "theta": 0.19783817277546067
+      "x": 0.5092952080121016,
+      "y": 0.1822766147637761,
+      "theta": 0.2366619753920931
     },
     "ee_initial_pose": {
-      "x": 0.07077175944017225,
-      "y": 0.21349341590255452,
+      "x": 0.09032868676245873,
+      "y": 0.21729906606362845,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.33544279044085296,
+          "x": 0.35254015401814187,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3198,7 +4058,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.34281542114140406,
+          "x": 0.34221972691627717,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3216,32 +4076,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 132,
+    "seed": 152,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.17562144136271393,
-      "y": 0.1953861050539652,
-      "theta": 0.19887921650331064
+      "x": 0.20388266613941394,
+      "y": 0.19457252458765298,
+      "theta": -0.17690927765556608
     },
     "goal_pose": {
-      "x": 0.5278663723387202,
-      "y": 0.18842606788390184,
-      "theta": 0.1742922543604985
+      "x": 0.5330123737753366,
+      "y": 0.21790273044396613,
+      "theta": 0.0623362474787762
     },
     "ee_initial_pose": {
-      "x": 0.07562144136271393,
-      "y": 0.1953861050539652,
+      "x": 0.10388266613941394,
+      "y": 0.19457252458765298,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3537470911724667,
+          "x": 0.35210187005772403,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3253,7 +4113,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3500778081744368,
+          "x": 0.34378721299364595,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3271,32 +4131,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 133,
+    "seed": 153,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1796916325220786,
-      "y": 0.19911769566026646,
-      "theta": 0.13447633614983356
+      "x": 0.20466838378105728,
+      "y": 0.1787833579023843,
+      "theta": -0.11999479419146142
     },
     "goal_pose": {
-      "x": 0.52158014948684,
-      "y": 0.19032083878596823,
-      "theta": 0.022500595799151812
+      "x": 0.524608438529008,
+      "y": 0.22374012049261943,
+      "theta": 0.03307678100078948
     },
     "ee_initial_pose": {
-      "x": 0.07969163252207859,
-      "y": 0.19911769566026646,
+      "x": 0.10466838378105728,
+      "y": 0.1787833579023843,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3436273919214621,
+          "x": 0.3429263576618289,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3308,7 +4168,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.34628240828361606,
+          "x": 0.35018643848234804,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3326,32 +4186,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 134,
+    "seed": 154,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1792059378039571,
-      "y": 0.1849384109399486,
-      "theta": 0.241939736743348
+      "x": 0.16515711531877636,
+      "y": 0.2211082271449839,
+      "theta": -0.06224040878410164
     },
     "goal_pose": {
-      "x": 0.5287729396707166,
-      "y": 0.21476663647805533,
-      "theta": 0.1678349305940599
+      "x": 0.5231653328578479,
+      "y": 0.19662346251690926,
+      "theta": -0.24736218197071308
     },
     "ee_initial_pose": {
-      "x": 0.0792059378039571,
-      "y": 0.1849384109399486,
+      "x": 0.06515711531877635,
+      "y": 0.2211082271449839,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3258066693667969,
+          "x": 0.33854913061702535,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3363,7 +4223,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.34789060506657643,
+          "x": 0.3486128796779285,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3381,32 +4241,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 135,
+    "seed": 155,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.188476751809412,
-      "y": 0.20627343566838569,
-      "theta": 0.041387033746877244
+      "x": 0.18404431466113647,
+      "y": 0.20196932739817658,
+      "theta": 0.19681374834945786
     },
     "goal_pose": {
-      "x": 0.4991525758845746,
-      "y": 0.21925413580498618,
-      "theta": -0.18966214562766143
+      "x": 0.5338114963326646,
+      "y": 0.21651341987004113,
+      "theta": -0.04178727589680292
     },
     "ee_initial_pose": {
-      "x": 0.088476751809412,
-      "y": 0.20627343566838569,
+      "x": 0.08404431466113646,
+      "y": 0.20196932739817658,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.33348744005225855,
+          "x": 0.3410546547356866,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3418,7 +4278,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3427985075485704,
+          "x": 0.3493066814364125,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3436,32 +4296,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 136,
+    "seed": 156,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18378581040682151,
-      "y": 0.20140467623647507,
-      "theta": -0.03342179024534703
+      "x": 0.17938897394299794,
+      "y": 0.21944736046354546,
+      "theta": -0.126268056156
     },
     "goal_pose": {
-      "x": 0.5185015777060047,
-      "y": 0.19536145241354325,
-      "theta": -0.1800635748869686
+      "x": 0.4900363765704444,
+      "y": 0.18338390467674937,
+      "theta": -0.17126333761609447
     },
     "ee_initial_pose": {
-      "x": 0.08378581040682151,
-      "y": 0.20140467623647507,
+      "x": 0.07938897394299793,
+      "y": 0.21944736046354546,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.34412402410023313,
+          "x": 0.3525398054461238,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3473,7 +4333,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3264005899050805,
+          "x": 0.32907756829594276,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3491,32 +4351,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 137,
+    "seed": 157,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.15861832871347353,
-      "y": 0.1955047560206229,
-      "theta": 0.24512735825942383
+      "x": 0.18558216962624427,
+      "y": 0.18624002157174346,
+      "theta": -0.2417893706646066
     },
     "goal_pose": {
-      "x": 0.481164557890477,
-      "y": 0.19092664972398907,
-      "theta": 0.16032231377393946
+      "x": 0.48945844549134926,
+      "y": 0.18388143896355305,
+      "theta": 0.1581038577058133
     },
     "ee_initial_pose": {
-      "x": 0.05861832871347353,
-      "y": 0.1955047560206229,
+      "x": 0.08558216962624426,
+      "y": 0.18624002157174346,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3519951609968812,
+          "x": 0.32771625880421523,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3528,7 +4388,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.34045385420072277,
+          "x": 0.33172550158280273,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3546,32 +4406,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 138,
+    "seed": 158,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.16467181674461914,
-      "y": 0.19750531425584553,
-      "theta": 0.0990824747885975
+      "x": 0.18921261532015404,
+      "y": 0.22477452688682464,
+      "theta": 0.21718060163996095
     },
     "goal_pose": {
-      "x": 0.47957741742254767,
-      "y": 0.22174868744747608,
-      "theta": -0.12611367857053007
+      "x": 0.4721687195764898,
+      "y": 0.195107186092588,
+      "theta": 0.13547530378648193
     },
     "ee_initial_pose": {
-      "x": 0.06467181674461914,
-      "y": 0.19750531425584553,
+      "x": 0.08921261532015404,
+      "y": 0.22477452688682464,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.32938761468521927,
+          "x": 0.33488537581834865,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3583,7 +4443,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.33829127263322745,
+          "x": 0.3439875573207412,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3601,32 +4461,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 139,
+    "seed": 159,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.15507550863900854,
-      "y": 0.20974936396486782,
-      "theta": 0.019415056734536085
+      "x": 0.17472599408426054,
+      "y": 0.20862686911548886,
+      "theta": -0.12783917219554175
     },
     "goal_pose": {
-      "x": 0.5273808304320557,
-      "y": 0.2264185495062407,
-      "theta": 0.07838429251095314
+      "x": 0.5238763382568966,
+      "y": 0.20739975118374657,
+      "theta": -0.23982710111282274
     },
     "ee_initial_pose": {
-      "x": 0.055075508639008536,
-      "y": 0.20974936396486782,
+      "x": 0.07472599408426053,
+      "y": 0.20862686911548886,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3474654815121648,
+          "x": 0.3464547287273496,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3638,7 +4498,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3414151694642576,
+          "x": 0.336374560870078,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3656,32 +4516,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 140,
+    "seed": 160,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19357954698491653,
-      "y": 0.17975062244765352,
-      "theta": -0.11656296246424924
+      "x": 0.1611268506587595,
+      "y": 0.19215911157409665,
+      "theta": -0.1627997274718026
     },
     "goal_pose": {
-      "x": 0.5022200794609327,
-      "y": 0.17318804130528523,
-      "theta": 0.11118474314474663
+      "x": 0.5061466549679846,
+      "y": 0.2126639487848965,
+      "theta": 0.011671556132840488
     },
     "ee_initial_pose": {
-      "x": 0.09357954698491652,
-      "y": 0.17975062244765352,
+      "x": 0.0611268506587595,
+      "y": 0.19215911157409665,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.3254516141522549,
+          "x": 0.34116791290956794,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3693,7 +4553,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.33068508170522154,
+          "x": 0.3495809065281017,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3711,32 +4571,32 @@
     "split": "test_sim_layout_ood_narrow_passage",
     "layout_family": "narrow_passage",
     "shape_family": "T_shape",
-    "seed": 141,
+    "seed": 161,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18086604497533618,
-      "y": 0.17650937757653953,
-      "theta": 0.1420538778417505
+      "x": 0.1809105034933104,
+      "y": 0.20251665345133285,
+      "theta": -0.13521957051569644
     },
     "goal_pose": {
-      "x": 0.4774156528722815,
-      "y": 0.21186518361969614,
-      "theta": -0.24918365506416318
+      "x": 0.5279630028186564,
+      "y": 0.20821176421202342,
+      "theta": -0.01003411772011914
     },
     "ee_initial_pose": {
-      "x": 0.08086604497533617,
-      "y": 0.17650937757653953,
+      "x": 0.08091050349331039,
+      "y": 0.20251665345133285,
       "theta": 0.0
     },
     "obstacles": [
       {
         "obstacle_id": "obs_narrow_top",
         "pose": {
-          "x": 0.333068099167419,
+          "x": 0.34763395419523757,
           "y": 0.32,
           "theta": 0.0
         },
@@ -3748,7 +4608,7 @@
       {
         "obstacle_id": "obs_narrow_bottom",
         "pose": {
-          "x": 0.3418369253752881,
+          "x": 0.3460299486817674,
           "y": 0.08000000000000002,
           "theta": 0.0
         },
@@ -3766,25 +4626,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 142,
+    "seed": 162,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2241294219691589,
-      "y": 0.22900950679175255,
-      "theta": -0.006473026553747097
+      "x": 0.19768520850320528,
+      "y": 0.2401471524788693,
+      "theta": -0.1476885844014077
     },
     "goal_pose": {
-      "x": 0.5494413522736815,
-      "y": 0.3738131884806939,
-      "theta": 0.16684205752982295
+      "x": 0.5380991683641113,
+      "y": 0.37997949682768395,
+      "theta": 0.05551196253283375
     },
     "ee_initial_pose": {
-      "x": 0.12412942196915888,
-      "y": 0.22900950679175255,
+      "x": 0.09768520850320528,
+      "y": 0.2401471524788693,
       "theta": 0.0
     },
     "obstacles": []
@@ -3796,25 +4656,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 143,
+    "seed": 163,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.24031855776307312,
-      "y": 0.23757001875077233,
-      "theta": -0.22709153959196382
+      "x": 0.22207103439467454,
+      "y": 0.21785523113153896,
+      "theta": 0.042159647393596345
     },
     "goal_pose": {
-      "x": 0.539043141645687,
-      "y": 0.3697807923207237,
-      "theta": 0.1165459916342923
+      "x": 0.5497086551379781,
+      "y": 0.3958861570923323,
+      "theta": -0.10760930844853456
     },
     "ee_initial_pose": {
-      "x": 0.14031855776307312,
-      "y": 0.23757001875077233,
+      "x": 0.12207103439467454,
+      "y": 0.21785523113153896,
       "theta": 0.0
     },
     "obstacles": []
@@ -3826,25 +4686,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 144,
+    "seed": 164,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2174133610856835,
-      "y": 0.2177197651123666,
-      "theta": 0.222423180363245
+      "x": 0.19976674502391867,
+      "y": 0.21005182310724962,
+      "theta": 0.22182828283092415
     },
     "goal_pose": {
-      "x": 0.5588789958267546,
-      "y": 0.392396656989085,
-      "theta": -0.20559914162748255
+      "x": 0.5485196812419428,
+      "y": 0.3842019898844907,
+      "theta": -0.18952859906193137
     },
     "ee_initial_pose": {
-      "x": 0.11741336108568348,
-      "y": 0.2177197651123666,
+      "x": 0.09976674502391866,
+      "y": 0.21005182310724962,
       "theta": 0.0
     },
     "obstacles": []
@@ -3856,25 +4716,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 145,
+    "seed": 165,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.23852378612662448,
-      "y": 0.23530372404410124,
-      "theta": 0.20585034609948283
+      "x": 0.19584125029362034,
+      "y": 0.24309133027410176,
+      "theta": 0.19578449588283242
     },
     "goal_pose": {
-      "x": 0.5300672624830484,
-      "y": 0.3609789793681927,
-      "theta": -0.08958662400619394
+      "x": 0.5329680700581328,
+      "y": 0.3693594363152076,
+      "theta": -0.16208044279653755
     },
     "ee_initial_pose": {
-      "x": 0.13852378612662447,
-      "y": 0.23530372404410124,
+      "x": 0.09584125029362034,
+      "y": 0.24309133027410176,
       "theta": 0.0
     },
     "obstacles": []
@@ -3886,25 +4746,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 146,
+    "seed": 166,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20166675833606554,
-      "y": 0.226166075292286,
-      "theta": 0.13630634847072715
+      "x": 0.20393571772888752,
+      "y": 0.22516233384872175,
+      "theta": -0.035989660724287775
     },
     "goal_pose": {
-      "x": 0.5326066816326894,
-      "y": 0.3825492826945047,
-      "theta": 0.19915336774444908
+      "x": 0.5430769270199953,
+      "y": 0.3614021782539283,
+      "theta": 0.12180021244247896
     },
     "ee_initial_pose": {
-      "x": 0.10166675833606553,
-      "y": 0.226166075292286,
+      "x": 0.10393571772888752,
+      "y": 0.22516233384872175,
       "theta": 0.0
     },
     "obstacles": []
@@ -3916,25 +4776,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 147,
+    "seed": 167,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.22526199402009478,
-      "y": 0.20243987818322795,
-      "theta": 0.22242406157509703
+      "x": 0.20644144528385414,
+      "y": 0.19939431530546564,
+      "theta": -0.03771301238490826
     },
     "goal_pose": {
-      "x": 0.5475798870962023,
-      "y": 0.3779387787529146,
-      "theta": 0.06308916537454651
+      "x": 0.568672241229959,
+      "y": 0.3907482185187144,
+      "theta": 0.11115827814873264
     },
     "ee_initial_pose": {
-      "x": 0.12526199402009477,
-      "y": 0.20243987818322795,
+      "x": 0.10644144528385413,
+      "y": 0.19939431530546564,
       "theta": 0.0
     },
     "obstacles": []
@@ -3946,25 +4806,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 148,
+    "seed": 168,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.21517508771379068,
-      "y": 0.22680151536886534,
-      "theta": 0.23513201207623458
+      "x": 0.23227798130917515,
+      "y": 0.22085181160622286,
+      "theta": -0.06018738379971594
     },
     "goal_pose": {
-      "x": 0.5315561797798835,
-      "y": 0.3871652097719546,
-      "theta": 0.23899235706658845
+      "x": 0.5388650636471719,
+      "y": 0.3676016137593322,
+      "theta": 0.1817081590961741
     },
     "ee_initial_pose": {
-      "x": 0.11517508771379067,
-      "y": 0.22680151536886534,
+      "x": 0.13227798130917515,
+      "y": 0.22085181160622286,
       "theta": 0.0
     },
     "obstacles": []
@@ -3976,25 +4836,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 149,
+    "seed": 169,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1985553753741486,
-      "y": 0.20758603721008206,
-      "theta": -0.1806362713299639
+      "x": 0.2077763750105305,
+      "y": 0.22623606114652822,
+      "theta": 0.027647035235847495
     },
     "goal_pose": {
-      "x": 0.5321984118287255,
-      "y": 0.392129459732076,
-      "theta": 0.039002664533598075
+      "x": 0.5349153037461515,
+      "y": 0.39160313809842234,
+      "theta": -0.07759179610425132
     },
     "ee_initial_pose": {
-      "x": 0.0985553753741486,
-      "y": 0.20758603721008206,
+      "x": 0.1077763750105305,
+      "y": 0.22623606114652822,
       "theta": 0.0
     },
     "obstacles": []
@@ -4006,25 +4866,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 150,
+    "seed": 170,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2361903620982044,
-      "y": 0.2397604579474584,
-      "theta": -0.15606579472330762
+      "x": 0.2343700679186687,
+      "y": 0.2404953468654864,
+      "theta": 0.04328834012237259
     },
     "goal_pose": {
-      "x": 0.5421543588674662,
-      "y": 0.37913193826237757,
-      "theta": -0.1685478857901423
+      "x": 0.5425839221752013,
+      "y": 0.3696891165750996,
+      "theta": -0.11728419519777294
     },
     "ee_initial_pose": {
-      "x": 0.1361903620982044,
-      "y": 0.2397604579474584,
+      "x": 0.1343700679186687,
+      "y": 0.2404953468654864,
       "theta": 0.0
     },
     "obstacles": []
@@ -4036,25 +4896,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 151,
+    "seed": 171,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2303286867624587,
-      "y": 0.23729906606362844,
-      "theta": 0.22539283600469667
+      "x": 0.23407791480587187,
+      "y": 0.22309130265832525,
+      "theta": 0.24137178962626332
     },
     "goal_pose": {
-      "x": 0.5553115474354866,
-      "y": 0.3681844098425174,
-      "theta": 0.2366619753920931
+      "x": 0.5347188264121729,
+      "y": 0.38359680826245846,
+      "theta": 0.2078980299168861
     },
     "ee_initial_pose": {
-      "x": 0.1303286867624587,
-      "y": 0.23729906606362844,
+      "x": 0.13407791480587186,
+      "y": 0.22309130265832525,
       "theta": 0.0
     },
     "obstacles": []
@@ -4066,25 +4926,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 152,
+    "seed": 172,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.24388266613941395,
-      "y": 0.21457252458765297,
-      "theta": -0.17690927765556608
+      "x": 0.21262599281724534,
+      "y": 0.20569938067332208,
+      "theta": 0.17421601843935614
     },
     "goal_pose": {
-      "x": 0.5688642135859067,
-      "y": 0.39193515362931075,
-      "theta": 0.0623362474787762
+      "x": 0.5596275392320436,
+      "y": 0.39702544074979623,
+      "theta": -0.019402371490026493
     },
     "ee_initial_pose": {
-      "x": 0.14388266613941395,
-      "y": 0.21457252458765297,
+      "x": 0.11262599281724534,
+      "y": 0.20569938067332208,
       "theta": 0.0
     },
     "obstacles": []
@@ -4096,25 +4956,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 153,
+    "seed": 173,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.24466838378105726,
-      "y": 0.19878335790238433,
-      "theta": -0.11999479419146142
+      "x": 0.21120633620289364,
+      "y": 0.22842953615601957,
+      "theta": 0.1389284387424249
     },
     "goal_pose": {
-      "x": 0.5640619648737188,
-      "y": 0.39582674699507964,
-      "theta": 0.03307678100078948
+      "x": 0.5587653633577618,
+      "y": 0.38033795910915913,
+      "theta": -0.0669317659420069
     },
     "ee_initial_pose": {
-      "x": 0.14466838378105726,
-      "y": 0.19878335790238433,
+      "x": 0.11120633620289364,
+      "y": 0.22842953615601957,
       "theta": 0.0
     },
     "obstacles": []
@@ -4126,25 +4986,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 154,
+    "seed": 174,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20515711531877637,
-      "y": 0.2411082271449839,
-      "theta": -0.06224040878410164
+      "x": 0.23520515233452977,
+      "y": 0.21710888936490852,
+      "theta": -0.2378356736281178
     },
     "goal_pose": {
-      "x": 0.5632373330616274,
-      "y": 0.37774897501127286,
-      "theta": -0.24736218197071308
+      "x": 0.5443824184144402,
+      "y": 0.36900965477836933,
+      "theta": -0.12906057348032263
     },
     "ee_initial_pose": {
-      "x": 0.10515711531877636,
-      "y": 0.2411082271449839,
+      "x": 0.13520515233452976,
+      "y": 0.21710888936490852,
       "theta": 0.0
     },
     "obstacles": []
@@ -4156,25 +5016,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 155,
+    "seed": 175,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.22404431466113647,
-      "y": 0.22196932739817657,
-      "theta": 0.19681374834945786
+      "x": 0.21719796971777136,
+      "y": 0.1975908323840856,
+      "theta": 0.03670757893127613
     },
     "goal_pose": {
-      "x": 0.569320855047237,
-      "y": 0.39100894658002744,
-      "theta": -0.04178727589680292
+      "x": 0.562037284579721,
+      "y": 0.3801147321448043,
+      "theta": 0.24527705929199473
     },
     "ee_initial_pose": {
-      "x": 0.12404431466113647,
-      "y": 0.22196932739817657,
+      "x": 0.11719796971777136,
+      "y": 0.1975908323840856,
       "theta": 0.0
     },
     "obstacles": []
@@ -4186,25 +5046,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 156,
+    "seed": 176,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.21938897394299794,
-      "y": 0.23944736046354545,
-      "theta": -0.126268056156
+      "x": 0.1964849584756619,
+      "y": 0.23337182221705072,
+      "theta": -0.1382159487254671
     },
     "goal_pose": {
-      "x": 0.5443065008973968,
-      "y": 0.3689226031178329,
-      "theta": -0.17126333761609447
+      "x": 0.5344457154961588,
+      "y": 0.39580514978911974,
+      "theta": 0.06798704086735674
     },
     "ee_initial_pose": {
-      "x": 0.11938897394299794,
-      "y": 0.23944736046354545,
+      "x": 0.09648495847566191,
+      "y": 0.23337182221705072,
       "theta": 0.0
     },
     "obstacles": []
@@ -4216,25 +5076,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 157,
+    "seed": 177,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.22558216962624428,
-      "y": 0.20624002157174345,
-      "theta": -0.2417893706646066
+      "x": 0.24339200869828326,
+      "y": 0.2199268142209263,
+      "theta": 0.04131548923480288
     },
     "goal_pose": {
-      "x": 0.5439762545664854,
-      "y": 0.3692542926423687,
-      "theta": 0.1581038577058133
+      "x": 0.5583834883490149,
+      "y": 0.3923419145952108,
+      "theta": -0.2283426693502547
     },
     "ee_initial_pose": {
-      "x": 0.12558216962624427,
-      "y": 0.20624002157174345,
+      "x": 0.14339200869828325,
+      "y": 0.2199268142209263,
       "theta": 0.0
     },
     "obstacles": []
@@ -4246,25 +5106,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 158,
+    "seed": 178,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.22921261532015402,
-      "y": 0.24477452688682463,
-      "theta": 0.21718060163996095
+      "x": 0.24243109126116116,
+      "y": 0.24282204313451655,
+      "theta": 0.19642204965896032
     },
     "goal_pose": {
-      "x": 0.5340964111865656,
-      "y": 0.37673812406172535,
-      "theta": 0.13547530378648193
+      "x": 0.5557901818280665,
+      "y": 0.3902040296680625,
+      "theta": -0.08188362449548542
     },
     "ee_initial_pose": {
-      "x": 0.12921261532015402,
-      "y": 0.24477452688682463,
+      "x": 0.14243109126116116,
+      "y": 0.24282204313451655,
       "theta": 0.0
     },
     "obstacles": []
@@ -4276,25 +5136,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 159,
+    "seed": 179,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.21472599408426055,
-      "y": 0.22862686911548885,
-      "theta": -0.12783917219554175
+      "x": 0.24007507043201898,
+      "y": 0.20490889784868885,
+      "theta": 0.1623285675971266
     },
     "goal_pose": {
-      "x": 0.5636436218610837,
-      "y": 0.38493316745583106,
-      "theta": -0.23982710111282274
+      "x": 0.5323433229087053,
+      "y": 0.3806665907217124,
+      "theta": -0.028064847450608055
     },
     "ee_initial_pose": {
-      "x": 0.11472599408426054,
-      "y": 0.22862686911548885,
+      "x": 0.14007507043201897,
+      "y": 0.20490889784868885,
       "theta": 0.0
     },
     "obstacles": []
@@ -4306,25 +5166,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 160,
+    "seed": 180,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20112685065875952,
-      "y": 0.21215911157409664,
-      "theta": -0.1627997274718026
+      "x": 0.20221199031174503,
+      "y": 0.22871898457831813,
+      "theta": 0.05923717940168688
     },
     "goal_pose": {
-      "x": 0.5535123742674198,
-      "y": 0.38844263252326433,
-      "theta": 0.011671556132840488
+      "x": 0.534880253253134,
+      "y": 0.3802472443728449,
+      "theta": -0.12667160257836124
     },
     "ee_initial_pose": {
-      "x": 0.10112685065875951,
-      "y": 0.21215911157409664,
+      "x": 0.10221199031174502,
+      "y": 0.22871898457831813,
       "theta": 0.0
     },
     "obstacles": []
@@ -4336,25 +5196,25 @@
     "split": "test_sim_layout_ood_edge_goal",
     "layout_family": "edge_goal",
     "shape_family": "T_shape",
-    "seed": 161,
+    "seed": 181,
     "object_shape": "T",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2209105034933104,
-      "y": 0.22251665345133284,
-      "theta": -0.13521957051569644
+      "x": 0.22404709529086195,
+      "y": 0.20026560398102272,
+      "theta": -0.08261805053739668
     },
     "goal_pose": {
-      "x": 0.5659788587535179,
-      "y": 0.3854745094746823,
-      "theta": -0.01003411772011914
+      "x": 0.5435697718964905,
+      "y": 0.3676814480877215,
+      "theta": -0.0945692406833763
     },
     "ee_initial_pose": {
-      "x": 0.1209105034933104,
-      "y": 0.22251665345133284,
+      "x": 0.12404709529086194,
+      "y": 0.20026560398102272,
       "theta": 0.0
     },
     "obstacles": []
@@ -4366,25 +5226,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 162,
+    "seed": 182,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.17322225020384635,
-      "y": 0.20417658297464314,
-      "theta": -0.1476885844014077
+      "x": 0.1971239519209434,
+      "y": 0.1640070373863421,
+      "theta": 0.21071644246455007
     },
     "goal_pose": {
-      "x": 0.42619833672822266,
-      "y": 0.2799589936553679,
-      "theta": 0.05551196253283375
+      "x": 0.4378905373187499,
+      "y": 0.2627250451310428,
+      "theta": 0.1423021395211474
     },
     "ee_initial_pose": {
-      "x": 0.07322225020384635,
-      "y": 0.20417658297464314,
+      "x": 0.09712395192094339,
+      "y": 0.1640070373863421,
       "theta": 0.0
     },
     "obstacles": []
@@ -4396,25 +5256,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 163,
+    "seed": 183,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.22248524127360944,
-      "y": 0.17742627735784675,
-      "theta": 0.050591576872315636
+      "x": 0.19647666130568536,
+      "y": 0.1948464971122775,
+      "theta": -0.2992109595653197
     },
     "goal_pose": {
-      "x": 0.41941731027595597,
-      "y": 0.35971539273083086,
-      "theta": -0.12913117013824146
+      "x": 0.4041547511767492,
+      "y": 0.2919645134641799,
+      "theta": 0.19041069785282128
     },
     "ee_initial_pose": {
-      "x": 0.12248524127360944,
-      "y": 0.15742627735784676,
+      "x": 0.09647666130568536,
+      "y": 0.1748464971122775,
       "theta": 0.0
     },
     "obstacles": []
@@ -4426,25 +5286,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 164,
+    "seed": 184,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.17572009402870242,
-      "y": 0.16806218772869955,
-      "theta": 0.22182828283092415
+      "x": 0.1865550746058524,
+      "y": 0.16442950965237674,
+      "theta": 0.2158450109135534
     },
     "goal_pose": {
-      "x": 0.44703936248388554,
-      "y": 0.2884039797689815,
-      "theta": -0.18952859906193137
+      "x": 0.4660119267252386,
+      "y": 0.2666611756907441,
+      "theta": 0.15502097058073083
     },
     "ee_initial_pose": {
-      "x": 0.07572009402870242,
-      "y": 0.16806218772869955,
+      "x": 0.0865550746058524,
+      "y": 0.16442950965237674,
       "theta": 0.0
     },
     "obstacles": []
@@ -4456,25 +5316,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 165,
+    "seed": 185,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19100950035234443,
-      "y": 0.2077095963289221,
-      "theta": 0.23494139505939887
+      "x": 0.2440134327915588,
+      "y": 0.19828504224705218,
+      "theta": -0.2089803450352767
     },
     "goal_pose": {
-      "x": 0.3859361401162656,
-      "y": 0.29339859078801905,
-      "theta": -0.19449653135584505
+      "x": 0.4039003717100327,
+      "y": 0.32925202629369754,
+      "theta": -0.014321951216892836
     },
     "ee_initial_pose": {
-      "x": 0.09100950035234442,
-      "y": 0.18770959632892212,
+      "x": 0.1440134327915588,
+      "y": 0.1782850422470522,
       "theta": 0.0
     },
     "obstacles": []
@@ -4486,25 +5346,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 166,
+    "seed": 186,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.18072286127466503,
-      "y": 0.1861948006184661,
-      "theta": -0.035989660724287775
+      "x": 0.19053797915322618,
+      "y": 0.17487545454365994,
+      "theta": 0.023897956212501292
     },
     "goal_pose": {
-      "x": 0.43615385403999063,
-      "y": 0.2428043565078566,
-      "theta": 0.12180021244247896
+      "x": 0.44593076884503874,
+      "y": 0.248680758758091,
+      "theta": 0.09115036994508602
     },
     "ee_initial_pose": {
-      "x": 0.08072286127466502,
-      "y": 0.1861948006184661,
+      "x": 0.09053797915322617,
+      "y": 0.17487545454365994,
       "theta": 0.0
     },
     "obstacles": []
@@ -4516,25 +5376,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 167,
+    "seed": 187,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20372973434062497,
-      "y": 0.15527317836655874,
-      "theta": -0.04525561486188989
+      "x": 0.21107424936694913,
+      "y": 0.17852206832345116,
+      "theta": 0.05620782294915566
     },
     "goal_pose": {
-      "x": 0.4573444824599179,
-      "y": 0.346870546296786,
-      "theta": 0.13338993377847919
+      "x": 0.42656996059620894,
+      "y": 0.2724291335161952,
+      "theta": 0.04823913819688508
     },
     "ee_initial_pose": {
-      "x": 0.10372973434062496,
-      "y": 0.13527317836655875,
+      "x": 0.11107424936694912,
+      "y": 0.15852206832345117,
       "theta": 0.0
     },
     "obstacles": []
@@ -4546,25 +5406,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 168,
+    "seed": 188,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2147335775710102,
-      "y": 0.18102217392746742,
-      "theta": -0.06018738379971594
+      "x": 0.21737983496798635,
+      "y": 0.200542470165395,
+      "theta": -0.13930724462279842
     },
     "goal_pose": {
-      "x": 0.42773012729434373,
-      "y": 0.2552032275186644,
-      "theta": 0.1817081590961741
+      "x": 0.4831868511460773,
+      "y": 0.25931386951823177,
+      "theta": 0.09515523265628834
     },
     "ee_initial_pose": {
-      "x": 0.11473357757101019,
-      "y": 0.18102217392746742,
+      "x": 0.11737983496798635,
+      "y": 0.200542470165395,
       "theta": 0.0
     },
     "obstacles": []
@@ -4576,25 +5436,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 169,
+    "seed": 189,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2053316500126366,
-      "y": 0.18748327337583387,
-      "theta": 0.03317644228301697
+      "x": 0.21900597772900027,
+      "y": 0.19464438301688358,
+      "theta": -0.21422264914472117
     },
     "goal_pose": {
-      "x": 0.3898306074923028,
-      "y": 0.3490078452460558,
-      "theta": -0.09311015532510158
+      "x": 0.42398668832540837,
+      "y": 0.3659654498125321,
+      "theta": 0.1407652080302777
     },
     "ee_initial_pose": {
-      "x": 0.10533165001263659,
-      "y": 0.16748327337583388,
+      "x": 0.11900597772900026,
+      "y": 0.1746443830168836,
       "theta": 0.0
     },
     "obstacles": []
@@ -4606,25 +5466,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 170,
+    "seed": 190,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.21724408150240246,
-      "y": 0.20459441623858368,
-      "theta": 0.04328834012237259
+      "x": 0.17447523586536737,
+      "y": 0.19510530367582082,
+      "theta": 0.19666697595056482
     },
     "goal_pose": {
-      "x": 0.43516784435040273,
-      "y": 0.25937823315019926,
-      "theta": -0.11728419519777294
+      "x": 0.4266500903502068,
+      "y": 0.2778149768079744,
+      "theta": 0.2271692383070602
     },
     "ee_initial_pose": {
-      "x": 0.11724408150240245,
-      "y": 0.20459441623858368,
+      "x": 0.07447523586536736,
+      "y": 0.19510530367582082,
       "theta": 0.0
     },
     "obstacles": []
@@ -4636,25 +5496,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 171,
+    "seed": 191,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2368934977670462,
-      "y": 0.18370956318999027,
-      "theta": 0.289646147551516
+      "x": 0.23555051156619858,
+      "y": 0.1972239292649381,
+      "theta": 0.22284813494333194
     },
     "goal_pose": {
-      "x": 0.38943765282434584,
-      "y": 0.3289920206561461,
-      "theta": 0.24947763590026334
+      "x": 0.4210644349468385,
+      "y": 0.2844985189829958,
+      "theta": -0.058168062129533626
     },
     "ee_initial_pose": {
-      "x": 0.1368934977670462,
-      "y": 0.16370956318999028,
+      "x": 0.13555051156619857,
+      "y": 0.1772239292649381,
       "theta": 0.0
     },
     "obstacles": []
@@ -4666,25 +5526,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 172,
+    "seed": 192,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.19115119138069442,
-      "y": 0.16283925680798647,
-      "theta": 0.17421601843935614
+      "x": 0.19240017123486572,
+      "y": 0.16796181861479131,
+      "theta": -0.01660742868848092
     },
     "goal_pose": {
-      "x": 0.46925507846408704,
-      "y": 0.3140508814995925,
-      "theta": -0.019402371490026493
+      "x": 0.48548378194847946,
+      "y": 0.26672623986362926,
+      "theta": -0.03688952223517039
     },
     "ee_initial_pose": {
-      "x": 0.09115119138069441,
-      "y": 0.16283925680798647,
+      "x": 0.09240017123486571,
+      "y": 0.16796181861479131,
       "theta": 0.0
     },
     "obstacles": []
@@ -4696,25 +5556,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 173,
+    "seed": 193,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.20944760344347238,
-      "y": 0.1901154433872235,
-      "theta": 0.16671412649090983
+      "x": 0.22370756542466175,
+      "y": 0.20316989508188207,
+      "theta": 0.15806980657509956
     },
     "goal_pose": {
-      "x": 0.4375307267155236,
-      "y": 0.3208448977728979,
-      "theta": -0.08031811913040826
+      "x": 0.45773115116176377,
+      "y": 0.3258185460199199,
+      "theta": 0.015619504030926878
     },
     "ee_initial_pose": {
-      "x": 0.10944760344347237,
-      "y": 0.1701154433872235,
+      "x": 0.12370756542466174,
+      "y": 0.18316989508188208,
       "theta": 0.0
     },
     "obstacles": []
@@ -4726,25 +5586,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 174,
+    "seed": 194,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2182461828014357,
-      "y": 0.1765306672378902,
-      "theta": -0.2378356736281178
+      "x": 0.21889349219318954,
+      "y": 0.15403284680011028,
+      "theta": -0.17377406227463416
     },
     "goal_pose": {
-      "x": 0.4387648368288804,
-      "y": 0.25801930955673863,
-      "theta": -0.12906057348032263
+      "x": 0.4409386073419513,
+      "y": 0.26013953431849873,
+      "theta": 0.16334419487904933
     },
     "ee_initial_pose": {
-      "x": 0.1182461828014357,
-      "y": 0.1765306672378902,
+      "x": 0.11889349219318954,
+      "y": 0.15403284680011028,
       "theta": 0.0
     },
     "obstacles": []
@@ -4756,25 +5616,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 175,
+    "seed": 195,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.21663756366132564,
-      "y": 0.1531089988609027,
-      "theta": 0.04404909471753138
+      "x": 0.22573112401172965,
+      "y": 0.15252853035051045,
+      "theta": -0.1803907026187762
     },
     "goal_pose": {
-      "x": 0.4440745691594418,
-      "y": 0.32028683036201067,
-      "theta": 0.2943324711503937
+      "x": 0.4339353310162635,
+      "y": 0.35614444152149544,
+      "theta": -0.061506539226430096
     },
     "ee_initial_pose": {
-      "x": 0.11663756366132563,
-      "y": 0.13310899886090272,
+      "x": 0.12573112401172964,
+      "y": 0.13252853035051046,
       "theta": 0.0
     },
     "obstacles": []
@@ -4786,25 +5646,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 176,
+    "seed": 196,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.1717819501707943,
-      "y": 0.19604618666046084,
-      "theta": -0.1382159487254671
+      "x": 0.20896396689450783,
+      "y": 0.19266426338941015,
+      "theta": 0.1064959393035968
     },
     "goal_pose": {
-      "x": 0.41889143099231757,
-      "y": 0.3116102995782395,
-      "theta": 0.06798704086735674
+      "x": 0.4735589837625054,
+      "y": 0.25672732637720497,
+      "theta": -0.03823595993350304
     },
     "ee_initial_pose": {
-      "x": 0.0717819501707943,
-      "y": 0.19604618666046084,
+      "x": 0.10896396689450782,
+      "y": 0.19266426338941015,
       "theta": 0.0
     },
     "obstacles": []
@@ -4816,25 +5676,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 177,
+    "seed": 197,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2480704104379399,
-      "y": 0.17991217706511153,
-      "theta": 0.04957858708176344
+      "x": 0.22239259795040156,
+      "y": 0.1579518530502847,
+      "theta": -0.2873112304911002
     },
     "goal_pose": {
-      "x": 0.43676697669802955,
-      "y": 0.3508547864880269,
-      "theta": -0.27401120322030564
+      "x": 0.39500926469752023,
+      "y": 0.28172970908811146,
+      "theta": 0.04888349839125122
     },
     "ee_initial_pose": {
-      "x": 0.1480704104379399,
-      "y": 0.15991217706511154,
+      "x": 0.12239259795040155,
+      "y": 0.1379518530502847,
       "theta": 0.0
     },
     "obstacles": []
@@ -4846,25 +5706,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 178,
+    "seed": 198,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2269173095133934,
-      "y": 0.20738645176141984,
-      "theta": 0.19642204965896032
+      "x": 0.17317871789891412,
+      "y": 0.1926882833900211,
+      "theta": -0.1995625917961314
     },
     "goal_pose": {
-      "x": 0.461580363656133,
-      "y": 0.300408059336125,
-      "theta": -0.08188362449548542
+      "x": 0.46952415823203975,
+      "y": 0.27826721695462275,
+      "theta": -0.2234822715435683
     },
     "ee_initial_pose": {
-      "x": 0.1269173095133934,
-      "y": 0.20738645176141984,
+      "x": 0.07317871789891411,
+      "y": 0.1926882833900211,
       "theta": 0.0
     },
     "obstacles": []
@@ -4876,25 +5736,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 179,
+    "seed": 199,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2440900845184228,
-      "y": 0.1618906774184266,
-      "theta": 0.1947942811165519
+      "x": 0.21065474692476427,
+      "y": 0.17359312348664488,
+      "theta": -0.1339147135591485
     },
     "goal_pose": {
-      "x": 0.3846866458174106,
-      "y": 0.32166647680428095,
-      "theta": -0.03367781694072969
+      "x": 0.43702798504171264,
+      "y": 0.2711713970285042,
+      "theta": 0.11664476175235816
     },
     "ee_initial_pose": {
-      "x": 0.14409008451842278,
-      "y": 0.14189067741842662,
+      "x": 0.11065474692476426,
+      "y": 0.1535931234866449,
       "theta": 0.0
     },
     "obstacles": []
@@ -4906,25 +5766,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "open_space",
     "shape_family": "L_shape",
-    "seed": 180,
+    "seed": 200,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.17865438837409403,
-      "y": 0.19046278149398171,
-      "theta": 0.05923717940168688
+      "x": 0.17273655812512365,
+      "y": 0.16220681849174395,
+      "theta": 0.10456199210272299
     },
     "goal_pose": {
-      "x": 0.4197605065062679,
-      "y": 0.28049448874568983,
-      "theta": -0.12667160257836124
+      "x": 0.42142787970168033,
+      "y": 0.30880087900084763,
+      "theta": -0.11664386869831633
     },
     "ee_initial_pose": {
-      "x": 0.07865438837409403,
-      "y": 0.19046278149398171,
+      "x": 0.07273655812512364,
+      "y": 0.16220681849174395,
       "theta": 0.0
     },
     "obstacles": []
@@ -4936,25 +5796,25 @@
     "split": "test_sim_shape_ood_L",
     "layout_family": "mild_offset",
     "shape_family": "L_shape",
-    "seed": 181,
+    "seed": 201,
     "object_shape": "L",
     "object_size_x": 0.048,
     "object_size_y": 0.048,
     "object_mass": 0.01905,
     "object_friction": null,
     "object_initial_pose": {
-      "x": 0.2248565143490343,
-      "y": 0.15631872477722725,
-      "theta": -0.099141660644876
+      "x": 0.19402613552556422,
+      "y": 0.16953597325996064,
+      "theta": -0.29779477813913807
     },
     "goal_pose": {
-      "x": 0.40713954379298084,
-      "y": 0.28920362021930385,
-      "theta": -0.11348308882005156
+      "x": 0.40262384791742833,
+      "y": 0.34526933826468253,
+      "theta": 0.11632594622160952
     },
     "ee_initial_pose": {
-      "x": 0.1248565143490343,
-      "y": 0.13631872477722726,
+      "x": 0.09402613552556421,
+      "y": 0.14953597325996065,
       "theta": 0.0
     },
     "obstacles": []

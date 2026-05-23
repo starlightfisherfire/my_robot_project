@@ -1,0 +1,53 @@
+flowchart TB
+    subgraph WORLD["Physical World"]
+        PHYS["s_{t+1} = T(s_t, a_t)"]
+    end
+
+    subgraph PERCEPTION["Perception Encoder"]
+        ENC["Observation Encoder<br/>Structured: MLP / Visual: ViT+Slot"]
+        Z_OBS["z_obs_t (128 dim)"]
+    end
+
+    subgraph CORE["SCWM Core: Self-Contained World State"]
+        S_PREV["State_{t-1} (256 dim)<br/>from previous timestep"]
+        
+        subgraph UPDATE_BLOCK["State Update"]
+            CROSS["Cross-Attention<br/>Query: State_{t-1}<br/>Key/Value: z_obs_t + act_{t-1}<br/>Result: State_t"]
+        end
+        
+        S_NEW["State_t (256 dim)<br/>Self-Contained World State<br/>Encodes all info from 0:t"]
+    end
+
+    subgraph HEADS["Prediction Heads"]
+        NL["Next-Latent Head<br/>State_t -> z_obs_{t+1}"]
+        DYN["Dynamics Head<br/>(State_t, act) -> delta_pose"]
+        SG["Subgoal Head<br/>State_t -> subgoal"]
+    end
+
+    subgraph PLANNER["Planner (Paper1: CEM-MPC)"]
+        ROLLOUT["rollout_model.py<br/>Forward simulation"]
+        MPC["CEM-MPC optimize actions"]
+        ACT["Output: a_t"]
+    end
+
+    PHYS --> ENC
+    ENC --> Z_OBS
+    Z_OBS --> CROSS
+    S_PREV --> CROSS
+    CROSS --> S_NEW
+    
+    S_NEW --> NL
+    S_NEW --> DYN
+    S_NEW --> SG
+    
+    DYN --> ROLLOUT
+    SG --> MPC
+    ROLLOUT --> MPC
+    MPC --> ACT
+    ACT --> PHYS
+
+    style CORE fill:#fff3e0,stroke:#ff9800
+    style S_NEW fill:#ffe0b2,stroke:#ff9800,stroke-width:3px
+    style NL fill:#e8f5e9
+    style DYN fill:#e8f5e9
+    style SG fill:#e8f5e9

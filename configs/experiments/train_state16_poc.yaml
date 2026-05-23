@@ -1,0 +1,53 @@
+# configs/experiments/train_state16_poc.yaml
+experiment:
+  name: train_state16_poc
+  state_schema: state16_original
+  seed: 0
+  purpose: proof_of_concept_only
+
+data:
+  root: data/sim/layout_ood_state16_v0
+  metadata: data/sim/layout_ood_state16_v0/metadata/episodes.jsonl
+  history_len: 6
+  token_count: 6
+  state_dim: 16
+  train_ratio_if_no_split: 0.8
+  val_ratio_if_no_split: 0.2
+  allow_open_only_poc: true
+
+normalizer:
+  enabled: true
+  fit_on: train_only
+  save_path: runs/train_state16_poc/normalizer_state16.json
+
+models:
+  names:
+    - flat
+    - object_centric
+    - causality_aware
+  d_model: 128
+  z_dim: 256
+  gru_hidden: 256
+
+train:
+  batch_size: 128
+  epochs_smoke: 2
+  epochs_poc: 5
+  lr: 0.0003
+  weight_decay: 0.000001
+  device: cuda
+  num_workers: 0
+  grad_clip_norm: 1.0
+  w_dynamics: 1.0
+  w_subgoal: 0.2
+
+eval:
+  metrics:
+    - dynamics_mse
+    - dynamics_rmse
+    - subgoal_mse
+    - subgoal_rmse
+  rollout_horizons: [1]
+
+outputs:
+  run_dir: runs/train_state16_poc

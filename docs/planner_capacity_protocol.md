@@ -82,11 +82,18 @@
 
 ## 4. 成功标准
 
+### Paper 主 success 定义
+
+**primary_success = success_pose_1cm_5deg**
+即 `final_pos_error <= 0.01m AND final_theta_error_deg <= 5.0deg`
+
+详见 `docs/success_rate_revise.md`。
+
 ### 当前 open_space / mild_offset 阶段
 
 | 指标 | 目标 |
 |------|------|
-| success_pos_1cm_rate | ≥ 0.8 |
+| primary_success_rate (success_pose_1cm_5deg) | ≥ 0.8 |
 | success_pos_0p5cm_rate | ≥ 0.6 |
 | success_pose_0p5cm_5deg_rate | ≥ 0.6 |
 | mean_final_pos_error | ≤ 5mm |

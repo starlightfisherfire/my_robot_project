@@ -1,0 +1,4412 @@
+[
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 42,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20836560790747305,
+      "y": 0.15150064531336002,
+      "theta": -0.11248534081544037
+    },
+    "goal_pose": {
+      "x": 0.42785685905190585,
+      "y": 0.298917697133121,
+      "theta": 0.08834974371145565
+    },
+    "ee_initial_pose": {
+      "x": 0.10836560790747304,
+      "y": 0.15150064531336002,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000000",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 44,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19451215275526965,
+      "y": 0.18251832054627576,
+      "theta": 0.1810183082396366
+    },
+    "goal_pose": {
+      "x": 0.4241332515356355,
+      "y": 0.25801276164625175,
+      "theta": -0.23545137336594446
+    },
+    "ee_initial_pose": {
+      "x": 0.09451215275526964,
+      "y": 0.18251832054627576,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000002",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 46,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22329608458714928,
+      "y": 0.17399966375826076,
+      "theta": 0.04431009138711606
+    },
+    "goal_pose": {
+      "x": 0.4787829338834209,
+      "y": 0.2582831362691681,
+      "theta": 0.007858642011759898
+    },
+    "ee_initial_pose": {
+      "x": 0.12329608458714927,
+      "y": 0.17399966375826076,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000004",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 48,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20288946970497979,
+      "y": 0.15791348780255254,
+      "theta": 0.10577342113401222
+    },
+    "goal_pose": {
+      "x": 0.43418000447342525,
+      "y": 0.3150660219820217,
+      "theta": -0.15364082636733511
+    },
+    "ee_initial_pose": {
+      "x": 0.10288946970497978,
+      "y": 0.15791348780255254,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000006",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 50,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19985219412551614,
+      "y": 0.16597042338435242,
+      "theta": 0.06870558072184546
+    },
+    "goal_pose": {
+      "x": 0.429398380334701,
+      "y": 0.27785348639899643,
+      "theta": 0.23516807455587668
+    },
+    "ee_initial_pose": {
+      "x": 0.09985219412551613,
+      "y": 0.16597042338435242,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000008",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 52,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22870129150225982,
+      "y": 0.15327135930062744,
+      "theta": 0.11283086058716246
+    },
+    "goal_pose": {
+      "x": 0.4487089394659554,
+      "y": 0.3153378596133126,
+      "theta": -0.046572755895354034
+    },
+    "ee_initial_pose": {
+      "x": 0.1287012915022598,
+      "y": 0.15327135930062744,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000010",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 54,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22481857835329347,
+      "y": 0.15824868117523386,
+      "theta": 0.028035068131706753
+    },
+    "goal_pose": {
+      "x": 0.4486417990266306,
+      "y": 0.3167184331938825,
+      "theta": -0.059805124182248315
+    },
+    "ee_initial_pose": {
+      "x": 0.12481857835329346,
+      "y": 0.15824868117523386,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000012",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 56,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.22795515128149665,
+      "y": 0.18358535483993427,
+      "theta": -0.013164055894678173
+    },
+    "goal_pose": {
+      "x": 0.4518623580343372,
+      "y": 0.30141280504627616,
+      "theta": 0.24430301387223607
+    },
+    "ee_initial_pose": {
+      "x": 0.12795515128149665,
+      "y": 0.18358535483993427,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000014",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 58,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2048454298960374,
+      "y": 0.1623434399388648,
+      "theta": 0.0709846838655675
+    },
+    "goal_pose": {
+      "x": 0.48571883511613007,
+      "y": 0.24329651724839824,
+      "theta": -0.025300192067773508
+    },
+    "ee_initial_pose": {
+      "x": 0.1048454298960374,
+      "y": 0.1623434399388648,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000016",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_open__open__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_open",
+    "layout_family": "open",
+    "shape_family": "T_shape",
+    "seed": 60,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18846840528402664,
+      "y": 0.18467747263050235,
+      "theta": -0.11719098229091213
+    },
+    "goal_pose": {
+      "x": 0.47463168411463913,
+      "y": 0.27737737768010085,
+      "theta": -0.08374009663129428
+    },
+    "ee_initial_pose": {
+      "x": 0.08846840528402664,
+      "y": 0.18467747263050235,
+      "theta": 0.0
+    },
+    "obstacles": [],
+    "_original_template_id": "train_sim_id__open_space__T_shape__000018",
+    "family": "open",
+    "type": "open",
+    "obstacle_count": 0,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_v0.json"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260513,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1623507397586069,
+      "y": 0.21934589366466076,
+      "theta": -0.016528004388441542
+    },
+    "goal_pose": {
+      "x": 0.5068693261329407,
+      "y": 0.32302493154731216,
+      "theta": -0.1561331225587398
+    },
+    "ee_initial_pose": {
+      "x": 0.06235073975860689,
+      "y": 0.21934589366466076,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34421828116473907,
+          "y": 0.26026869595296487,
+          "theta": -0.42826359598190966
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260514,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16264387428567495,
+      "y": 0.18402792082974911,
+      "theta": -0.23680139019297536
+    },
+    "goal_pose": {
+      "x": 0.4602973210665897,
+      "y": 0.320923525034173,
+      "theta": 0.028668743714309664
+    },
+    "ee_initial_pose": {
+      "x": 0.06264387428567494,
+      "y": 0.18402792082974911,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.30106482101704074,
+          "y": 0.24657035593205764,
+          "theta": -0.32852711692158787
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000001"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260515,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1804641663992126,
+      "y": 0.1986269048478908,
+      "theta": 0.17612620995509443
+    },
+    "goal_pose": {
+      "x": 0.47104984624501917,
+      "y": 0.3184368492914453,
+      "theta": 0.18219717557374976
+    },
+    "ee_initial_pose": {
+      "x": 0.08046416639921258,
+      "y": 0.1986269048478908,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.29840287136043575,
+          "y": 0.2795358374100393,
+          "theta": -0.15424610374939451
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000002"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260516,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1749675764214124,
+      "y": 0.21094693776663165,
+      "theta": 0.21858891611339054
+    },
+    "goal_pose": {
+      "x": 0.4750422275941932,
+      "y": 0.3313671668324846,
+      "theta": 0.2436429987991957
+    },
+    "ee_initial_pose": {
+      "x": 0.07496757642141239,
+      "y": 0.21094693776663165,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3040893959818092,
+          "y": 0.26829520247184135,
+          "theta": -0.07198015304280247
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000003"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260517,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1646813370202326,
+      "y": 0.19752408041056824,
+      "theta": -0.16086540565555085
+    },
+    "goal_pose": {
+      "x": 0.46957942687839366,
+      "y": 0.3283188568076844,
+      "theta": -0.2159454660685321
+    },
+    "ee_initial_pose": {
+      "x": 0.0646813370202326,
+      "y": 0.19752408041056824,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.2888191579526803,
+          "y": 0.27924711693962995,
+          "theta": -0.04938365427387914
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000004"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260518,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20396138264852468,
+      "y": 0.18852246844113837,
+      "theta": 0.15228840417364736
+    },
+    "goal_pose": {
+      "x": 0.45564644208724125,
+      "y": 0.3348083320694063,
+      "theta": 0.052910861843950885
+    },
+    "ee_initial_pose": {
+      "x": 0.10396138264852467,
+      "y": 0.18852246844113837,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3454255603291649,
+          "y": 0.2715669728895259,
+          "theta": -0.40138837160529883
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000005"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260519,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20201619601667123,
+      "y": 0.19203487669804012,
+      "theta": 0.08482497389328703
+    },
+    "goal_pose": {
+      "x": 0.48629112856596396,
+      "y": 0.31682015062206176,
+      "theta": 0.18818113292413396
+    },
+    "ee_initial_pose": {
+      "x": 0.10201619601667122,
+      "y": 0.19203487669804012,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3216875701782981,
+          "y": 0.26570192637871803,
+          "theta": -0.11643373977087101
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000006"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260520,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17355737863262038,
+      "y": 0.17650068464368285,
+      "theta": 0.0020336304658994386
+    },
+    "goal_pose": {
+      "x": 0.4551084627520836,
+      "y": 0.3106469728967086,
+      "theta": -0.24697435269423762
+    },
+    "ee_initial_pose": {
+      "x": 0.07355737863262038,
+      "y": 0.17650068464368285,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.336787542905073,
+          "y": 0.2572409265305964,
+          "theta": 0.031590859000714344
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000007"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260521,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1582014125607748,
+      "y": 0.19764408302669362,
+      "theta": -0.02851663564663437
+    },
+    "goal_pose": {
+      "x": 0.5093701593813617,
+      "y": 0.3034777627782189,
+      "theta": 0.003943971924669665
+    },
+    "ee_initial_pose": {
+      "x": 0.058201412560774796,
+      "y": 0.19764408302669362,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3463182949700143,
+          "y": 0.2323157184211697,
+          "theta": -0.2461341805263726
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000008"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_easy",
+    "layout_family": "blocking_easy",
+    "shape_family": "T_shape",
+    "seed": 20260522,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16474491727842616,
+      "y": 0.22416542801650097,
+      "theta": -0.03813040049769095
+    },
+    "goal_pose": {
+      "x": 0.4916283913641703,
+      "y": 0.3041422335541476,
+      "theta": 0.12615238789903993
+    },
+    "ee_initial_pose": {
+      "x": 0.06474491727842616,
+      "y": 0.22416542801650097,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3580948967072521,
+          "y": 0.2414491415567335,
+          "theta": 0.3630818636365446
+        },
+        "size_x": 0.04,
+        "size_y": 0.08,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "easy",
+    "obstacle_size_x": 0.04,
+    "obstacle_size_y": 0.08,
+    "family": "blocking_easy",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_easy__blocking_easy__T_shape__000009"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260523,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18312321557103367,
+      "y": 0.18894257091206723,
+      "theta": -0.05220253757083765
+    },
+    "goal_pose": {
+      "x": 0.5072780135617994,
+      "y": 0.2959165289850795,
+      "theta": -0.21650411381529783
+    },
+    "ee_initial_pose": {
+      "x": 0.08312321557103367,
+      "y": 0.18894257091206723,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33497008669626344,
+          "y": 0.22522730472195163,
+          "theta": -0.41466587096123075
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260524,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1654048120743649,
+      "y": 0.18785405652042245,
+      "theta": 0.1294806486439396
+    },
+    "goal_pose": {
+      "x": 0.5005378989720738,
+      "y": 0.2756450916365286,
+      "theta": 0.018481288713613153
+    },
+    "ee_initial_pose": {
+      "x": 0.06540481207436488,
+      "y": 0.18785405652042245,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3489678789656648,
+          "y": 0.20847174780422104,
+          "theta": -0.06871889011470023
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000001"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260525,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15724115178111192,
+      "y": 0.19323715475468972,
+      "theta": -0.24543204270007363
+    },
+    "goal_pose": {
+      "x": 0.4484746825397034,
+      "y": 0.31521070671191387,
+      "theta": 0.04727083825711498
+    },
+    "ee_initial_pose": {
+      "x": 0.057241151781111915,
+      "y": 0.19323715475468972,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.27857716194023674,
+          "y": 0.2647184074698384,
+          "theta": -0.343240698437176
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000002"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260526,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18811209000933,
+      "y": 0.221328763208441,
+      "theta": 0.20743210979589827
+    },
+    "goal_pose": {
+      "x": 0.5035778418404745,
+      "y": 0.29766422338488613,
+      "theta": 0.09258467928153824
+    },
+    "ee_initial_pose": {
+      "x": 0.08811209000932999,
+      "y": 0.221328763208441,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3348972477148153,
+          "y": 0.24253707096161514,
+          "theta": 0.02145616833755759
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000003"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260527,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1564832771683677,
+      "y": 0.1779105084717763,
+      "theta": -0.18744368749420498
+    },
+    "goal_pose": {
+      "x": 0.5056102299408151,
+      "y": 0.2895865728389873,
+      "theta": -0.07123663368806404
+    },
+    "ee_initial_pose": {
+      "x": 0.05648327716836771,
+      "y": 0.1779105084717763,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.32174302062407184,
+          "y": 0.21563876668733092,
+          "theta": 0.04209146287589727
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000004"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260528,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1653554740467927,
+      "y": 0.19676484020496152,
+      "theta": 0.22173727738089694
+    },
+    "goal_pose": {
+      "x": 0.47041402174505403,
+      "y": 0.2873290148928761,
+      "theta": -0.07901173330675254
+    },
+    "ee_initial_pose": {
+      "x": 0.0653554740467927,
+      "y": 0.19676484020496152,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.335496112603942,
+          "y": 0.24717547649453087,
+          "theta": 0.002010351622397266
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000005"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260529,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20036114416651812,
+      "y": 0.18317263722345828,
+      "theta": 0.009572757836526058
+    },
+    "goal_pose": {
+      "x": 0.47714289981378927,
+      "y": 0.30996655593898215,
+      "theta": 0.11990557924977602
+    },
+    "ee_initial_pose": {
+      "x": 0.10036114416651812,
+      "y": 0.18317263722345828,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.31994746788451917,
+          "y": 0.2586844450563569,
+          "theta": -0.12476082230768892
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000006"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260530,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1652376120566,
+      "y": 0.20892936783259974,
+      "theta": 0.1834139723753732
+    },
+    "goal_pose": {
+      "x": 0.4723480597296164,
+      "y": 0.30663441490116705,
+      "theta": -0.05026871068091021
+    },
+    "ee_initial_pose": {
+      "x": 0.0652376120566,
+      "y": 0.20892936783259974,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3340344917868741,
+          "y": 0.23481303905464343,
+          "theta": -0.35593221275908105
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000007"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260531,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15939685711779764,
+      "y": 0.1890108942290184,
+      "theta": -0.2083213395490559
+    },
+    "goal_pose": {
+      "x": 0.5034475530346819,
+      "y": 0.30633425426155936,
+      "theta": 0.15296493880320644
+    },
+    "ee_initial_pose": {
+      "x": 0.05939685711779763,
+      "y": 0.1890108942290184,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.30365364509556503,
+          "y": 0.2720815913523803,
+          "theta": -0.12471029409994216
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000008"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_medium",
+    "layout_family": "blocking_medium",
+    "shape_family": "T_shape",
+    "seed": 20260532,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2027683382678572,
+      "y": 0.22083027192351612,
+      "theta": -0.08395423395006513
+    },
+    "goal_pose": {
+      "x": 0.4620070423261073,
+      "y": 0.32787980453484616,
+      "theta": -0.17947811036310007
+    },
+    "ee_initial_pose": {
+      "x": 0.1027683382678572,
+      "y": 0.22083027192351612,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3096366374141295,
+          "y": 0.28581740664547883,
+          "theta": 0.023402995361309853
+        },
+        "size_x": 0.05,
+        "size_y": 0.1,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "medium",
+    "obstacle_size_x": 0.05,
+    "obstacle_size_y": 0.1,
+    "family": "blocking_medium",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_medium__blocking_medium__T_shape__000009"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260533,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17276346504440027,
+      "y": 0.17534987438469124,
+      "theta": -0.08038536722375472
+    },
+    "goal_pose": {
+      "x": 0.47814616619683387,
+      "y": 0.28052821980297377,
+      "theta": 0.24611390924781162
+    },
+    "ee_initial_pose": {
+      "x": 0.07276346504440026,
+      "y": 0.17534987438469124,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.33127420087577475,
+          "y": 0.23538420260192172,
+          "theta": 0.4225507378002499
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260534,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1661329734875756,
+      "y": 0.19666198866066234,
+      "theta": -0.22944544557486746
+    },
+    "goal_pose": {
+      "x": 0.504868991980153,
+      "y": 0.27898796073276627,
+      "theta": 0.09366622276606806
+    },
+    "ee_initial_pose": {
+      "x": 0.0661329734875756,
+      "y": 0.19666198866066234,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3186609970381351,
+          "y": 0.23973881719094042,
+          "theta": 0.1881675078920596
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000001"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260535,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1802794048545535,
+      "y": 0.18308446151072313,
+      "theta": 0.12416243448674041
+    },
+    "goal_pose": {
+      "x": 0.5087748058754046,
+      "y": 0.28822450823590434,
+      "theta": 0.009396531417194043
+    },
+    "ee_initial_pose": {
+      "x": 0.08027940485455348,
+      "y": 0.18308446151072313,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.35730856059340654,
+          "y": 0.259255783622898,
+          "theta": -0.32750751512533116
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000002"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260536,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17417636861273275,
+      "y": 0.19406874087022224,
+      "theta": -0.07678482763065919
+    },
+    "goal_pose": {
+      "x": 0.49848778640713975,
+      "y": 0.3227317990260962,
+      "theta": 0.09926428286043837
+    },
+    "ee_initial_pose": {
+      "x": 0.07417636861273275,
+      "y": 0.19406874087022224,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.36574444112459853,
+          "y": 0.2429347967129697,
+          "theta": -0.13069729933708552
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000003"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260537,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19969985088529593,
+      "y": 0.21160976852652708,
+      "theta": -0.13456646411442164
+    },
+    "goal_pose": {
+      "x": 0.4813906242793924,
+      "y": 0.2688838783108359,
+      "theta": -0.08283268514298098
+    },
+    "ee_initial_pose": {
+      "x": 0.09969985088529593,
+      "y": 0.21160976852652708,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3502382882814827,
+          "y": 0.22689552870198343,
+          "theta": 0.31068931298229296
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000004"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260538,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16328237785034708,
+      "y": 0.1995440500482901,
+      "theta": -0.05578668786973445
+    },
+    "goal_pose": {
+      "x": 0.5044415338537388,
+      "y": 0.3172886649694071,
+      "theta": -0.17289557564988417
+    },
+    "ee_initial_pose": {
+      "x": 0.06328237785034707,
+      "y": 0.1995440500482901,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34885782671060606,
+          "y": 0.26886013575712225,
+          "theta": 0.37286621807176135
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000005"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260539,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17323603887108416,
+      "y": 0.2224077147325386,
+      "theta": 0.015196102444029358
+    },
+    "goal_pose": {
+      "x": 0.48503148597947754,
+      "y": 0.3115562259830076,
+      "theta": 0.18995023997708455
+    },
+    "ee_initial_pose": {
+      "x": 0.07323603887108415,
+      "y": 0.2224077147325386,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.34386220552228486,
+          "y": 0.2844904258929921,
+          "theta": 0.2950026306306054
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000006"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260540,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19124349299701493,
+      "y": 0.22377338101354077,
+      "theta": -0.2214044623406609
+    },
+    "goal_pose": {
+      "x": 0.5040012000686338,
+      "y": 0.2701171971004618,
+      "theta": 0.061975649311273306
+    },
+    "ee_initial_pose": {
+      "x": 0.09124349299701492,
+      "y": 0.22377338101354077,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3583202660968542,
+          "y": 0.274322417305638,
+          "theta": 0.05263795815507122
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000007"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260541,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1592640884517257,
+      "y": 0.21437207737727876,
+      "theta": 0.2417262255490079
+    },
+    "goal_pose": {
+      "x": 0.44750567053319634,
+      "y": 0.27415518702307307,
+      "theta": 0.09170114230076098
+    },
+    "ee_initial_pose": {
+      "x": 0.059264088451725705,
+      "y": 0.21437207737727876,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.27875297636533225,
+          "y": 0.22063949022919863,
+          "theta": 0.25163119017696123
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000008"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_blocking_hard",
+    "layout_family": "blocking_hard",
+    "shape_family": "T_shape",
+    "seed": 20260542,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18184249985218076,
+      "y": 0.18373119811103714,
+      "theta": 0.21763093669305705
+    },
+    "goal_pose": {
+      "x": 0.5013014948221901,
+      "y": 0.28043212803024464,
+      "theta": -0.20860807703365702
+    },
+    "ee_initial_pose": {
+      "x": 0.08184249985218076,
+      "y": 0.18373119811103714,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_blocking_0",
+        "pose": {
+          "x": 0.3675523715512853,
+          "y": 0.2542439860278735,
+          "theta": -0.2174852608564415
+        },
+        "size_x": 0.06,
+        "size_y": 0.12,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "blocking_difficulty": "hard",
+    "obstacle_size_x": 0.06,
+    "obstacle_size_y": 0.12,
+    "family": "blocking_hard",
+    "type": "blocking",
+    "obstacle_count": 1,
+    "passage_gap": null,
+    "effective_passage_gap": null,
+    "is_direct": false,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_blocking_hard__blocking_hard__T_shape__000009"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260543,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1934485020334263,
+      "y": 0.199296061353529,
+      "theta": 0.0010142668478037575
+    },
+    "goal_pose": {
+      "x": 0.470608351977613,
+      "y": 0.22141891013462325,
+      "theta": -0.23503226870127997
+    },
+    "ee_initial_pose": {
+      "x": 0.0934485020334263,
+      "y": 0.199296061353529,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3469259541240394,
+          "y": 0.28535748574407616,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3469259541240394,
+          "y": 0.13535748574407613,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.33202842700551966,
+      "y": 0.21035748574407614
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260544,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19983634794020433,
+      "y": 0.2163784815812438,
+      "theta": -0.013438404728766895
+    },
+    "goal_pose": {
+      "x": 0.49831474383456964,
+      "y": 0.1981173432235164,
+      "theta": -0.1767707455141273
+    },
+    "ee_initial_pose": {
+      "x": 0.09983634794020432,
+      "y": 0.2163784815812438,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.34183829270525434,
+          "y": 0.2822479124023801,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.34183829270525434,
+          "y": 0.1322479124023801,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.349075545887387,
+      "y": 0.2072479124023801
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000001"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260545,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15661233542659425,
+      "y": 0.20447693279586046,
+      "theta": -0.022093229991985097
+    },
+    "goal_pose": {
+      "x": 0.5239369185378601,
+      "y": 0.19352855301635752,
+      "theta": -0.2235452904381165
+    },
+    "ee_initial_pose": {
+      "x": 0.056612335426594246,
+      "y": 0.20447693279586046,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3557126085920635,
+          "y": 0.274002742906109,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3557126085920635,
+          "y": 0.12400274290610898,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.34027462698222716,
+      "y": 0.19900274290610898
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000002"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260546,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15729685175681793,
+      "y": 0.19680092071075925,
+      "theta": -0.0018213716980752803
+    },
+    "goal_pose": {
+      "x": 0.4951858829426647,
+      "y": 0.17372126400336366,
+      "theta": -0.2473709264186167
+    },
+    "ee_initial_pose": {
+      "x": 0.057296851756817924,
+      "y": 0.19680092071075925,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.335276002701314,
+          "y": 0.26026109235706146,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.335276002701314,
+          "y": 0.11026109235706145,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3262413673497413,
+      "y": 0.18526109235706145
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000003"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260547,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.16919880396564602,
+      "y": 0.1943028407147834,
+      "theta": 0.10588064396276742
+    },
+    "goal_pose": {
+      "x": 0.49003958709195106,
+      "y": 0.20636975505003116,
+      "theta": -0.0324312164721649
+    },
+    "ee_initial_pose": {
+      "x": 0.06919880396564601,
+      "y": 0.1943028407147834,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3148629579017941,
+          "y": 0.27533629788240727,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3148629579017941,
+          "y": 0.1253362978824073,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.32961919552879854,
+      "y": 0.20033629788240728
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000004"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260548,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1717999618500394,
+      "y": 0.2058741088320685,
+      "theta": 0.09729761392204228
+    },
+    "goal_pose": {
+      "x": 0.5079051165378999,
+      "y": 0.18379225502507474,
+      "theta": 0.24225025601471578
+    },
+    "ee_initial_pose": {
+      "x": 0.0717999618500394,
+      "y": 0.2058741088320685,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.34630441027985953,
+          "y": 0.26983318192857164,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.34630441027985953,
+          "y": 0.11983318192857163,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3398525391939697,
+      "y": 0.19483318192857163
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000005"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260549,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1859003928636405,
+      "y": 0.22065133666448652,
+      "theta": -0.24001638573535666
+    },
+    "goal_pose": {
+      "x": 0.4779479686364799,
+      "y": 0.1882829172822536,
+      "theta": 0.19322308684620965
+    },
+    "ee_initial_pose": {
+      "x": 0.08590039286364048,
+      "y": 0.22065133666448652,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3229768396166089,
+          "y": 0.27946712697337006,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3229768396166089,
+          "y": 0.12946712697337004,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3319241807500602,
+      "y": 0.20446712697337005
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000006"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260550,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19479226807801775,
+      "y": 0.22241664485784618,
+      "theta": -0.1895063927664164
+    },
+    "goal_pose": {
+      "x": 0.5031500788900631,
+      "y": 0.18987446751989284,
+      "theta": 0.02805787643890012
+    },
+    "ee_initial_pose": {
+      "x": 0.09479226807801774,
+      "y": 0.22241664485784618,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.33166166504208533,
+          "y": 0.2811455561888695,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.33166166504208533,
+          "y": 0.13114555618886953,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.34897117348404044,
+      "y": 0.2061455561888695
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000007"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260551,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20032811003578851,
+      "y": 0.1880888022734315,
+      "theta": 0.11817874642178916
+    },
+    "goal_pose": {
+      "x": 0.4775308098471851,
+      "y": 0.20056981371304256,
+      "theta": -0.07711646891999496
+    },
+    "ee_initial_pose": {
+      "x": 0.10032811003578851,
+      "y": 0.1880888022734315,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3461988427291026,
+          "y": 0.269329307993237,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3461988427291026,
+          "y": 0.11932930799323703,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3389294599414868,
+      "y": 0.19432930799323703
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000008"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_wide",
+    "layout_family": "passage_direct_wide",
+    "shape_family": "T_shape",
+    "seed": 20260552,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1845789339718992,
+      "y": 0.20580924765537664,
+      "theta": -0.09267048645102
+    },
+    "goal_pose": {
+      "x": 0.49028546653329164,
+      "y": 0.19189472618522488,
+      "theta": 0.08439485218050086
+    },
+    "ee_initial_pose": {
+      "x": 0.0845789339718992,
+      "y": 0.20580924765537664,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.34192673899993,
+          "y": 0.27385198692030077,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.34192673899993,
+          "y": 0.12385198692030076,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.09,
+    "effective_passage_gap": 0.09,
+    "passage_center_distance": 0.15,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3374322002525954,
+      "y": 0.19885198692030076
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_wide",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_wide__passage_direct_wide__T_shape__000009"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260553,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18353749617957762,
+      "y": 0.19386145824918383,
+      "theta": -0.15023071876854788
+    },
+    "goal_pose": {
+      "x": 0.5114409445087684,
+      "y": 0.21846952129500255,
+      "theta": -0.003205517493500898
+    },
+    "ee_initial_pose": {
+      "x": 0.08353749617957762,
+      "y": 0.19386145824918383,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3378625914119696,
+          "y": 0.2711654897720932,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3378625914119696,
+          "y": 0.1411654897720932,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.347489220344173,
+      "y": 0.2061654897720932
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260554,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18663719872861217,
+      "y": 0.21337752853278452,
+      "theta": -0.04363239632870758
+    },
+    "goal_pose": {
+      "x": 0.5101885177872729,
+      "y": 0.204510068236818,
+      "theta": 0.022597780585926874
+    },
+    "ee_initial_pose": {
+      "x": 0.08663719872861217,
+      "y": 0.21337752853278452,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.352770962424137,
+          "y": 0.27394379838480126,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.352770962424137,
+          "y": 0.14394379838480126,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.34841285825794255,
+      "y": 0.20894379838480126
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000001"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260555,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1634110590959935,
+      "y": 0.2031637531450367,
+      "theta": -0.09528314894579859
+    },
+    "goal_pose": {
+      "x": 0.5191052607408174,
+      "y": 0.18946367435107858,
+      "theta": 0.18408712498636265
+    },
+    "ee_initial_pose": {
+      "x": 0.06341105909599348,
+      "y": 0.2031637531450367,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3346038383756271,
+          "y": 0.2613137137480577,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3346038383756271,
+          "y": 0.13131371374805764,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.34125815991840547,
+      "y": 0.19631371374805764
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000002"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260556,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17016420758547776,
+      "y": 0.21234796958718044,
+      "theta": -0.050154296029584655
+    },
+    "goal_pose": {
+      "x": 0.5007336997905321,
+      "y": 0.17065102152997588,
+      "theta": -0.23835055839097902
+    },
+    "ee_initial_pose": {
+      "x": 0.07016420758547776,
+      "y": 0.21234796958718044,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.31923424954139645,
+          "y": 0.25649949555857815,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.31923424954139645,
+          "y": 0.12649949555857815,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3354489536880049,
+      "y": 0.19149949555857815
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000003"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260557,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1890971678610725,
+      "y": 0.22451184249604056,
+      "theta": 0.11351408018151105
+    },
+    "goal_pose": {
+      "x": 0.5143713780822389,
+      "y": 0.21313013724892038,
+      "theta": -0.14445221455328783
+    },
+    "ee_initial_pose": {
+      "x": 0.0890971678610725,
+      "y": 0.22451184249604056,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3560747782110022,
+          "y": 0.2838209898724805,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3560747782110022,
+          "y": 0.15382098987248047,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3517342729716557,
+      "y": 0.21882098987248047
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000004"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260558,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1698782122315201,
+      "y": 0.21897462553594,
+      "theta": -0.0234356354684932
+    },
+    "goal_pose": {
+      "x": 0.5121404846732895,
+      "y": 0.18601585184279268,
+      "theta": 0.00276943513275979
+    },
+    "ee_initial_pose": {
+      "x": 0.0698782122315201,
+      "y": 0.21897462553594,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3504850769765526,
+          "y": 0.2674952386893663,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3504850769765526,
+          "y": 0.13749523868936633,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3410093484524048,
+      "y": 0.20249523868936634
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000005"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260559,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17112530120012245,
+      "y": 0.22291727556264512,
+      "theta": -0.12751025674595745
+    },
+    "goal_pose": {
+      "x": 0.5200988456730453,
+      "y": 0.18127894385963214,
+      "theta": 0.057068147624673105
+    },
+    "ee_initial_pose": {
+      "x": 0.07112530120012245,
+      "y": 0.22291727556264512,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3554455524000943,
+          "y": 0.2670981097111386,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3554455524000943,
+          "y": 0.13709810971113862,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3456120734365839,
+      "y": 0.20209810971113862
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000006"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260560,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.17584342683281454,
+      "y": 0.1778074042700597,
+      "theta": 0.04624497924069443
+    },
+    "goal_pose": {
+      "x": 0.522393891479672,
+      "y": 0.2169074160626849,
+      "theta": 0.1578163158116213
+    },
+    "ee_initial_pose": {
+      "x": 0.07584342683281453,
+      "y": 0.1778074042700597,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3401066843924576,
+          "y": 0.2623574101663723,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3401066843924576,
+          "y": 0.1323574101663723,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.34911865915624324,
+      "y": 0.19735741016637232
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000007"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260561,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.20466701580999186,
+      "y": 0.21665793568822878,
+      "theta": 0.16397153544158805
+    },
+    "goal_pose": {
+      "x": 0.5202336957431443,
+      "y": 0.21304845587727217,
+      "theta": 0.1296990324641042
+    },
+    "ee_initial_pose": {
+      "x": 0.10466701580999185,
+      "y": 0.21665793568822878,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3678906986567134,
+          "y": 0.2798531957827505,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3678906986567134,
+          "y": 0.14985319578275047,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.36245035577656803,
+      "y": 0.21485319578275047
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000008"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_medium",
+    "layout_family": "passage_direct_medium",
+    "shape_family": "T_shape",
+    "seed": 20260562,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19922713812400353,
+      "y": 0.19446406605052072,
+      "theta": 0.05846947703871447
+    },
+    "goal_pose": {
+      "x": 0.520568050052943,
+      "y": 0.19187395002065438,
+      "theta": 0.1437409994864351
+    },
+    "ee_initial_pose": {
+      "x": 0.09922713812400352,
+      "y": 0.19446406605052072,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3505333013114702,
+          "y": 0.25816900803558757,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3505333013114702,
+          "y": 0.12816900803558756,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.07,
+    "effective_passage_gap": 0.07,
+    "passage_center_distance": 0.13,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.35989759408847327,
+      "y": 0.19316900803558756
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_medium",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_medium__passage_direct_medium__T_shape__000009"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260563,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.2004187392338043,
+      "y": 0.17808774389814508,
+      "theta": 0.22325028672110686
+    },
+    "goal_pose": {
+      "x": 0.46792367019053,
+      "y": 0.20587045074312246,
+      "theta": 0.02039618916076641
+    },
+    "ee_initial_pose": {
+      "x": 0.10041873923380429,
+      "y": 0.17808774389814508,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3334452747956278,
+          "y": 0.24697909732063378,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3334452747956278,
+          "y": 0.1369790973206338,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.33417120471216716,
+      "y": 0.19197909732063378
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000001",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260564,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18757379208597394,
+      "y": 0.1792582448689917,
+      "theta": 0.1658726886455562
+    },
+    "goal_pose": {
+      "x": 0.49655993653224795,
+      "y": 0.21356384707627543,
+      "theta": 0.09661058634426978
+    },
+    "ee_initial_pose": {
+      "x": 0.08757379208597393,
+      "y": 0.1792582448689917,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.32651185773393304,
+          "y": 0.2514110459726336,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.32651185773393304,
+          "y": 0.14141104597263357,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.34206686430911093,
+      "y": 0.19641104597263356
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000001"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000002",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260565,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.15944383471944054,
+      "y": 0.20484626664077085,
+      "theta": 0.062331894526884646
+    },
+    "goal_pose": {
+      "x": 0.4808514948576122,
+      "y": 0.17581607156345824,
+      "theta": -0.05961011845899067
+    },
+    "ee_initial_pose": {
+      "x": 0.059443834719440536,
+      "y": 0.20484626664077085,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.32971786923685364,
+          "y": 0.24533116910211455,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.32971786923685364,
+          "y": 0.13533116910211457,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.32014766478852635,
+      "y": 0.19033116910211456
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000002"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000003",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260566,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1954939718869625,
+      "y": 0.1758410509996945,
+      "theta": 0.024712686533502226
+    },
+    "goal_pose": {
+      "x": 0.5314068827715632,
+      "y": 0.22944533965721647,
+      "theta": -0.22824674146043888
+    },
+    "ee_initial_pose": {
+      "x": 0.09549397188696249,
+      "y": 0.1758410509996945,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3573642389059772,
+          "y": 0.2576431953284555,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3573642389059772,
+          "y": 0.1476431953284555,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.36345042732926286,
+      "y": 0.20264319532845548
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000003"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000004",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260567,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1633487660232795,
+      "y": 0.18650688011876496,
+      "theta": 0.12747970184586882
+    },
+    "goal_pose": {
+      "x": 0.5101586108382453,
+      "y": 0.1925732491815467,
+      "theta": 0.2127833598050909
+    },
+    "ee_initial_pose": {
+      "x": 0.06334876602327949,
+      "y": 0.18650688011876496,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.33083189291248244,
+          "y": 0.24454006465015582,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.33083189291248244,
+          "y": 0.13454006465015583,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3367536884307624,
+      "y": 0.18954006465015583
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000004"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000005",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260568,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.195829150691701,
+      "y": 0.19444588251611938,
+      "theta": 0.14957858041332872
+    },
+    "goal_pose": {
+      "x": 0.46639855910976075,
+      "y": 0.21766130038802245,
+      "theta": 0.18244047115715906
+    },
+    "ee_initial_pose": {
+      "x": 0.095829150691701,
+      "y": 0.19444588251611938,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3498819061769981,
+          "y": 0.2610535914520709,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3498819061769981,
+          "y": 0.15105359145207092,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.33111385490073086,
+      "y": 0.20605359145207092
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000005"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000006",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260569,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.1802245544533481,
+      "y": 0.18720088438389673,
+      "theta": -0.0844987548372596
+    },
+    "goal_pose": {
+      "x": 0.4961933708029805,
+      "y": 0.17160207132639155,
+      "theta": 0.005573457457851816
+    },
+    "ee_initial_pose": {
+      "x": 0.08022455445334808,
+      "y": 0.18720088438389673,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3543774010205759,
+          "y": 0.23440147785514415,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3543774010205759,
+          "y": 0.12440147785514416,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3382089626281643,
+      "y": 0.17940147785514415
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000006"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000007",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260570,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18880801077503576,
+      "y": 0.19268537304017921,
+      "theta": 0.17545030434524872
+    },
+    "goal_pose": {
+      "x": 0.5050838916736201,
+      "y": 0.19155580837342454,
+      "theta": -0.14987227651124774
+    },
+    "ee_initial_pose": {
+      "x": 0.08880801077503575,
+      "y": 0.19268537304017921,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3551732645367176,
+          "y": 0.24712059070680187,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3551732645367176,
+          "y": 0.13712059070680188,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3469459512243279,
+      "y": 0.19212059070680187
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000007"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000008",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260571,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.18660564301341043,
+      "y": 0.1857409204457107,
+      "theta": -0.09817263867627324
+    },
+    "goal_pose": {
+      "x": 0.5154034375171557,
+      "y": 0.19175113200829857,
+      "theta": -0.09259683489168685
+    },
+    "ee_initial_pose": {
+      "x": 0.08660564301341042,
+      "y": 0.1857409204457107,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3339152625603753,
+          "y": 0.24374602622700464,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3339152625603753,
+          "y": 0.13374602622700466,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.35100454026528305,
+      "y": 0.18874602622700465
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000008"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000009",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_direct_narrow",
+    "layout_family": "passage_direct_narrow",
+    "shape_family": "T_shape",
+    "seed": 20260572,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": null,
+    "object_initial_pose": {
+      "x": 0.19179004988956644,
+      "y": 0.20602087978171627,
+      "theta": -0.007344690137087717
+    },
+    "goal_pose": {
+      "x": 0.5312677871516821,
+      "y": 0.19726286879522756,
+      "theta": -0.22411667377645655
+    },
+    "ee_initial_pose": {
+      "x": 0.09179004988956643,
+      "y": 0.20602087978171627,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_top",
+        "pose": {
+          "x": 0.3725552366462943,
+          "y": 0.2566418742884719,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bottom",
+        "pose": {
+          "x": 0.3725552366462943,
+          "y": 0.14664187428847192,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "shape": "box",
+        "valid": true
+      }
+    ],
+    "passage_gap": 0.05,
+    "effective_passage_gap": 0.05,
+    "passage_center_distance": 0.11,
+    "passage_gap_definition": "inner_wall_gap",
+    "passage_center": {
+      "x": 0.3615289185206243,
+      "y": 0.2016418742884719
+    },
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "family": "passage_direct_narrow",
+    "type": "passage_direct",
+    "obstacle_count": 2,
+    "is_direct": true,
+    "is_bypass": false,
+    "template_source_file": "reset_templates_obstacle_difficulty_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_direct_narrow__passage_direct_narrow__T_shape__000009"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_bypass_wide__passage_bypass_wide__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_bypass_wide",
+    "layout_family": "passage_bypass_wide",
+    "shape_family": "T_shape",
+    "seed": 0,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": 1.0,
+    "object_initial_pose": {
+      "x": 0.18,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "goal_pose": {
+      "x": 0.48,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "ee_initial_pose": {
+      "x": 0.08,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_bypass_wide_top",
+        "pose": {
+          "x": 0.33,
+          "y": 0.255,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bypass_wide_bottom",
+        "pose": {
+          "x": 0.33,
+          "y": 0.095,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "valid": true
+      }
+    ],
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "passage_gap": 0.1,
+    "effective_passage_gap": 0.08,
+    "passage_center_distance": 0.16,
+    "passage_gap_definition": "vertical_edge_to_edge_bypass",
+    "passage_center": {
+      "x": 0.33,
+      "y": 0.175
+    },
+    "family": "passage_bypass_wide",
+    "type": "passage_bypass",
+    "obstacle_count": 2,
+    "is_direct": false,
+    "is_bypass": true,
+    "template_source_file": "reset_templates_bypass_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_bypass_wide__passage_bypass_wide__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_bypass_medium__passage_bypass_medium__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_bypass_medium",
+    "layout_family": "passage_bypass_medium",
+    "shape_family": "T_shape",
+    "seed": 0,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": 1.0,
+    "object_initial_pose": {
+      "x": 0.18,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "goal_pose": {
+      "x": 0.48,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "ee_initial_pose": {
+      "x": 0.08,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_bypass_medium_top",
+        "pose": {
+          "x": 0.33,
+          "y": 0.255,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bypass_medium_bottom",
+        "pose": {
+          "x": 0.33,
+          "y": 0.115,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "valid": true
+      }
+    ],
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "passage_gap": 0.08,
+    "effective_passage_gap": 0.06,
+    "passage_center_distance": 0.14,
+    "passage_gap_definition": "vertical_edge_to_edge_bypass",
+    "passage_center": {
+      "x": 0.33,
+      "y": 0.185
+    },
+    "family": "passage_bypass_medium",
+    "type": "passage_bypass",
+    "obstacle_count": 2,
+    "is_direct": false,
+    "is_bypass": true,
+    "template_source_file": "reset_templates_bypass_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_bypass_medium__passage_bypass_medium__T_shape__000000"
+  },
+  {
+    "schema_version": "reset_template_v0.1",
+    "reset_template_id": "test_sim_layout_ood_passage_bypass_narrow__passage_bypass_narrow__T_shape__000000",
+    "domain": "sim",
+    "split": "test_sim_layout_ood_passage_bypass_narrow",
+    "layout_family": "passage_bypass_narrow",
+    "shape_family": "T_shape",
+    "seed": 0,
+    "object_shape": "T",
+    "object_size_x": 0.048,
+    "object_size_y": 0.048,
+    "object_mass": 0.01905,
+    "object_friction": 1.0,
+    "object_initial_pose": {
+      "x": 0.18,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "goal_pose": {
+      "x": 0.48,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "ee_initial_pose": {
+      "x": 0.08,
+      "y": 0.22,
+      "theta": 0.0
+    },
+    "obstacles": [
+      {
+        "obstacle_id": "obs_passage_bypass_narrow_top",
+        "pose": {
+          "x": 0.33,
+          "y": 0.255,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "valid": true
+      },
+      {
+        "obstacle_id": "obs_passage_bypass_narrow_bottom",
+        "pose": {
+          "x": 0.33,
+          "y": 0.135,
+          "theta": 0.0
+        },
+        "size_x": 0.08,
+        "size_y": 0.06,
+        "valid": true
+      }
+    ],
+    "obstacle_size_x": 0.08,
+    "obstacle_size_y": 0.06,
+    "passage_gap": 0.06,
+    "effective_passage_gap": 0.04,
+    "passage_center_distance": 0.12,
+    "passage_gap_definition": "vertical_edge_to_edge_bypass",
+    "passage_center": {
+      "x": 0.33,
+      "y": 0.195
+    },
+    "family": "passage_bypass_narrow",
+    "type": "passage_bypass",
+    "obstacle_count": 2,
+    "is_direct": false,
+    "is_bypass": true,
+    "template_source_file": "reset_templates_bypass_v0.json",
+    "original_template_id": "test_sim_layout_ood_passage_bypass_narrow__passage_bypass_narrow__T_shape__000000"
+  }
+]

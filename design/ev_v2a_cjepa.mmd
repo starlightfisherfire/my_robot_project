@@ -1,0 +1,6 @@
+flowchart TB
+    OBS_C["per-object z_obs + act"] --> FUSE["Per-Slot Update<br/>S_i_{t-1} + z_i + act → S_i_t"]
+    STATE_C["[S_robot, S_objA, S_objB]_{t-1}"] --> FUSE
+    FUSE --> INTERACT["Cross-Slot Self-Attention"]
+    INTERACT --> S_T["[S_robot, S_objA, S_objB]_t"]
+    S_T --> POOL["Global Pooling → planner vector"]

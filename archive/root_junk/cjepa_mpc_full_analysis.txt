@@ -1,0 +1,2070 @@
+# C-JEPA MPC Cost 计算全链路分析
+
+## 概述
+
+C-JEPA (Causal Joint Embedding Predictive Architecture) 是一个 object-centric world model。它不预测像素，而是在 **4 个 slot（对象级潜在表示）的 128 维 latent space** 中做推演和规划。MPC 规划器使用 CEM (Cross-Entropy Method) 在这个低维 latent space 中搜索最优动作序列。
+
+本文档详细解释：**给定一条采样的动作序列，C-JEPA 如何把它转化为一个 cost 值来指导 MPC 规划**。
+
+---
+
+## 1. 整体数据流（一口吃下）
+
+```
+一张 PushT 观测图像 (224×224)
+        ↓ VideoSAUR + Slot Attention
+   4 个 slot 向量 (4 × 128维) —— 场景中对象的抽象表示
+        ↓
+300 个候选动作序列 (300 × 5步 × 10维动作)
+        ↓ Transformer 在 latent space 中推演
+   300 组预测的最终 slot 状态
+        ↓ Hungarian matching + MSE vs Goal slots
+   300 个 cost 值
+        ↓ CEM 选 top-30, 重拟合分布, 迭代 30 轮
+   最优动作 → 执行 → 重新规划
+```
+
+---
+
+## 2. 关键数字速查（来自 scripts/pusht/test_planning.sh 和 config.yaml）
+
+| 参数 | 值 | 含义 |
+|------|-----|------|
+| history_size | 1 | world model 只看当前帧做推演 |
+| horizon | 5 | 规划视野 5 步 |
+| action_block | 5 | 每步 action 覆盖 5 帧环境 (frameskip) |
+| pred_frames | 3 | Transformer 一次预测 3 帧未来 |
+| num_slots | 4 | VideoSAUR 提取 4 个对象 slot |
+| slot_dim | 128 | 每个 slot 是 128 维向量 |
+| S_total | 6 | = 4 pixel slots + 1 proprio slot + 1 action slot |
+| num_candidates | 300 | CEM 每轮采样 300 个候选动作序列 |
+| n_steps (CEM) | 30 | CEM 迭代 30 轮 |
+| topk | 30 | 保留精英数 |
+| goal_offset_steps | 25 | goal 图像在 start 之后 25 步 |
+
+PushT 动作空间: 2 维 (x, y)，加上 action_block=5: 每个 planning step 的实际动作维度 = 2 × 5 = 10
+
+---
+
+## 3. 核心组件
+
+### 3.1 CausalWM_AP (dinowm_causal_AP_node.py)
+
+世界模型主体。关键方法：
+
+- **encode()** — 将图像编码为 slot embeddings，同时编码 proprio 和 action
+- **rollout()** — 给定初始观测 + 候选动作序列，推演未来 slot 状态
+- **get_cost()** — 对动作候选调用 rollout，编码 goal，调用 criterion 算 cost
+- **criterion()** — 比较预测 slot 和 goal slot，返回标量 cost
+
+### 3.2 MaskedSlot_AP_Predictor (cjepa_predictor.py)
+
+核心 C-JEPA Transformer。关键设计：
+
+- **非因果 (bidirectional) attention**: 所有 token 可以互相看到
+- **Identity Anchor 机制**: t=0 的 slot 通过 id_projector 投影为 query vector，作为对象身份的"锚点"
+- **Mask Token**: 被 mask 的位置用可学习的 mask_token 填充
+- **inference()**: 规划时使用，不做 mask。输入完全可见的 history，未来位置放 query token (mask_token + anchor_query + time_pos_embed)，Transformer 通过 full attention 从 history 中提取信息预测未来
+- **MaskedSlot_AP_Predictor 变体**: 不 mask 最后 2 个 slot (proprio + action)，因为它们是所有 patch 共享的值，没有对象身份信息
+
+### 3.3 Hungarian Matching (hungarian.py)
+
+因为 slots 是**无序集合**，直接 MSE 会因为排列不同而得到错误的大 cost。匈牙利算法找到最优 slot-to-slot 对应后再算 MSE。
+
+三个关键函数：
+
+- **hungarian_cost()** — planning 用：pred slots vs goal slots 的最优匹配 MSE
+- **reorder_slots_to_match_AP()** — rollout 用：保持 slot 编号在时间上的连续性，只重排前 num_slots 个 object slot，不动 proprio/action slot
+- **hungarian_matching_loss_AP()** — 训练用：pred slots vs target slots 的最优匹配 loss
+
+### 3.4 CEM 求解器 (stable_worldmodel 包，不在本 repo)
+
+```
+for i in range(30):           # CEM 迭代
+    采样: N(μ, σ) → 300 个候选动作 (B, 300, 5, 10)
+    评估: model.get_cost() → cost (B, 300)
+    排序: cost 升序, 取 top-30
+    更新: μ, σ = top-30 的均值和方差
+最优动作 = μ_final
+执行 receding_horizon=5 步, 然后重新规划
+```
+
+---
+
+## 4. 逐步详解：一条动作序列如何变成 cost
+
+下面用具体张量形状走一遍 `get_cost()` 的全部流程。
+
+### Step A: 编码当前观测 (encode)
+
+```
+输入:
+  pixels: (B=1, N=300, T=1, C=3, H=224, W=224)
+  proprio: agent 位置 (B=1, N=300, T=1, proprio_dim)
+
+流程:
+  1. VideoSAUR backbone 提取图像特征
+  2. Slot Attention 迭代: 将特征分配给 4 个 slot
+     → 4 个 slot × 128 维 = object slots
+  3. MLP 编码 proprio → 1 个 proprio slot (128 维)
+  4. MLP 编码 action → 1 个 action slot (128 维)
+
+输出:
+  embed: (1, 300, T=1, S=6, D=128)
+    S 维度: [slot_0, slot_1, slot_2, slot_3, proprio_slot, action_slot]
+```
+
+### Step B: Rollout 推演 (rollout)
+
+```
+候选动作: action_sequence (1, 300, horizon=5, action_dim=10)
+
+初始: z = embed (1, 300, 1, 6, 128)
+
+展平 B×N: z_flat (300, 1, 6, 128)
+动作展平: act_flat (300, 5, 10)
+
+循环 (horizon=5, pred_frames=3):
+  
+  第1轮 (current_step=0):
+    history_input = z_flat[:, -1:]                    # (300, 1, 6, 128)
+    pred = predictor.inference(history_input)           # (300, 3, 6, 128)
+    
+    # Hungarian 重排: 保证 pred slot 0 对应 history slot 0
+    pred = reorder_slots_to_match_AP(pred, z_flat[:, -1, :4, :])
+    
+    # 注入 action a_0,a_1,a_2
+    pred_with_action = replace_action(pred, act_flat[:, 0:3])
+    
+    z_flat = [z_flat, pred_with_action]                # (300, 4, 6, 128)
+    current_step = 3
+
+  第2轮 (current_step=3):
+    history_input = z_flat[:, -1:]                     # (300, 1, 6, 128)
+    pred = predictor.inference(history_input)           # (300, 3, 6, 128)
+    
+    # 只需要 2 帧来覆盖 horizon=5
+    pred = pred[:, :2]                                  # (300, 2, 6, 128)
+    
+    # 注入 action a_3,a_4
+    pred_with_action = replace_action(pred, act_flat[:, 3:5])
+    
+    z_flat = [..., pred_with_action]                    # (300, 6, 6, 128)
+    current_step = 5 → 循环结束
+
+最后一步 (不加 action, terminal state):
+  final_pred = predictor.inference(z_flat[:, -1:])[:, :1]  # (300, 1, 6, 128)
+  final_pred = reorder_slots_to_match_AP(final_pred, z_flat[:, -1, :4, :])
+  z_flat = [..., final_pred]                            # (300, 7, 6, 128)
+
+还原 B×N: z = rearrange(z_flat, ...) → (1, 300, 7, 6, 128)
+
+拆分:
+  predicted_pixels_embed: (1, 300, 7, 4, 128)  ← 4 个 object slot
+  predicted_proprio_embed: (1, 300, 7, 1, 128) ← proprio slot
+```
+
+**关键：为什么需要 Hungarian 重排？**
+
+Transformer 做 non-autoregressive 预测时，不知道 slot 0 应该继续是"蓝圈"还是变成了"灰T"。因为 slot 是无序集合，预测后 slot 编号可能乱掉。`reorder_slots_to_match_AP` 的工作：
+1. 取上一帧的 4 个 slot 作为 reference
+2. 构建 pred_slot_i vs ref_slot_j 的 cost matrix
+3. 匈牙利算法找最优排列
+4. 按最优排列重排 pred slots
+
+这样保证"蓝圈一直是 slot 0，灰T一直是 slot 1"在时间上一致。
+
+### Step C: 编码 Goal (get_cost 中)
+
+```
+goal 图像: 在 start 帧之后 goal_offset_steps=25 帧的图像
+
+encode(goal, target="goal_embed"):
+  → goal_embed: (1, 300, 1, 6, 128)  # 沿 N 复制
+
+拆分:
+  pixels_goal_embed: (1, 300, 1, 4, 128)
+```
+
+### Step D: 计算 Cost (criterion)
+
+```python
+def criterion(info_dict, action_candidates):
+    cost = 0.0
+    
+    # 1. Slot Cost (匈牙利匹配 MSE)
+    pred_last = info_dict["predicted_pixels_embed"][:, :, -1]  # (1, 300, 4, 128)
+    goal_last = info_dict["pixels_goal_embed"][:, :, -1]       # (1, 300, 4, 128)
+    
+    # 对每个候选 (共 300 个) 分别:
+    #   构建 4×4 cost matrix: cost[i][j] = MSE(pred_slot_i, goal_slot_j)
+    #   匈牙利算法 (scipy.optimize.linear_sum_assignment)
+    #     → 找到最优匹配: slot_0→goal_2, slot_1→goal_0, slot_2→goal_3, slot_3→goal_1
+    #   返回 matched 后的总 MSE
+    slot_costs = hungarian_cost(pred_last, goal_last, cost_type='mse')
+    # → (1, 300)  每个候选一个 cost 值
+    cost += slot_costs
+    
+    # 2. Proprioception Cost (直接 MSE, 不需要匈牙利)
+    pred_proprio = info_dict["predicted_proprio_embed"][:, :, -1:]  # (1, 300, 1, 128)
+    goal_proprio = info_dict["proprio_goal_embed"]                   # (1, 300, 1, 128)
+    proprio_cost = MSE(pred_proprio, goal_proprio)
+    cost += proprio_cost
+    
+    return cost  # (1, 300)
+```
+
+**为什么需要 Hungarian matching?**
+
+举个直观例子：场景中有 3 个对象——蓝圈(agent)、灰T(目标)、绿T(干扰物)对应 slot [0,1,2,3]。假设预测结果中：
+- slot 0 是灰T → 应该匹配 goal 的 slot 1（灰T）
+- slot 1 是蓝圈 → 应该匹配 goal 的 slot 0（蓝圈）
+- slot 2 是绿T → 应该匹配 goal 的 slot 2（绿T）
+
+如果直接按 slot 编号 0→0, 1→1, 2→2 算 MSE，cost 会很大（因为比较了不同对象）。但实际上预测是正确的，只是 slot 排列不同。匈牙利算法自动找到 MSE(slot0, goal1) + MSE(slot1, goal0) + MSE(slot2, goal2) 这个最优匹配，给出正确的低 cost。
+
+### Step E: CEM 用 cost 选动作
+
+```
+cost (1, 300) = [c_0, c_1, ..., c_299]
+
+CEM 迭代 30 轮:
+  第 k 轮:
+    300 个 cost → 排序 → 取最小的 30 个 → 用这 30 个动作候选更新 μ_k, σ_k
+    下一轮从 N(μ_{k+1}, σ_{k+1}) 采样
+
+最优动作 = μ_30  (最终收敛的均值)
+执行前 receding_horizon=5 步, 然后重新观察 → 重新规划
+```
+
+---
+
+## 5. 为什么高效？
+
+对比 patch-based world model (如 Dreamer):
+
+| 方法 | Latent 维度 | 每次预测的计算量 |
+|------|-------------|-----------------|
+| Patch-based (DINO) | 196 patches × 384 dim | ~75K 维 |
+| C-JEPA (ours) | 4 slots × 128 dim | 512 维 |
+
+C-JEPA 的 latent space 维度仅为 patch-based 方法的 **~0.7%**。在 CEM 需要做 300 × 30 = 9000 次前向传播时，这个差距非常显著。
+
+---
+
+## 6. 涉及的关键文件
+
+| 文件 | 作用 |
+|------|------|
+| `src/world_models/dinowm_causal_AP_node.py` | 世界模型：encode, rollout, criterion, get_cost |
+| `src/cjepa_predictor.py` | MaskedSlotPredictor / MaskedSlot_AP_Predictor |
+| `src/custom_codes/hungarian.py` | 匈牙利匹配：hungarian_cost, reorder_slots_to_match_AP |
+| `src/plan/run.py` | 规划评估入口：加载环境/模型/solver, 运行评估 |
+| `src/plan/config.yaml` | 规划配置：horizon, receding_horizon, action_block |
+| `src/plan/solver/cem.yaml` | CEM 求解器参数 |
+| `scripts/pusht/test_planning.sh` | PushT 规划实验脚本 |
+
+---
+
+## 7. 环境
+
+PushT-v1 (来自 stable_worldmodel 包): 无障碍物的块推送任务。场景包含一个蓝色圆形 agent、一个灰色 T 形目标、一个绿色 T 形干扰物。动作为 2 维 (agent 移动方向)。
+
+---
+
+## 8. 代码 Snapshot
+
+以下是通过 `scripts/generate_repo_snapshot.py --include` 聚合的所有相关源代码文件。
+========================================================================
+REPOSITORY SNAPSHOT
+========================================================================
+generated_at: 2026-05-14T00:35:07
+repo_root: /home/brucewu/ai_papers_code/cjepa
+snapshot_mode: focused
+snapshot_title: C-JEPA MPC Cost Computation Pipeline
+max_file_size_kb: 500
+included_files_count: 9
+skipped_files_count: 0
+missing_files_count: 0
+total_chars: 66,393
+
+Include sources:
+  --include src/world_models/dinowm_causal_AP_node.py
+  --include src/custom_codes/hungarian.py
+  --include src/cjepa_predictor.py
+  --include src/plan/run.py
+  --include src/plan/config.yaml
+  --include src/plan/solver/cem.yaml
+  --include src/plan/solver/gd.yaml
+  --include src/plan/launcher/local.yaml
+  --include scripts/pusht/test_planning.sh
+
+Skipped summary by reason:
+========================================================================
+
+===== FILE: scripts/pusht/test_planning.sh =====
+```bash
+export PYTHONPATH=$(pwd)
+
+SEEDS=(0 1 2)
+# POLICY is the name of the C-JEPA ckpt, but after removing "_object.ckpt"
+# For example, if the ckpt name is "pusht_videosaur_1_object.ckpt", then POLICY should be "pusht_videosaur_1"
+# This is because of the planning script by stable-worldmodel library.
+POLICY="pusht_videosaur_1"
+
+for SEED in "${SEEDS[@]}"; do
+    echo "Running experiment with seed=${SEED}"
+    HYDRA_FULL_ERROR=1 
+    STABLEWM_HOME='~/.stable_worldmodel/'
+    python src/plan/run.py \
+        seed=${SEED} \
+        policy=${POLICY} \
+        world.history_size=1 \
+        world.frame_skip=1 \
+        plan_config.horizon=5 \
+        plan_config.receding_horizon=5 \
+        plan_config.action_block=5 \
+        eval.eval_budget=50 \
+        output.filename=planning_${POLICY}_seed_${SEED}.txt \
+        eval.dataset_name=pusht_expert_train \
+        eval.goal_offset_steps=25
+done
+
+echo "All experiments finished on: $(date)"
+
+```
+
+===== FILE: src/cjepa_predictor.py =====
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from einops import rearrange
+import numpy as np
+
+class NonCausalTransformer(nn.Module):
+    """
+    Standard Transformer Encoder with Non-Causal (Full) Attention.
+    """
+    def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout=0.0):
+        super().__init__()
+        self.norm = nn.LayerNorm(dim)
+        self.layers = nn.ModuleList([])
+        for _ in range(depth):
+            self.layers.append(nn.ModuleList([
+                # Batch_first=True for (B, Seq, D)
+                nn.MultiheadAttention(dim, heads, dropout=dropout, batch_first=True),
+                # FeedForward Network
+                nn.Sequential(
+                    nn.LayerNorm(dim),
+                    nn.Linear(dim, mlp_dim),
+                    nn.GELU(),
+                    nn.Dropout(dropout),
+                    nn.Linear(mlp_dim, dim),
+                    nn.Dropout(dropout)
+                )
+            ]))
+
+    def forward(self, x, return_attention=False):
+        # x: (B, SeqLen, D)
+        attn_weights_list = [] if return_attention else None
+        for attn, ff in self.layers:
+            # Self-attention with no mask (Full Attention)
+            if return_attention:
+                attn_out, attn_weights = attn(x, x, x, need_weights=return_attention, average_attn_weights=True)
+                attn_weights_list.append(attn_weights)  # (B, SeqLen, SeqLen)
+            else:
+                attn_out, _ = attn(x, x, x)
+            x = x + attn_out
+            x = x + ff(x)
+        if return_attention:
+            return self.norm(x), attn_weights_list
+        return self.norm(x)
+
+class MaskedSlotPredictor(nn.Module):
+    def __init__(
+        self,
+        num_slots: int,             # Total number of slots per frame
+        slot_dim: int = 64,
+        history_frames: int = 3,    # Number of input frames
+        pred_frames: int = 1,       # Number of future frames to predict
+        num_masked_slots: int = 2,  # N slots to mask (context masking)
+        seed: int = 42,             # Random seed for masking
+        depth: int = 6,
+        heads: int = 8,
+        dim_head: int = 64,
+        mlp_dim: int = 2048,
+        dropout: float = 0.1,
+    ):
+        super().__init__()
+        self.num_slots = num_slots
+        self.slot_dim = slot_dim
+        self.history_frames = history_frames
+        self.pred_frames = pred_frames
+        self.total_frames = history_frames + pred_frames
+        self.num_masked_slots = num_masked_slots
+        self.seed = seed
+        
+        # 1. Learnable Mask Token (Query Base)
+        # Represents the center of the manifold for any missing data
+        self.mask_token = nn.Parameter(torch.zeros(1, 1, slot_dim))
+        nn.init.trunc_normal_(self.mask_token, std=0.02)
+        
+        # 2. Time Positional Embedding
+        # Shared across all slots, distinct for each timestep (0 to T_total)
+        self.time_pos_embed = nn.Parameter(torch.randn(1, self.total_frames, 1, slot_dim))
+        
+        # 3. ID Projector (The "Anchor" mechanism)
+        # Projects the t=0 latent (feature) into a Query (instruction)
+        # "Here is what this object looked like at start, predict its future/history."
+        self.id_projector = nn.Linear(slot_dim, slot_dim)
+
+        # 4. Backbone (Non-Causal Transformer)
+        self.transformer = NonCausalTransformer(
+            dim=slot_dim, depth=depth, heads=heads, 
+            dim_head=dim_head, mlp_dim=mlp_dim, dropout=dropout
+        )
+        
+        # 5. Output Head
+        self.to_out = nn.Linear(slot_dim, slot_dim)
+
+    def get_mask_indices(self, batch_size, device):
+        """
+        Selects N slots to be masked per sample (or shared across batch).
+        Here, we implement shared masking across the batch for simplicity, 
+        but it can be easily made per-sample.
+        """
+        rng = np.random.RandomState(self.seed)
+        
+        # Select N indices out of num_slots
+        masked_indices = rng.choice(self.num_slots, self.num_masked_slots, replace=False)
+        
+        # Create boolean mask for logic (True = Masked/Target, False = Visible/Context)
+        # This is strictly about "Slot" masking. Time masking logic is handled in prepare_input.
+        is_slot_masked = torch.zeros(self.num_slots, dtype=torch.bool, device=device)
+        is_slot_masked[masked_indices] = True
+        
+        return is_slot_masked, torch.from_numpy(masked_indices).to(device)
+
+    def prepare_input(self, x):
+        """
+        Constructs the input sequence for the Transformer.
+        
+        Logic:
+        - t=0: ALWAYS Visible (Identity Anchor).
+        - Masked Slots (Target): Visible at t=0, Masked at t=1 ~ T_total.
+        - Unmasked Slots (Context): Visible at t=0 ~ T_hist, Masked at Future.
+        
+        Args:
+            x: (B, T_hist, S, D) - Ground Truth History
+        Returns:
+            full_input: (B, T_total, S, D)
+            mask_indices: indices of slots that were masked
+        """
+        B, T_hist, S, D = x.shape
+        T_total = self.total_frames
+        device = x.device
+        
+        # 1. Get Mask Indices
+        if self.num_masked_slots > 0 :
+            is_slot_masked, masked_indices = self.get_mask_indices(B, device)
+        else:
+            masked_indices = torch.tensor([], dtype=torch.long, device=device)
+        
+        # 2. Prepare Base Components
+        # Anchors: First frame of all slots (B, S, D)
+        anchors = x[:, 0, :, :] 
+        
+        # Project anchors to create Identity Queries (B, S, D)
+        anchor_queries = self.id_projector(anchors)
+        
+        # 3. Construct the "Query Grid" (Default for everything)
+        # Shape: (B, T_total, S, D)
+        # Base = MaskToken + TimePE + AnchorQuery
+        # This represents "Predict the state of [Anchor] at [Time]"
+        
+        # Expand dims for broadcasting
+        # MaskToken: (1, 1, 1, D) -> (B, T, S, D)
+        tokens_grid = self.mask_token.expand(B, T_total, S, D)
+        
+        # TimePE: (1, T, 1, D) -> (B, T, S, D)
+        pos_grid = self.time_pos_embed.expand(B, T_total, S, D)
+        
+        # AnchorQueries: (B, 1, S, D) -> (B, T, S, D)
+        anchor_grid = anchor_queries.unsqueeze(1).expand(B, T_total, S, D)
+        
+        # Full Query Input
+        query_input = tokens_grid + pos_grid + anchor_grid
+
+        # 4. Construct the "Real Data Grid" (Only available for history)
+        # We start by cloning the query input, then overwrite visible parts with real data.
+        final_input = query_input.clone()
+        
+        # --- Overwrite Logic ---
+        
+        # (A) ALWAYS overwrite t=0 with Real Data + TimePE(0) for ALL slots
+        # This ensures the Anchor is physically present in the input
+        final_input[:, 0, :, :] = x[:, 0, :, :] + self.time_pos_embed[:, 0, :, :]
+        
+        # (B) For UNMASKED (Context) slots, overwrite history (t=1 to T_hist-1)
+        # Filter indices for unmasked slots
+        if self.num_masked_slots > 0:
+            unmasked_indices = torch.where(~is_slot_masked)[0]
+        else:
+            unmasked_indices = torch.arange(0, x.shape[2])
+        
+        if len(unmasked_indices) > 0 and T_hist > 1:
+            # Extract real history for unmasked slots
+            # x[:, 1:, ...] matches T_hist-1 frames
+            real_history = x[:, 1:, unmasked_indices, :]
+            
+            # Add corresponding TimePE
+            history_pos = self.time_pos_embed[:, 1:T_hist, :, :].expand(B, T_hist-1, S, D)
+            history_pos_unmasked = history_pos[:, :, unmasked_indices, :]
+            
+            # Overwrite in final_input
+            final_input[:, 1:T_hist, unmasked_indices, :] = real_history + history_pos_unmasked
+
+        # Note: 
+        # - Masked slots at t >= 1 remain as "Query Input".
+        # - Unmasked slots at t >= T_hist (Future) remain as "Query Input".
+        
+        return final_input, masked_indices
+    
+    @torch.no_grad()
+    def inference(self, x):
+        """
+        Inference function.
+        Args:
+            x: (B, T_hist, S, D) - Fully visible history
+        Returns:
+            future_prediction: (B, T_pred, S, D)
+        """
+        B, T_hist, S, D = x.shape
+        T_pred = self.pred_frames
+        T_total = T_hist + T_pred
+        inf_time_pos_embed = self.time_pos_embed[:, -T_total:, :, :]
+        
+        # 1. Anchor Query (t=0)
+        anchors = x[:, 0, :, :]
+        anchor_queries = self.id_projector(anchors) # (B, S, D)
+        
+        # 2. History Part  (NO MASK)
+        input_history = x + inf_time_pos_embed[:, :T_hist, :, :]
+        
+        tokens_grid = self.mask_token.expand(B, T_pred, S, D)
+        pos_grid = inf_time_pos_embed[:, T_hist:T_total, :, :].expand(B, T_pred, S, D)
+        anchor_grid = anchor_queries.unsqueeze(1).expand(B, T_pred, S, D)
+        input_future = tokens_grid + pos_grid + anchor_grid
+        full_input = torch.cat([input_history, input_future], dim=1)
+        
+        # Flatten
+        x_flat = rearrange(full_input, 'b t s d -> b (t s) d')
+        out_flat = self.transformer(x_flat)
+        
+        # Unflatten
+        out = rearrange(out_flat, 'b (t s) d -> b t s d', t=T_total, s=S)
+        out = self.to_out(out)
+        return out[:, T_hist:, :, :]
+    
+    @torch.no_grad()
+    def attention_probing(self, x, layer_idx=-1):
+        """
+        Forward pass with attention extraction for probing.
+        
+        Args:
+            x: (B, T_hist, S, D)
+            layer_idx: Which transformer layer's attention to return. 
+                       -1 means the last layer. Default: -1.
+        
+        Returns:
+            out: (B, T_total, S, D) - Predicted slots
+            masked_indices: Indices of masked slots
+            attention_dict: Dictionary with attention scores.
+                Keys: 
+                    - 'masked_slot_{i}_t{t}' for masked slots at history timesteps (t=1 to T_hist-1)
+                    - 'future_t{T_hist}_slot_{s}' for all slots at the first future timestep
+                Values: (B, T_total, S) normalized attention scores (what that token attends to)
+        """
+        B, T_hist, S, D = x.shape
+        T_total = self.total_frames
+        
+        # 1. Prepare Input (Mix of Real Data and Queries)
+        x_input, masked_indices = self.prepare_input(x)  # (B, T_total, S, D)
+        
+        # 2. Flatten for Transformer: (B, T*S, D)
+        x_flat = rearrange(x_input, 'b t s d -> b (t s) d')
+        
+        # 3. Non-Causal Full Attention with attention weights
+        out_flat, attn_weights_list = self.transformer(x_flat, return_attention=True)
+        
+        # Select attention from specified layer (default: last layer)
+        # attn_weights shape: (B, T*S, T*S)
+        attn_weights = attn_weights_list[layer_idx]
+        
+        # 4. Unflatten output
+        out = rearrange(out_flat, 'b (t s) d -> b t s d', t=T_total, s=S)
+        
+        # 5. Output Projection
+        out = self.to_out(out)
+        
+        # 6. Extract attention scores for specific tokens
+        # Reshape attention to (B, T_total, S, T_total, S) for easier indexing
+        # attn[b, t_q, s_q, t_k, s_k] = attention from query (t_q, s_q) to key (t_k, s_k)
+        attn_reshaped = rearrange(attn_weights, 'b (tq sq) (tk sk) -> b tq sq tk sk', 
+                                   tq=T_total, sq=S, tk=T_total, sk=S)
+        
+        attention_dict = {}
+        
+        # (A) Attention for masked slots at history timesteps (t=1 to T_hist-1)
+        # These are positions where masked slots have query tokens instead of real data
+        for slot_idx in masked_indices.tolist():
+            for t in range(1, T_hist):  # t=1 to T_hist-1
+                key = f'masked_slot_{slot_idx}_t{t}'
+                # Get attention: (B, T_total, S) - what this token attends to
+                attn_slice = attn_reshaped[:, t, slot_idx, :, :]  # (B, T_total, S)
+                attention_dict[key] = attn_slice
+        
+        # (B) Attention for all slots at the first future timestep (t=T_hist)
+        first_future_t = T_hist
+        for slot_idx in range(S):
+            key = f'future_t{first_future_t}_slot_{slot_idx}'
+            # Get attention: (B, T_total, S) - what this token attends to
+            attn_slice = attn_reshaped[:, first_future_t, slot_idx, :, :]  # (B, T_total, S)
+            attention_dict[key] = attn_slice
+        
+        return out, masked_indices, attention_dict
+
+    def forward(self, x):
+        """
+        Args:
+            x: (B, T_hist, S, D)
+            return_indices: If True, returns the indices of masked slots.
+        """
+        B, T_hist, S, D = x.shape
+        
+        # 1. Prepare Input (Mix of Real Data and Queries)
+        x_input, masked_indices = self.prepare_input(x) # (B, T_total, S, D)
+        
+        # 2. Flatten for Transformer: (B, T*S, D)
+        x_flat = rearrange(x_input, 'b t s d -> b (t s) d')
+        
+        # 3. Non-Causal Full Attention
+        # Every token (History, Future, Masked, Unmasked) attends to every other token.
+        out_flat = self.transformer(x_flat)
+        
+        # 4. Unflatten
+        out = rearrange(out_flat, 'b (t s) d -> b t s d', t=self.total_frames, s=S)
+        
+        # 5. Output Projection
+        out = self.to_out(out)
+
+        return out, masked_indices
+
+
+
+class MaskedSlot_AP_Predictor(MaskedSlotPredictor):
+    def __init__(
+        self,
+        num_slots: int,             # Total number of slots per frame
+        slot_dim: int = 64,
+        history_frames: int = 3,    # Number of input frames
+        pred_frames: int = 1,       # Number of future frames to predict
+        num_masked_slots: int = 2,  # N slots to mask (context masking)
+        seed: int = 42,             # Random seed for masking
+        depth: int = 6,
+        heads: int = 8,
+        dim_head: int = 64,
+        mlp_dim: int = 2048,
+        dropout: float = 0.1,
+        future_action_conditioning: bool = False,  # If True, includes action conditioning in future frames
+    ):
+        super().__init__(
+            num_slots=num_slots,
+            slot_dim=slot_dim,
+            history_frames=history_frames,
+            pred_frames=pred_frames,
+            num_masked_slots=num_masked_slots,
+            seed=seed,
+            depth=depth,
+            heads=heads,
+            dim_head=dim_head,
+            mlp_dim=mlp_dim,
+            dropout=dropout,
+        )
+
+        self.future_action_conditioning = future_action_conditioning
+
+    def get_mask_indices(self, batch_size, device):
+        rng = np.random.RandomState(self.seed)
+        
+        # Select N indices out of num_slots
+        masked_indices = rng.choice(self.num_slots-2, self.num_masked_slots, replace=False) # excluding the last 2 slots: proprio and action
+        
+        # Create boolean mask for logic (True = Masked/Target, False = Visible/Context)
+        # This is strictly about "Slot" masking. Time masking logic is handled in prepare_input.
+        is_slot_masked = torch.zeros(self.num_slots, dtype=torch.bool, device=device)
+        is_slot_masked[masked_indices] = True
+        
+        return is_slot_masked, torch.from_numpy(masked_indices).to(device)
+    
+
+```
+
+===== FILE: src/custom_codes/hungarian.py =====
+```python
+import torch
+from loguru import logger as logging
+from torch.nn import functional as F
+from scipy.optimize import linear_sum_assignment
+
+
+# ============================================================================
+# Hungarian Matching Loss
+# ============================================================================
+def hungarian_matching_loss_AP(
+    pred: torch.Tensor,
+    target: torch.Tensor,
+    cost_type: str = "mse",
+    reduction: str = "mean",
+) -> torch.Tensor:
+    """
+    Compute per-time-step Hungarian matching loss for slot-based predictions.
+    
+    For each time step independently, finds the optimal bipartite matching
+    between predicted slots and target slots, then computes the loss using
+    matched pairs. This handles slot permutation invariance.
+    
+    Args:
+        pred: Predicted slot embeddings (B, T, N, D)
+              - B: batch size
+              - T: number of time steps (prediction horizon)
+              - N: number of slots per frame
+              - D: slot embedding dimension
+        target: Target slot embeddings (B, T, N, D)
+        cost_type: Type of cost for matching, "mse" or "cosine"
+        reduction: "mean" or "sum" for final loss aggregation
+    
+    Returns:
+        loss: Scalar loss suitable for backpropagation
+    
+    Algorithm:
+        1. For each (batch, time) pair:
+           - Build cost matrix C[i,j] = ||pred[i] - target[j]||^2
+           - Run Hungarian algorithm to find optimal permutation π
+           - Compute loss using matched pairs
+        2. Average (or sum) over all (B, T) pairs
+    """
+    B, T, N, D = pred.shape
+    assert target.shape == pred.shape, f"Shape mismatch: pred {pred.shape} vs target {target.shape}"
+    
+    device = pred.device
+    total_loss = torch.tensor(0.0, device=device, dtype=pred.dtype)
+    
+    # Detach for cost matrix computation (Hungarian is non-differentiable)
+    pred_detached = pred.detach()
+    target_detached = target.detach()
+    
+    for b in range(B):
+        for t in range(T):
+            # Extract slots at this (batch, time) position
+            pred_slots = pred[b, t]           # (N, D)
+            target_slots = target[b, t]       # (N, D)
+            pred_slots_det = pred_detached[b, t]
+            target_slots_det = target_detached[b, t]
+            
+            # Build cost matrix C[i,j] = cost(pred[i], target[j])
+            if cost_type == "mse":
+                # C[i,j] = ||pred[i] - target[j]||^2
+                # Expand for pairwise computation: (N, 1, D) - (1, N, D) = (N, N, D)
+                diff = pred_slots_det.unsqueeze(1) - target_slots_det.unsqueeze(0)  # (N, N, D)
+                cost_matrix = (diff ** 2).sum(dim=-1)  # (N, N)
+            elif cost_type == "cosine":
+                # C[i,j] = 1 - cosine_similarity(pred[i], target[j])
+                pred_norm = F.normalize(pred_slots_det, dim=-1)  # (N, D)
+                target_norm = F.normalize(target_slots_det, dim=-1)  # (N, D)
+                cosine_sim = torch.mm(pred_norm, target_norm.t())  # (N, N)
+                cost_matrix = 1.0 - cosine_sim
+            else:
+                raise ValueError(f"Unknown cost_type: {cost_type}")
+            
+            # Run Hungarian algorithm to find optimal matching
+            # Returns (row_indices, col_indices) where row i is matched to col[i]
+            cost_np = cost_matrix.cpu().numpy()
+            row_ind, col_ind = linear_sum_assignment(cost_np)
+            
+            # col_ind[i] gives the target index that should be matched to pred index i
+            # So we permute target according to col_ind
+            matched_target = target_slots[col_ind]  # (N, D)
+            
+            # Compute loss on matched pairs (this is differentiable w.r.t. pred)
+            if cost_type == "mse":
+                pair_loss = F.mse_loss(pred_slots, matched_target, reduction='sum')
+            elif cost_type == "cosine":
+                # For cosine, we use 1 - cosine_similarity as loss
+                cos_sim = F.cosine_similarity(pred_slots, matched_target, dim=-1)  # (N,)
+                pair_loss = (1.0 - cos_sim).sum()
+            
+            total_loss = total_loss + pair_loss
+    
+    # Reduction
+    if reduction == "mean":
+        total_loss = total_loss / (B * T * N)
+    elif reduction == "sum":
+        pass  # Already summed
+    else:
+        raise ValueError(f"Unknown reduction: {reduction}")
+    
+
+    return {"pixels_loss": total_loss}
+
+
+
+def hungarian_matching_loss_with_proprio(
+    pred: torch.Tensor,
+    target: torch.Tensor,
+    pixels_dim: int,
+    proprio_dim: int = 0,
+    cost_type: str = "mse",
+    reduction: str = "mean",
+) -> dict:
+    """
+    Hungarian matching loss with separate losses for pixels and proprio.
+    
+    Matching is done based on pixels (slot embeddings) only,
+    but loss is computed for both pixels and proprio using the same matching.
+    
+    Args:
+        pred: (B, T, N, D) where D = pixels_dim + proprio_dim + action_dim
+        target: (B, T, N, D)
+        pixels_dim: Dimension of pixel/slot embedding
+        proprio_dim: Dimension of proprio embedding (0 if not used)
+        cost_type: "mse" or "cosine"
+        reduction: "mean" or "sum"
+    
+    Returns:
+        dict with "pixels_loss", "proprio_loss" (if proprio_dim > 0), and "total_loss"
+    """
+    B, T, N, D = pred.shape
+    assert target.shape == pred.shape
+    
+    device = pred.device
+    total_pixels_loss = torch.tensor(0.0, device=device, dtype=pred.dtype)
+    total_proprio_loss = torch.tensor(0.0, device=device, dtype=pred.dtype)
+    
+    # Extract pixels part for matching
+    pred_pixels = pred[..., :pixels_dim]           # (B, T, N, pixels_dim)
+    target_pixels = target[..., :pixels_dim]
+    
+    pred_pixels_det = pred_pixels.detach()
+    target_pixels_det = target_pixels.detach()
+    
+    # Extract proprio part if available
+    if proprio_dim > 0:
+        pred_proprio = pred[..., pixels_dim:pixels_dim + proprio_dim]
+        target_proprio = target[..., pixels_dim:pixels_dim + proprio_dim]
+    
+    for b in range(B):
+        for t in range(T):
+            # Build cost matrix using ONLY pixels (slot embeddings)
+            pred_slots = pred_pixels_det[b, t]      # (N, pixels_dim)
+            target_slots = target_pixels_det[b, t]  # (N, pixels_dim)
+            
+            if cost_type == "mse":
+                diff = pred_slots.unsqueeze(1) - target_slots.unsqueeze(0)
+                cost_matrix = (diff ** 2).sum(dim=-1)
+            elif cost_type == "cosine":
+                pred_norm = F.normalize(pred_slots, dim=-1)
+                target_norm = F.normalize(target_slots, dim=-1)
+                cost_matrix = 1.0 - torch.mm(pred_norm, target_norm.t())
+            else:
+                raise ValueError(f"Unknown cost_type: {cost_type}")
+            
+            # Hungarian matching
+            cost_np = cost_matrix.cpu().numpy()
+            row_ind, col_ind = linear_sum_assignment(cost_np)
+            
+            # Apply matching to pixels
+            matched_target_pixels = target_pixels[b, t, col_ind]
+            pixels_loss = F.mse_loss(pred_pixels[b, t], matched_target_pixels, reduction='sum')
+            total_pixels_loss = total_pixels_loss + pixels_loss
+            
+            # Apply same matching to proprio
+            if proprio_dim > 0:
+                matched_target_proprio = target_proprio[b, t, col_ind]
+                proprio_loss = F.mse_loss(pred_proprio[b, t], matched_target_proprio, reduction='sum')
+                total_proprio_loss = total_proprio_loss + proprio_loss
+    
+    # Reduction
+    num_elements_pixels = B * T * N * pixels_dim
+    num_elements_proprio = B * T * N * proprio_dim if proprio_dim > 0 else 1
+    
+    if reduction == "mean":
+        total_pixels_loss = total_pixels_loss / num_elements_pixels
+        if proprio_dim > 0:
+            total_proprio_loss = total_proprio_loss / num_elements_proprio
+    
+    result = {
+        "pixels_loss": total_pixels_loss,
+        "total_loss": total_pixels_loss,
+    }
+    
+    if proprio_dim > 0:
+        result["proprio_loss"] = total_proprio_loss
+        result["total_loss"] = total_pixels_loss + total_proprio_loss
+    
+    return result
+
+
+# ============================================================================
+# Hungarian Matching for Planning (Cost Computation)
+# ============================================================================
+def hungarian_cost(
+    preds: torch.Tensor,
+    goal: torch.Tensor,
+    cost_type: str = "mse",
+    pixels_dim: int = None,
+) -> torch.Tensor:
+    """
+    Compute per-sample Hungarian matched cost between predictions and goal.
+    
+    Used for planning: computes the minimum-cost matching between predicted
+    slots and goal slots for each sample independently.
+    Matching is based on pixels_dim only (if specified).
+    
+    Args:
+        preds: Predicted slot embeddings (B, N, S, D)
+               - B: batch size (num action candidates)
+               - N: num candidates (usually 1 for this use case)
+               - S: number of slots
+               - D: slot embedding dimension
+        goal: Goal slot embeddings (B, N, S, D)
+        cost_type: "mse" or "cosine"
+        pixels_dim: If specified, use only first pixels_dim dimensions for matching and cost.
+                   Otherwise use full D.
+    
+    Returns:
+        cost: (B, N) tensor of matched costs per sample
+    """
+    # Handle shapes - preds and goal should be (B, N, S, D) or (B, N, T, S, D)
+    # For criterion, we usually pass preds[:, :, -1:] which is (B, N, 1, S, D)
+    
+    if preds.ndim == 5:
+        # (B, N, T, S, D) -> take last time step
+        preds = preds[:, :, -1]  # (B, N, S, D)
+        goal = goal[:, :, -1]    # (B, N, S, D)
+    
+    B, N, S, D = preds.shape
+    assert goal.shape == preds.shape, f"Shape mismatch: preds {preds.shape} vs goal {goal.shape}"
+    
+    # Determine matching dimension
+    match_dim = pixels_dim if pixels_dim is not None else D
+    
+    device = preds.device
+    costs = torch.zeros(B, N, device=device, dtype=preds.dtype)
+    
+    preds_det = preds.detach()
+    goal_det = goal.detach()
+    
+    for b in range(B):
+        for n in range(N):
+            pred_slots_full = preds_det[b, n]  # (S, D)
+            goal_slots_full = goal_det[b, n]   # (S, D)
+            
+            # Use only pixels_dim for matching
+            pred_slots = pred_slots_full[:, :match_dim]  # (S, match_dim)
+            goal_slots = goal_slots_full[:, :match_dim]  # (S, match_dim)
+            
+            # Build cost matrix using only pixels portion
+            if cost_type == "mse":
+                diff = pred_slots.unsqueeze(1) - goal_slots.unsqueeze(0)  # (S, S, match_dim)
+                cost_matrix = (diff ** 2).sum(dim=-1)  # (S, S)
+            elif cost_type == "cosine":
+                pred_norm = F.normalize(pred_slots, dim=-1)
+                goal_norm = F.normalize(goal_slots, dim=-1)
+                cost_matrix = 1.0 - torch.mm(pred_norm, goal_norm.t())
+            else:
+                raise ValueError(f"Unknown cost_type: {cost_type}")
+            
+            # Hungarian matching
+            cost_np = cost_matrix.cpu().numpy()
+            row_ind, col_ind = linear_sum_assignment(cost_np)
+            
+            # Compute matched cost (on pixels only)
+            matched_goal = goal_slots[col_ind]  # (S, match_dim)
+            
+            if cost_type == "mse":
+                sample_cost = F.mse_loss(pred_slots, matched_goal, reduction='mean')
+            elif cost_type == "cosine":
+                cos_sim = F.cosine_similarity(pred_slots, matched_goal, dim=-1)
+                sample_cost = (1.0 - cos_sim).mean()
+            
+            costs[b, n] = sample_cost
+    
+    return costs
+
+
+def reorder_slots_to_match(
+    pred: torch.Tensor,
+    reference: torch.Tensor,
+    cost_type: str = "mse",
+    pixels_dim: int = None,
+) -> torch.Tensor:
+    """
+    Reorder predicted slots to match the order of reference slots.
+    
+    Used during rollout to maintain slot consistency across prediction steps.
+    Matching is based on pixels_dim only (if specified), but the full embedding
+    (including proprio/action) is reordered together.
+    
+    Args:
+        pred: Predicted slots (B, T, S, D) or (B, S, D)
+        reference: Reference slots to match against (B, S, D_ref)
+                   Usually the last frame of the current history
+                   D_ref can be pixels_dim (for matching) or full D
+        cost_type: "mse" or "cosine"
+        pixels_dim: If specified, use only first pixels_dim dimensions for matching.
+                   The full embedding is still reordered.
+    
+    Returns:
+        reordered_pred: Same shape as pred, with slots reordered
+    """
+    has_time_dim = pred.ndim == 4
+    
+    if has_time_dim:
+        B, T, S, D = pred.shape
+    else:
+        B, S, D = pred.shape
+        T = 1
+        pred = pred.unsqueeze(1)  # (B, 1, S, D)
+    
+    D_ref = reference.shape[-1]
+    assert reference.shape[:2] == (B, S), f"Reference shape mismatch: {reference.shape}, expected (B={B}, S={S}, D)"
+    
+    # Determine matching dimension
+    if pixels_dim is not None:
+        match_dim = pixels_dim
+    else:
+        match_dim = D_ref  # Use reference dimension for matching
+    
+    device = pred.device
+    reordered = torch.zeros_like(pred)
+    
+    # For each batch, find the matching between reference and pred's first frame
+    # Then apply the same permutation to all time steps
+    pred_det = pred.detach()
+    ref_det = reference.detach()
+    
+    for b in range(B):
+        ref_slots = ref_det[b]  # (S, D_ref)
+        # Use first predicted frame for matching (only pixels_dim portion)
+        pred_slots_full = pred_det[b, 0]  # (S, D)
+        pred_slots = pred_slots_full[:, :match_dim]  # (S, match_dim)
+        ref_slots_match = ref_slots[:, :match_dim] if ref_slots.shape[-1] > match_dim else ref_slots  # (S, match_dim)
+        
+        # Build cost matrix: cost[i,j] = distance(pred[i], ref[j])
+        if cost_type == "mse":
+            diff = pred_slots.unsqueeze(1) - ref_slots_match.unsqueeze(0)
+            cost_matrix = (diff ** 2).sum(dim=-1)  # (S, S)
+        elif cost_type == "cosine":
+            pred_norm = F.normalize(pred_slots, dim=-1)
+            ref_norm = F.normalize(ref_slots_match, dim=-1)
+            cost_matrix = 1.0 - torch.mm(pred_norm, ref_norm.t())
+        else:
+            raise ValueError(f"Unknown cost_type: {cost_type}")
+        
+        # Hungarian: find matching that minimizes cost(pred[i], ref[perm[i]])
+        # We want to reorder pred so that pred[perm[i]] matches ref[i]
+        cost_np = cost_matrix.cpu().numpy()
+        row_ind, col_ind = linear_sum_assignment(cost_np)
+        
+        # row_ind[i] should go to position col_ind[i]
+        # We need inverse permutation: position col_ind[i] gets row_ind[i]
+        inv_perm = torch.zeros(S, dtype=torch.long, device=device)
+        inv_perm[col_ind] = torch.tensor(row_ind, device=device)
+        
+        # Apply same permutation to all time steps
+        for t in range(T):
+            reordered[b, t] = pred[b, t, inv_perm]
+    
+    if not has_time_dim:
+        reordered = reordered.squeeze(1)
+    
+    return reordered
+
+
+def reorder_slots_to_match_AP(
+    pred: torch.Tensor,
+    reference: torch.Tensor,
+    cost_type: str = "mse",
+    slot_dim: int = None,
+) -> torch.Tensor:
+    """
+    Args:
+        pred: Predicted slots (B, T, S, D) or (B, S, D)
+        reference: Reference slots to match against (B, S_ref, D)
+                   Usually the last frame of the current history
+                   S_ref can be pixels_dim (for matching) or full S
+        cost_type: "mse" or "cosine"
+        slot_dim: If specified, use only first slotdim dimensions for matching.
+                   The full embedding is still reordered.
+    
+    Returns:
+        reordered_pred: Same shape as pred, with slots reordered
+    """
+    has_time_dim = pred.ndim == 4
+    
+    if has_time_dim:
+        B, T, S, D = pred.shape
+    else:
+        B, S, D = pred.shape
+        T = 1
+        pred = pred.unsqueeze(1)  # (B, 1, S, D)
+    
+    S_ref = reference.shape[-2]
+    # assert reference.shape[:2] == (B, S), f"Reference shape mismatch: {reference.shape}, expected (B={B}, S={S}, D)"
+    
+    # Determine matching dimension
+    if slot_dim is not None:
+        match_dim = slot_dim
+    else:
+        match_dim = S_ref  # Use reference dimension for matching
+    
+    device = pred.device
+    reordered = torch.zeros_like(pred)
+    
+    # For each batch, find the matching between reference and pred's first frame
+    # Then apply the same permutation to all time steps
+    pred_det = pred.detach()
+    ref_det = reference.detach()
+    
+    for b in range(B):
+        ref_slots = ref_det[b]  # (S_ref, D)
+        # Use first predicted frame for matching (only first slot_dim slots)
+        pred_slots_full = pred_det[b, 0]  # (S, D)
+        pred_slots = pred_slots_full[:match_dim, :]  # (match_dim, D)
+        ref_slots_match = ref_slots[:match_dim, :] if ref_slots.shape[-2] > match_dim else ref_slots  # (match_dim, D)
+        
+        # Build cost matrix: cost[i,j] = distance(pred[i], ref[j])
+        # Only comparing object slots (first match_dim slots in axis=-2)
+        if cost_type == "mse":
+            diff = pred_slots.unsqueeze(1) - ref_slots_match.unsqueeze(0)
+            cost_matrix = (diff ** 2).sum(dim=-1)  # (match_dim, match_dim)
+        elif cost_type == "cosine":
+            pred_norm = F.normalize(pred_slots, dim=-1)
+            ref_norm = F.normalize(ref_slots_match, dim=-1)
+            cost_matrix = 1.0 - torch.mm(pred_norm, ref_norm.t())
+        else:
+            raise ValueError(f"Unknown cost_type: {cost_type}")
+        
+        # Hungarian: find matching that minimizes cost(pred[i], ref[perm[i]])
+        cost_np = cost_matrix.cpu().numpy()
+        row_ind, col_ind = linear_sum_assignment(cost_np)
+        
+        # Create permutation for object slots only (size = match_dim, not S)
+        # inv_perm[col_ind[i]] = row_ind[i] means position col_ind[i] gets slot row_ind[i]
+        obj_perm = torch.zeros(match_dim, dtype=torch.long, device=device)
+        obj_perm[col_ind] = torch.tensor(row_ind, device=device)
+        
+        # Apply permutation to all time steps
+        for t in range(T):
+            # Reorder only object slots (first match_dim slots in axis=-2)
+            reordered[b, t, :match_dim, :] = pred[b, t, obj_perm, :]
+            # Keep proprio and action slots unchanged (slots after match_dim)
+            reordered[b, t, match_dim:, :] = pred[b, t, match_dim:, :]
+    
+    if not has_time_dim:
+        reordered = reordered.squeeze(1)
+    
+    return reordered
+```
+
+===== FILE: src/plan/config.yaml =====
+```yaml
+defaults:
+  - launcher: local
+  - solver: cem
+  - _self_
+
+world:
+  env_name: swm/PushT-v1
+  num_envs: ${eval.num_eval}
+  max_episode_steps: ??? # make sure it's >= eval_budget
+  history_size: 5
+  frame_skip: 1
+
+
+seed: 42
+policy: pusht_expert_world_model_epoch_10 # ckpt name or random
+cache_dir: ~/.stable_worldmodel/
+
+plan_config:
+  horizon: 9 # frame num of action_sequence in rollout. do not include history frames
+  receding_horizon: 3
+  action_block: 3 # frameskip
+
+# evaluation from dataset (replay expert trajectories)
+eval:
+  num_eval: 50
+  goal_offset_steps: 25
+  eval_budget: 50
+  dataset_name: pusht_expert_train
+  data_format: video
+
+output:
+  filename: results.txt
+
+wandb:
+  use_wandb: true
+  project: cjepa
+  entity: heejeong_nam-brown-university
+
+```
+
+===== FILE: src/plan/launcher/local.yaml =====
+```yaml
+# @package _global_
+# Local launcher configuration (no SLURM)
+
+defaults:
+  - override /hydra/launcher: basic
+
+n_gpus: 1
+cpus_per_task: 4
+cache_dir: null # Use stable-worldmodel default cache
+wandb:
+  use_wandb: false
+  entity: stable-wm
+  project: stable-wm
+
+```
+
+===== FILE: src/plan/run.py =====
+```python
+import time
+from pathlib import Path
+
+import datasets
+import hydra
+import numpy as np
+import stable_pretraining as spt
+import torch
+from omegaconf import DictConfig
+from sklearn import preprocessing
+from torchvision.transforms import v2 as transforms
+
+import stable_worldmodel as swm
+import wandb
+
+
+def img_transform():
+    transform = transforms.Compose(
+        [
+            transforms.ToImage(),
+            transforms.ToDtype(torch.float32, scale=True),
+            transforms.Normalize(**spt.data.dataset_stats.ImageNet),
+            transforms.Resize(size=196),
+            transforms.CenterCrop(size=196),
+        ]
+    )
+    return transform
+
+
+def get_episodes_length(dataset, episodes):
+    episode_idx = dataset["episode_idx"][:]
+    step_idx = dataset["step_idx"][:]
+    lengths = []
+    for ep_id in episodes:
+        lengths.append(np.max(step_idx[episode_idx == ep_id]) + 1)
+    return np.array(lengths)
+
+
+@hydra.main(version_base=None, config_path=".", config_name="config")
+def run(cfg: DictConfig):
+    """Run evaluation of dinowm vs random policy."""
+    assert cfg.plan_config.horizon * cfg.plan_config.action_block <= cfg.eval.eval_budget, (
+        "Planning horizon must be smaller than or equal to eval_budget"
+    )
+    if cfg.wandb.use_wandb:
+        # Initialize wandb
+        wandb.init(project=cfg.wandb.project, entity=cfg.wandb.entity, config=dict(cfg))
+
+    # create world environment
+    cfg.world.max_episode_steps = 2 * cfg.eval.eval_budget
+    world = swm.World(**cfg.world, image_shape=(224, 224), render_mode="rgb_array")
+    cache_dir = cfg.cache_dir or swm.data.utils.get_cache_dir()
+
+    # create the transform
+    transform = {
+        "pixels": img_transform(),
+        "goal": img_transform(),
+    }
+
+    dataset_path = Path(cache_dir, cfg.eval.dataset_name)
+    dataset = datasets.load_from_disk(dataset_path).with_format("numpy")
+    ep_indices, _ = np.unique(dataset["episode_idx"][:], return_index=True)
+
+    # create the processing
+    action_process = preprocessing.StandardScaler()
+    action_process.fit(dataset["action"][:])
+
+    proprio_process = preprocessing.StandardScaler()
+    proprio_process.fit(dataset["proprio"][:])
+
+    process = {
+        "action": action_process,
+        "proprio": proprio_process,
+        "goal_proprio": proprio_process,
+    }
+
+    # -- run evaluation
+    model = swm.policy.AutoCostModel(cfg.policy, cache_dir)
+    model = model.to("cuda")
+    model = model.eval()
+    model.requires_grad_(False)
+
+    # model.interpolate_pos_encoding = True
+
+    config = swm.PlanConfig(**cfg.plan_config)
+    solver = hydra.utils.instantiate(cfg.solver, model=model)
+    policy = swm.policy.WorldModelPolicy(solver=solver, config=config, process=process, transform=transform)
+
+    # sample the episodes and the starting indices
+    episode_len = get_episodes_length(dataset, ep_indices)
+    max_start_idx = episode_len - cfg.eval.goal_offset_steps - 1
+    max_start_idx_dict = {ep_id: max_start_idx[i] for i, ep_id in enumerate(ep_indices)}
+    # Map each dataset row’s episode_idx to its max_start_idx
+    max_start_per_row = np.array([max_start_idx_dict[ep_id] for ep_id in dataset["episode_idx"]])
+
+    # remove all the lines of dataset for which dataset['step_idx'] > max_start_per_row
+    valid_mask = dataset["step_idx"] <= max_start_per_row
+    dataset_start = dataset.select(np.nonzero(valid_mask)[0])
+
+    g = np.random.default_rng(cfg.seed)
+    random_episode_indices = g.choice(len(dataset_start) - 1, size=cfg.eval.num_eval, replace=False)
+    eval_episodes = dataset_start[random_episode_indices]["episode_idx"]
+    eval_start_idx = dataset_start[random_episode_indices]["step_idx"]
+
+    if len(eval_episodes) < cfg.eval.num_eval:
+        raise ValueError("Not enough episodes with sufficient length for evaluation.")
+
+    world.set_policy(policy)
+
+    if cfg.eval.data_format == "frame":
+        dataset = swm.data.FrameDataset(
+            cfg.eval.dataset_name,
+            cache_dir=cache_dir
+
+        )
+    elif cfg.eval.data_format == "video":
+        dataset = swm.data.VideoDataset(
+            cfg.eval.dataset_name,
+            cache_dir=cache_dir
+        )
+    else:
+        raise NotImplementedError(f"Data format '{cfg.eval.data_format}' not supported.")
+
+    start_time = time.time()
+    metrics = world.evaluate_from_dataset(
+        dataset,
+        start_steps=eval_start_idx.tolist(),
+        goal_offset_steps=cfg.eval.goal_offset_steps,
+        eval_budget=cfg.eval.eval_budget,
+        episodes_idx=eval_episodes.tolist(),
+        callables={
+            "_set_state": "state",
+            "_set_goal_state": "goal_state",
+        },
+    )
+    end_time = time.time()
+
+    if cfg.wandb.use_wandb:
+        # Log metrics to wandb
+        wandb.log(metrics)
+        # Finish wandb run
+        wandb.finish()
+
+    # dump results
+    print(metrics)
+    # ---- dump results to a txt file ----
+    results_path = Path(__file__).parent / cfg.output.filename
+    with results_path.open("a") as f:
+        f.write("\n")  # separate from previous runs
+        f.write(f"policy: {cfg.policy}\n")
+        f.write(f"dataset_name: {cfg.eval.dataset_name}\n")
+        f.write(f"goal_offset_steps: {cfg.eval.goal_offset_steps}\n")
+        f.write(f"eval_budget: {cfg.eval.eval_budget}\n")
+        f.write(f"horizon: {cfg.plan_config.horizon}\n")
+        f.write(f"receding_horizon: {cfg.plan_config.receding_horizon}\n")
+        f.write(f"seed: {cfg.seed}\n")
+        f.write(f"metrics: {metrics}\n")
+        f.write(f"evaluation_time: {end_time - start_time} seconds\n")
+
+
+if __name__ == "__main__":
+    run()
+
+```
+
+===== FILE: src/plan/solver/cem.yaml =====
+```yaml
+_target_: stable_worldmodel.solver.CEMSolver
+model: ???
+batch_size: 1
+num_samples: 300
+var_scale: 1.0
+n_steps: 30
+topk: 30
+device: "cuda"
+seed: ${seed}
+
+```
+
+===== FILE: src/plan/solver/gd.yaml =====
+```yaml
+_target_: stable_worldmodel.solver.GradientSolver
+model: ???
+n_steps: 30
+batch_size: 1
+num_samples: 100
+action_noise: 0
+device: "cuda"
+seed: ${seed}
+
+```
+
+===== FILE: src/world_models/dinowm_causal_AP_node.py =====
+```python
+import torch
+import torch.nn.functional as F
+
+# from torchvision import transforms
+import torchvision.transforms.v2 as transforms
+from einops import rearrange, repeat
+from torch import distributed as dist
+from torch import nn
+
+# Hungarian matching for planning
+from src.custom_codes.hungarian import hungarian_cost, reorder_slots_to_match_AP
+
+class CausalWM_AP(torch.nn.Module):
+    def __init__(
+        self,
+        encoder,
+        slot_attention, 
+        initializer,
+        predictor,
+        action_encoder,
+        proprio_encoder,
+        decoder=None,
+        history_size=3,
+        num_pred=1,
+        interpolate_pos_encoding=True,
+        device="cpu",
+        use_hungarian=True,          # Enable Hungarian matching for planning use_hungarian
+        hungarian_cost_type="mse",    # "mse" or "cosine"
+    ):
+        super().__init__()
+
+        self.encoder = encoder # includes backbone and output transform
+        self.slot_attention = slot_attention # includes correcter and  predictor  / should i use this predictor??? NOOOOO
+        self.initializer = initializer
+        self.predictor = predictor
+        self.action_encoder = action_encoder
+        self.proprio_encoder = proprio_encoder
+        self.decoder = decoder
+        self.history_size = history_size
+        self.num_pred = num_pred
+        self.device = device
+        self.interpolate_pos_encoding = interpolate_pos_encoding
+        
+        # Hungarian matching settings
+        self.use_hungarian = use_hungarian
+        self.hungarian_cost_type = hungarian_cost_type
+
+        decoder_scale = 16  # from vqvae
+        num_side_patches = 224 // decoder_scale
+        self.encoder_image_size = num_side_patches * 14
+        self.encoder_transform = transforms.Compose([transforms.Resize(self.encoder_image_size)])
+
+    def encode(
+        self,
+        info,
+        pixels_key="pixels",
+        prefix=None,
+        target="embed",
+        proprio_key=None,
+        action_key=None,
+        return_last_slot=False
+    ):
+        assert target not in info, f"{target} key already in info_dict"
+        emb_keys = [proprio_key, action_key]
+        prefix = prefix or ""
+
+        # == pixels embeddings
+        pixels = info[pixels_key].float()  # (B, T, 3, H, W)
+        B = pixels.shape[0]
+        pixels_embed = self.encoder(pixels)#.last_hidden_state.detach() # bt, n_patches+1, d
+        features = pixels_embed["features"]
+
+        if "prev_slot" in info:
+            slots_initial = info["prev_slot"]   
+        else:
+            slots_initial = self.initializer(batch_size=B) # bs x slotnum x slotfeat (8x7x64)
+        processor_output = self.slot_attention(slots_initial, features)
+        pixels_embed = processor_output["state"] # bs x nstep x numslot x slotfeat (8x4x7x64)
+        if return_last_slot:
+            if "prev_slot" in info:
+                info["prev_slot"] = pixels_embed[:, -1].detach().clone()
+            else:
+                info.update({"prev_slot": pixels_embed[:, -1].detach().clone()})
+
+        # == improve the embedding
+        n_patches = pixels_embed.shape[2]
+        embedding = pixels_embed
+        info[f"pixels_{target}"] = pixels_embed
+
+        for key in [proprio_key, action_key]: # always in this order
+            if key == "proprio":
+                extr_enc = self.proprio_encoder
+            elif key == "action":
+                extr_enc = self.action_encoder
+            else:
+                continue
+            extra_input = info[f"{prefix}{key}"].float()  # (B, T, dim)
+            extra_embed = extr_enc(extra_input)  # (B, T, dim) -> (B, T, emb_dim)
+            info[f"{key}_{target}"] = extra_embed
+
+            # copy extra embedding across patches for each time step
+            extra_tiled = extra_embed.unsqueeze(2)
+
+            # concatenate along feature dimension
+            embedding = torch.cat([embedding, extra_tiled], dim=2)
+
+        info[target] = embedding  # (B, T, P, d)
+
+        return info
+
+    def predict(self, embedding, use_inference_function: bool=False):
+        """predict next latent state
+        Args:
+            embedding: (B, T, P, d) - P can be num_patches or num_slots
+        Returns:
+            preds: (B, T, P, d) for old-style or (B, num_pred, P, d) for MaskedSlotPredictor
+            mask_info: (mask_indices, T) for selective loss computation
+        """
+        if use_inference_function: # no mask
+            preds = self.predictor.inference(embedding)
+            return preds
+        else:
+            preds, mask_indices = self.predictor(embedding)
+            return preds, mask_indices
+
+        # Output: (B, num_pred, S, 64) or (B, T+num_pred, S, 64)
+
+    def decode(self, info):
+        assert "pixels_embed" in info, "pixels_embed not in info_dict"
+        pixels_embed = info["pixels_embed"]
+        num_frames = pixels_embed.shape[1]
+
+        pixels, diff = self.decoder(pixels_embed)  # (b*num_frames, 3, 224, 224)
+        pixels = rearrange(pixels, "(b t) c h w -> b t c h w", t=num_frames)
+
+        info["reconstructed_pixels"] = pixels
+        info["reconstruction_diff"] = diff
+
+        return info
+
+    def split_embedding(self, embedding, extra_dims):  # action_dim, proprio_dim):
+        split_embed = {}
+        slot_num = embedding.shape[-2] - sum(extra_dims)
+
+        # == pixels embedding
+        split_embed["pixels_embed"] = embedding[..., :slot_num, :]
+
+        # == extra embeddings
+        start_dim = slot_num
+        for i, key in enumerate(["proprio", "action"]):
+            dim = extra_dims[i]
+            extra_emb = embedding[..., start_dim : start_dim + dim, :].squeeze(-2)
+            split_embed[f"{key}_embed"] = extra_emb # all patches are the same
+            start_dim += dim
+
+        return split_embed
+
+    def replace_action_in_embedding(self, embedding, act):
+        """Replace the action embeddings in the latent state z with the provided actions.
+        
+        Args:
+            embedding: (B, N, T, P, d) - 5D tensor with action at the end of d
+            act: (B, N, T, action_dim) - raw actions to inject
+        Returns:
+            new_embedding: (B, N, T, P, d)
+        """
+        assert self.action_encoder is not None, "No action encoder defined in the model."
+        n_patches = embedding.shape[3]
+        B, N = act.shape[:2]
+        act_flat = rearrange(act, "b n ... -> (b n) ...")
+        z_act = self.action_encoder(act_flat)  # (B*N, T, A_emb)
+        action_dim = z_act.shape[-1]
+        act_tiled = z_act.unsqueeze(2) # (B*N, T, 1, A_emb)
+        act_tiled = rearrange(act_tiled, "(b n) t p d -> b n t p d", b=B, n=N, p=1, d=action_dim)
+        # z (B, N, T, P, d) with P = num_slot + proprio + action
+        new_embedding = torch.cat([embedding[:,:,:,:-1, :], act_tiled], dim=-2) # replace last patch
+        return new_embedding
+
+    def rollout(self, info, action_sequence):
+        """Rollout the world model given an initial observation and a sequence of actions.
+        
+        Non-autoregressive rollout for MaskedSlotPredictor:
+        - Predicts pred_frames at a time (e.g., 3 frames per call)
+        - If horizon > pred_frames, reconstructs history using predicted frames
+        - Repeats until all required future steps are predicted
+
+        Params:
+            info: dict containing 'pixels', 'proprio', etc.
+                  pixels shape: (B, N, T_history, C, H, W) where N = num_candidates
+                  - T_history comes from world.history_size
+            action_sequence: (B, N, horizon, action_dim * action_block)
+                  - This contains ONLY future actions (no history)
+                  - horizon = plan_config.horizon (number of planning steps)
+                  - Each action covers action_block environment steps
+
+        Returns:
+            info: dict with 'predicted_embedding' of shape (B, N, T_history + horizon, S, D)
+        """
+        # try:
+        #     use_hungarian = self.use_hungarian
+        # except:
+        use_hungarian = True
+        print(f"Rollout with use_hungarian = {use_hungarian}")
+
+        assert "pixels" in info, "pixels not in info_dict"
+        proprio_key = "proprio" if "proprio" in info else None
+        emb_keys = [proprio_key] if proprio_key in info else []
+        
+        # == add action to info dict
+
+        n_obs = info["pixels"].shape[2]
+        act_0 = action_sequence[:, :, :n_obs]
+        info["action"] = act_0
+        # check if we have already computed the initial embedding for this state
+        if (
+            hasattr(self, "_init_cached_info")
+            and torch.equal(self._init_cached_info["id"], info["id"][:, 0])
+            and torch.equal(self._init_cached_info["step_idx"], info["step_idx"][:, 0])
+        ):
+            init_info_dict = {k: v.detach() if torch.is_tensor(v) else v for k, v in self._init_cached_info.items()}
+        else:
+            # prepare init_info_dict
+            init_info_dict = {}
+            for k, v in info.items():
+                if torch.is_tensor(v):
+                    init_info_dict[k] = info[k][:, 0]  # (B, T_history, ...)
+
+            init_info_dict = self.encode(
+                init_info_dict,
+                pixels_key="pixels",
+                target="embed",
+                proprio_key=proprio_key,
+                action_key="action",
+                return_last_slot=True
+            )
+            # repeat copy for each action candidate
+            init_info_dict["embed"] = (
+                init_info_dict["embed"]
+                .unsqueeze(1)
+                .expand(-1, action_sequence.shape[1], *([-1] * (init_info_dict["embed"].ndim - 1)))
+                .clone()
+            )
+            init_info_dict["pixels_embed"] = (
+                init_info_dict["pixels_embed"]
+                .unsqueeze(1)
+                .expand(-1, action_sequence.shape[1], *([-1] * (init_info_dict["pixels_embed"].ndim - 1)))
+            )
+
+            for key in emb_keys:
+                init_info_dict[f"{key}_embed"] = (
+                    init_info_dict[f"{key}_embed"]
+                    .unsqueeze(1)
+                    .expand(-1, action_sequence.shape[1], *([-1] * (init_info_dict[f"{key}_embed"].ndim - 1)))
+                )
+
+            init_info_dict = {k: v.detach().clone() if torch.is_tensor(v) else v for k, v in init_info_dict.items()}
+            self._init_cached_info = init_info_dict
+
+        # Get encoded history
+        info["embed"] = init_info_dict["embed"]
+        info["pixels_embed"] = init_info_dict["pixels_embed"]
+        info["prev_slot"] = init_info_dict["prev_slot"]
+        for key in emb_keys:
+            info[f"{key}_embed"] = init_info_dict[f"{key}_embed"]
+
+        # actually compute the embedding of action for each candidate
+        info["embed"] = self.replace_action_in_embedding(info["embed"], action_sequence[:, :, :n_obs])
+        # action_dim = init_info_dict["action_embed"].shape[-1]
+        info["action_embed"] = action_sequence[:, :, :n_obs]  # info["embed"][:, :, :n_obs, 0, -action_dim:]
+
+        # number of step to predict
+        act_pred = action_sequence[:, :, n_obs:]
+        n_steps = act_pred.shape[2]
+
+        # == initial embedding
+        z = info["embed"]
+        B, N = z.shape[:2]
+
+
+        # we flatten B and N to process all candidates in a single batch in the predictor
+        z_flat = rearrange(z, "b n ... -> (b n) ...").clone()
+        act_pred_flat = rearrange(act_pred, "b n ... -> (b n) ...")
+
+
+        # Collect all predictions
+        current_step = 0
+
+        while current_step < n_steps:
+            # Get current history window (last history_size frames)
+            history_input = z_flat[:, -self.history_size:]  # (B*N, history_size, S, D)
+
+            # Predict pred_frames future frames at once
+            pred_embed = self.predict(history_input, use_inference_function=True)  # (B*N, pred_frames, S, D)
+            pred_frames = pred_embed.shape[1]
+
+            # How many steps to use from this prediction
+            steps_this_round = min(pred_frames, n_steps - current_step)
+
+            # === Hungarian reordering to maintain slot consistency ===
+            # Reorder predicted slots to match the last frame of current history
+            if use_hungarian:
+                # Get the last frame of current history as reference (excluding action/proprio)
+                slot_dim = z_flat.shape[-2] - 2 # action, proprio
+                reference = z_flat[:, -1, :slot_dim, :]  # (B*N, S, pixel_dim)
+                
+                # Matching is done on pixels only, but full embedding is reordered
+                pred_embed = reorder_slots_to_match_AP(
+                    pred_embed, 
+                    reference, 
+                    cost_type='mse',
+                    slot_dim=slot_dim,
+                )
+
+            # Inject actions into predicted frames
+            new_action = act_pred_flat[None, :, current_step:current_step + steps_this_round, :]  # (B*N, steps_this_round, action_dim)
+            
+            # Only replace action in the frames we'll actually use
+            pred_to_use = pred_embed[:, :steps_this_round].clone()  # (B*N, steps_this_round, S, D)
+            new_embed = self.replace_action_in_embedding(pred_to_use.unsqueeze(0), new_action)[0]
+
+            # Update z_flat by appending predictions (for next iteration's history)
+            z_flat = torch.cat([z_flat, new_embed], dim=1)
+
+            current_step += steps_this_round
+
+        # Predict one more step without action (final state after all actions)
+        # This matches the original behavior of predicting n+t+1 states for n+t actions
+        final_history = z_flat[:, -self.history_size:]
+        final_pred = self.predict(final_history, use_inference_function=True)[:, :1]  # Just first predicted frame
+        
+        # === Hungarian reordering for final prediction ===
+        # Reorder final_pred to match z_flat's last frame ordering
+        # This maintains consistency with the initial prev_slot ordering
+        if use_hungarian:
+            slot_dim = z_flat.shape[-2] - 2
+            reference = z_flat[:, -1, :slot_dim, :]  # (B*N, S, pixel_dim) - last frame of current z_flat
+            final_pred = reorder_slots_to_match_AP(
+                final_pred, 
+                reference=reference, 
+                cost_type='mse',
+                slot_dim=slot_dim,
+            )
+        
+        z_flat = torch.cat([z_flat, final_pred], dim=1)
+
+        # Reshape back to (B, N, T_total, S, D)
+        z = rearrange(z_flat, "(b n) ... -> b n ...", b=B, n=N)
+
+        # == update info dict with predicted embeddings
+        info["predicted_embedding"] = z
+
+        # Extract embedding components for cost computation
+        extra_dims = []
+        # proprio first
+        if self.proprio_encoder is not None:
+            extra_dims.append(1)
+        if self.action_encoder is not None:
+            extra_dims.append(1)
+
+        splitted_embed = self.split_embedding(z, extra_dims)
+        info.update({f"predicted_{k}": v for k, v in splitted_embed.items()})
+
+        return info
+
+    def criterion(self, info_dict: dict, action_candidates: torch.Tensor):
+        """Compute the cost for planning. Should be overridden for custom costs."""
+        proprio_key = "proprio" if "proprio" in info_dict else None
+        emb_keys = [proprio_key] if proprio_key in info_dict else [] 
+        cost = 0.0
+
+        pixel_preds = info_dict["predicted_pixels_embed"]
+        pixel_goal = info_dict["pixels_goal_embed"]
+        pred_last = pixel_preds[:, :, -1]  # (B, N, S, D)
+        goal_last = pixel_goal[:, :, -1]   # (B, N, S, D)
+        
+        # Hungarian matching for slot-based comparison
+        slot_costs = hungarian_cost(
+            pred_last, 
+            goal_last, 
+            cost_type='mse',
+            pixels_dim=None,  
+        ) 
+        cost = cost + slot_costs
+
+        for key in emb_keys:
+            preds = info_dict[f"predicted_{key}_embed"]
+            goal = info_dict[f"{key}_goal_embed"]
+            cost = cost + F.mse_loss(preds[:, :, -1:], goal, reduction="none").mean(dim=tuple(range(2, preds.ndim)))
+        return cost
+
+    def get_cost(self, info_dict: dict, action_candidates: torch.Tensor):
+        assert "action" in info_dict, "action key must be in info_dict"
+        assert "pixels" in info_dict, "pixels key must be in info_dict"
+
+        # move to device and unsqueeze time
+        for k, v in info_dict.items():
+            if torch.is_tensor(v):
+                info_dict[k] = v.to(next(self.parameters()).device)
+        proprio_key = "proprio" if "proprio" in info_dict else None
+        emb_keys = [proprio_key] if proprio_key in info_dict else []
+        # == run world model
+        info_dict = self.rollout(info_dict, action_candidates)
+        # == get the goal embedding
+
+        # check if we have already computed the goal embedding for this goal
+        if (
+            hasattr(self, "_goal_cached_info")
+            and torch.equal(self._goal_cached_info["id"], info_dict["id"][:, 0])
+            and torch.equal(self._goal_cached_info["step_idx"], info_dict["step_idx"][:, 0])
+        ):
+            goal_info_dict = {k: v.detach() if torch.is_tensor(v) else v for k, v in self._goal_cached_info.items()}
+
+        else:
+            # prepare goal_info_dict
+            goal_info_dict = {}
+            for k, v in info_dict.items():
+                if torch.is_tensor(v):
+                    # goal is the same across samples so we will only embed it once
+                    # prev_slot has shape [B, num_slots, slot_size] without candidate dim
+                    # so we should not index it with [:, 0]
+                    if k == "prev_slot":
+                        goal_info_dict[k] = info_dict[k]  # keep as is: [B, num_slots, slot_size]
+                    else:
+                        goal_info_dict[k] = info_dict[k][:, 0]  # (B, ...)
+            assert "prev_slot" in info_dict, "prev_slot must be in info_dict for goal encoding"
+            goal_info_dict = self.encode(
+                goal_info_dict,
+                target="goal_embed",
+                pixels_key="goal",
+                prefix="goal_",
+                proprio_key=proprio_key,
+                action_key=None,
+            )
+
+            goal_info_dict["goal_embed"] = (
+                goal_info_dict["goal_embed"]
+                .unsqueeze(1)
+                .expand(-1, action_candidates.shape[1], *([-1] * (goal_info_dict["goal_embed"].ndim - 1)))
+            )
+
+            goal_info_dict["pixels_goal_embed"] = (
+                goal_info_dict["pixels_goal_embed"]
+                .unsqueeze(1)
+                .expand(-1, action_candidates.shape[1], *([-1] * (goal_info_dict["pixels_goal_embed"].ndim - 1)))
+            )
+
+            for key in emb_keys:
+                goal_info_dict[f"{key}_goal_embed"] = (
+                    goal_info_dict[f"{key}_goal_embed"]
+                    .unsqueeze(1)
+                    .expand(-1, action_candidates.shape[1], *([-1] * (goal_info_dict[f"{key}_goal_embed"].ndim - 1)))
+                )
+
+            goal_info_dict = {k: v.detach() if torch.is_tensor(v) else v for k, v in goal_info_dict.items()}
+            self._goal_cached_info = goal_info_dict
+
+        info_dict["goal_embed"] = goal_info_dict["goal_embed"]
+        info_dict["pixels_goal_embed"] = goal_info_dict["pixels_goal_embed"]
+
+        for key in emb_keys:
+            info_dict[f"{key}_goal_embed"] = goal_info_dict[f"{key}_goal_embed"]
+
+
+
+        # cost = 0.0
+
+        # for key in emb_keys + ["pixels"]:
+        #     preds = info_dict[f"predicted_{key}_embed"]
+        #     goal = info_dict[f"{key}_goal_embed"]
+        #     cost = cost + F.mse_loss(preds[:, :, -1:], goal, reduction="none").mean(dim=tuple(range(2, preds.ndim)))
+
+        return self.criterion(info_dict, action_candidates)
+
+
+class Embedder(torch.nn.Module):
+    def __init__(
+        self,
+        num_frames=1,
+        tubelet_size=1,
+        in_chans=8,
+        emb_dim=10,
+    ):
+        super().__init__()
+
+        self.num_frames = num_frames
+        self.tubelet_size = tubelet_size
+        self.in_chans = in_chans
+        self.emb_dim = emb_dim
+
+        self.patch_embed = torch.nn.Conv1d(in_chans, emb_dim, kernel_size=tubelet_size, stride=tubelet_size)
+
+    def forward(self, x):
+        with torch.amp.autocast(enabled=False, device_type=x.device.type):
+            x = x.permute(0, 2, 1)  # (B, T, B) -> (B, D, T)
+            x = self.patch_embed(x)
+            x = x.permute(0, 2, 1)  # (B, D, T) -> (B, T, D)
+        return x
+
+
+class CausalPredictor(nn.Module):
+    def __init__(
+        self,
+        *,
+        num_patches,
+        num_frames,
+        dim,
+        depth,
+        heads,
+        mlp_dim,
+        pool="cls",
+        dim_head=64,
+        dropout=0.0,
+        emb_dropout=0.0,
+    ):
+        super().__init__()
+        assert pool in {"cls", "mean"}, "pool type must be either cls (cls token) or mean (mean pooling)"
+
+        self.num_patches = num_patches
+        self.num_frames = num_frames
+
+        self.pos_embedding = nn.Parameter(torch.randn(1, num_frames * (num_patches), dim))  # dim for the pos encodings
+        self.dropout = nn.Dropout(emb_dropout)
+        self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim, dropout, num_patches, num_frames)
+        self.pool = pool
+
+    def forward(self, x):  # x: (b, window_size * H/patch_size * W/patch_size, 384)
+        b, n, _ = x.shape
+        x = x + self.pos_embedding[:, :n]
+        x = self.dropout(x)
+        x = self.transformer(x)
+        return x
+
+
+class FeedForward(nn.Module):
+    def __init__(self, dim, hidden_dim, dropout=0.0):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.LayerNorm(dim),
+            nn.Linear(dim, hidden_dim),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_dim, dim),
+            nn.Dropout(dropout),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class Attention(nn.Module):
+    def __init__(self, dim, heads=8, dim_head=64, dropout=0.0, num_patches=1, num_frames=1):
+        super().__init__()
+        inner_dim = dim_head * heads
+        project_out = not (heads == 1 and dim_head == dim)
+        self.heads = heads
+        self.scale = dim_head**-0.5
+        self.norm = nn.LayerNorm(dim)
+        self.attend = nn.Softmax(dim=-1)
+        self.dropout = nn.Dropout(dropout)
+        self.to_qkv = nn.Linear(dim, inner_dim * 3, bias=False)
+        self.to_out = nn.Sequential(nn.Linear(inner_dim, dim), nn.Dropout(dropout)) if project_out else nn.Identity()
+
+        self.register_buffer("bias", self.generate_mask_matrix(num_patches, num_frames))
+
+    def forward(self, x):
+        B, T, C = x.size()
+        x = self.norm(x)
+
+        # q, k, v: (B, heads, T, dim_head)
+        qkv = self.to_qkv(x).chunk(3, dim=-1)
+        q, k, v = (rearrange(t, "b n (h d) -> b h n d", h=self.heads) for t in qkv)
+
+        attn_mask = self.bias[:, :, :T, :T] == 1  # bool mask
+
+        out = F.scaled_dot_product_attention(
+            q, k, v, attn_mask=attn_mask, dropout_p=self.dropout.p if self.training else 0.0, is_causal=False
+        )
+
+        out = rearrange(out, "b h n d -> b n (h d)")
+
+        return self.to_out(out)
+
+    def generate_mask_matrix(self, npatch, nwindow):
+        zeros = torch.zeros(npatch, npatch)
+        ones = torch.ones(npatch, npatch)
+        rows = []
+        for i in range(nwindow):
+            row = torch.cat([ones] * (i + 1) + [zeros] * (nwindow - i - 1), dim=1)
+            rows.append(row)
+        mask = torch.cat(rows, dim=0).unsqueeze(0).unsqueeze(0)
+        return mask
+
+
+class Transformer(nn.Module):
+    def __init__(
+        self,
+        dim,
+        depth,
+        heads,
+        dim_head,
+        mlp_dim,
+        dropout=0.0,
+        num_patches=1,
+        num_frames=1,
+    ):
+        super().__init__()
+        self.norm = nn.LayerNorm(dim)
+        self.layers = nn.ModuleList([])
+        for _ in range(depth):
+            self.layers.append(
+                nn.ModuleList(
+                    [
+                        Attention(
+                            dim,
+                            heads=heads,
+                            dim_head=dim_head,
+                            dropout=dropout,
+                            num_patches=num_patches,
+                            num_frames=num_frames,
+                        ),
+                        FeedForward(dim, mlp_dim, dropout=dropout),
+                    ]
+                )
+            )
+
+    def forward(self, x):
+        for attn, ff in self.layers:
+            x = attn(x) + x
+            x = ff(x) + x
+
+        return self.norm(x)
+
+```

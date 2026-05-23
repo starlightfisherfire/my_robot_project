@@ -8,7 +8,7 @@ import numpy as np
 
 from src.envs.mujoco_push_env import MujocoPushEnv
 from src.planners.cem_mpc import CEMMPC
-from src.planners.cost_functions import CostWeights, wrap_angle
+from src.planners.cost_functions import CostWeights, collision_cost, wrap_angle
 from src.planners.mujoco_oracle_rollout import (
     mujoco_oracle_rollout_cost,
     rollout_action_sequence_mujoco,
@@ -29,10 +29,80 @@ def make_default_mujoco_cost_weights() -> CostWeights:
         w_no_contact=2.0,
         w_push_alignment=1.0,
         w_collision=20.0,
+        w_collision_step=1.0,
         w_action=0.05,
         w_smooth=0.1,
         w_subgoal=0.0,
     )
+
+
+def compute_pose_success_metrics(
+    final_pos_error: float, final_theta_error_deg: float
+) -> dict[str, bool]:
+    """Compute unified pose-level success metrics for paper reporting.
+
+    All thresholds use <= (inclusive).
+    Primary success = success_pose_1cm_5deg (pos<=1cm AND theta<=5deg).
+    """
+    # Position-only thresholds
+    success_pos_5cm = bool(final_pos_error <= 0.05)
+    success_pos_3cm = bool(final_pos_error <= 0.03)
+    success_pos_2cm = bool(final_pos_error <= 0.02)
+    success_pos_1p5cm = bool(final_pos_error <= 0.015)
+    success_pos_1cm = bool(final_pos_error <= 0.01)
+    success_pos_0p5cm = bool(final_pos_error <= 0.005)
+    success_pos_0p15cm = bool(final_pos_error <= 0.0015)
+
+    # Theta-only thresholds
+    success_theta_15deg = bool(final_theta_error_deg <= 15.0)
+    success_theta_10deg = bool(final_theta_error_deg <= 10.0)
+    success_theta_5deg = bool(final_theta_error_deg <= 5.0)
+    success_theta_3deg = bool(final_theta_error_deg <= 3.0)
+
+    # Combined pose thresholds
+    success_pose_5cm_15deg = bool(success_pos_5cm and success_theta_15deg)
+    success_pose_3cm_15deg = bool(success_pos_3cm and success_theta_15deg)
+    success_pose_2cm_15deg = bool(success_pos_2cm and success_theta_15deg)
+    success_pose_2cm_10deg = bool(success_pos_2cm and success_theta_10deg)
+    success_pose_1cm_15deg = bool(success_pos_1cm and success_theta_15deg)
+    success_pose_1p5cm_10deg = bool(success_pos_1p5cm and success_theta_10deg)
+    success_pose_1cm_10deg = bool(success_pos_1cm and success_theta_10deg)
+    success_pose_1cm_5deg = bool(success_pos_1cm and success_theta_5deg)
+    success_pose_0p5cm_5deg = bool(success_pos_0p5cm and success_theta_5deg)
+    success_pose_0p15cm_3deg = bool(success_pos_0p15cm and success_theta_3deg)
+
+    return {
+        # Position-only
+        "success_pos_5cm": success_pos_5cm,
+        "success_pos_3cm": success_pos_3cm,
+        "success_pos_2cm": success_pos_2cm,
+        "success_pos_1p5cm": success_pos_1p5cm,
+        "success_pos_1cm": success_pos_1cm,
+        "success_pos_0p5cm": success_pos_0p5cm,
+        "success_pos_0p15cm": success_pos_0p15cm,
+        # Theta-only
+        "success_theta_15deg": success_theta_15deg,
+        "success_theta_10deg": success_theta_10deg,
+        "success_theta_5deg": success_theta_5deg,
+        "success_theta_3deg": success_theta_3deg,
+        # Combined pose
+        "success_pose_5cm_15deg": success_pose_5cm_15deg,
+        "success_pose_3cm_15deg": success_pose_3cm_15deg,
+        "success_pose_2cm_15deg": success_pose_2cm_15deg,
+        "success_pose_2cm_10deg": success_pose_2cm_10deg,
+        "success_pose_1cm_15deg": success_pose_1cm_15deg,
+        "success_pose_1p5cm_10deg": success_pose_1p5cm_10deg,
+        "success_pose_1cm_10deg": success_pose_1cm_10deg,
+        "success_pose_1cm_5deg": success_pose_1cm_5deg,
+        "success_pose_0p5cm_5deg": success_pose_0p5cm_5deg,
+        "success_pose_0p15cm_3deg": success_pose_0p15cm_3deg,
+        # Semantic aliases (paper naming)
+        "primary_success": success_pose_1cm_5deg,
+        "coarse_success": success_pose_2cm_15deg,
+        "precision_success": success_pose_0p5cm_5deg,
+        "strict_completion": success_pose_0p15cm_3deg,
+        "legacy_pos_5cm": success_pos_5cm,
+    }
 
 
 def evaluate_one_template_mujoco_oracle_mpc(
@@ -148,6 +218,9 @@ def evaluate_one_template_mujoco_oracle_mpc(
     # Contact and collision
     max_contact = float(np.max(planned_rollout.contact_flags))
     max_collision = float(np.max(planned_rollout.collision_flags))
+    planned_collision_any, planned_collision_count, planned_collision_rate = collision_cost(
+        planned_rollout.collision_flags
+    )
 
     # Object displacement
     planned_object_pose_start = planned_rollout.predicted_object_poses[0].copy()
@@ -211,6 +284,9 @@ def evaluate_one_template_mujoco_oracle_mpc(
         # Contact and collision
         "max_contact": max_contact,
         "max_collision": max_collision,
+        "planned_collision_any": planned_collision_any,
+        "planned_collision_count": planned_collision_count,
+        "planned_collision_rate": planned_collision_rate,
         # Object movement
         "object_displacement": object_displacement,
         "object_moved": object_moved,
@@ -231,7 +307,16 @@ def evaluate_one_template_mujoco_oracle_mpc(
         "improved_dist": improved_dist,
         "restored_ok": restored_ok,
         "success": success,
+        "success_definition": "open_loop_compound_legacy",
     }
+
+    # Add unified pose success metrics
+    pose_metrics = compute_pose_success_metrics(
+        final_pos_error=final_dist,  # open-loop uses final_dist as pos error
+        final_theta_error_deg=0.0,   # open-loop does not track theta separately
+    )
+    result.update(pose_metrics)
+    return result
 
 
 def run_mujoco_oracle_mpc_capacity(
@@ -287,6 +372,12 @@ def run_mujoco_oracle_mpc_capacity(
         "num_templates": num_templates,
         "num_success": num_success,
         "success_rate": float(num_success / num_templates),
+        "success_rate_definition": "open_loop_compound_legacy",
+        "primary_success_rate": float(sum(1 for r in results if r["primary_success"]) / num_templates),
+        "coarse_success_rate": float(sum(1 for r in results if r["coarse_success"]) / num_templates),
+        "precision_success_rate": float(sum(1 for r in results if r["precision_success"]) / num_templates),
+        "strict_completion_rate": float(sum(1 for r in results if r["strict_completion"]) / num_templates),
+        "legacy_pos_5cm_rate": float(sum(1 for r in results if r["legacy_pos_5cm"]) / num_templates),
         "num_improved_cost": num_improved_cost,
         "num_improved_dist": num_improved_dist,
         "num_restored_ok": num_restored_ok,
@@ -329,6 +420,7 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
     disable_early_stop: bool = False,
     success_pos_threshold: float = 0.05,
     success_theta_threshold_deg: float = 180.0,
+    max_speed_mps: float = 0.05,
 ) -> dict[str, Any]:
     """
     Evaluate one reset template with closed-loop MuJoCo Oracle-MPC.
@@ -360,7 +452,7 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
 
     env = MujocoPushEnv(
         control_dt=0.1,
-        max_speed_mps=0.05,
+        max_speed_mps=max_speed_mps,
         pusher_radius=pusher_radius,
         pusher_halfheight=pusher_halfheight,
         pusher_z=pusher_z,
@@ -388,6 +480,7 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
     # Track trajectory
     distances = [initial_dist]
     contact_flags = []
+    collision_flags = []
     num_mpc_steps = 0
     total_executed_steps = 0
     success = False
@@ -534,11 +627,17 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
         # Planned contact steps (first 10)
         planned_contact_steps_list = np.where(contact_mask)[0].tolist()[:10]
 
+        # Planned collision metrics
+        planned_collision_any, planned_collision_count, planned_collision_rate = collision_cost(
+            planned_rollout.collision_flags
+        )
+
         # Print planned trajectory
         print(f"\n  Planned trajectory:")
         print(f"    first_contact_step: {planned_contact_first_step}")
         print(f"    contact_within_execute_steps: {planned_contact_within_execute_steps}")
         print(f"    contact_rate: {planned_contact_rate:.3f}")
+        print(f"    collision_count: {planned_collision_count:.0f}  collision_rate: {planned_collision_rate:.3f}")
         print(f"    planned_dist_after_execute_steps: {planned_dist_after_execute_steps:.4f} m")
         print(f"    planned_object_displacement_after_execute_steps: {planned_object_displacement_after_execute_steps:.4f} m")
         print(f"    planned_contact_steps_first10: {planned_contact_steps_list}")
@@ -554,6 +653,7 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
         # Track execution metrics
         exec_start_pose = env.get_object_pose()
         actual_contact_flags_this_round = []
+        actual_collision_flags_this_round = []
 
         for env_step_in_chunk, action in enumerate(actions_to_execute, start=1):
             env.step(action)
@@ -569,8 +669,11 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
             current_pose_cost = (current_dist / 0.01) ** 2 + (current_theta_error_deg / 5.0) ** 2
             distances.append(current_dist)
             contact_flag = env.get_contact_flag()
+            collision_flag = env.get_collision_flag()
             contact_flags.append(contact_flag)
+            collision_flags.append(collision_flag)
             actual_contact_flags_this_round.append(contact_flag)
+            actual_collision_flags_this_round.append(collision_flag)
 
             # Update best distance
             if current_dist < best_dist:
@@ -642,11 +745,15 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
         )
         actual_contact_any = bool(np.any(np.array(actual_contact_flags_this_round) > 0.5))
         actual_contact_steps = [i for i, c in enumerate(actual_contact_flags_this_round) if c > 0.5][:10]
+        actual_collision_any = bool(np.any(np.array(actual_collision_flags_this_round) > 0.5))
+        actual_collision_count = float(np.sum(np.array(actual_collision_flags_this_round)))
+        actual_collision_rate = float(np.mean(np.array(actual_collision_flags_this_round)))
 
         # Print execution result
         print(f"\n  After execution:")
         print(f"    actual_contact_any: {actual_contact_any}")
         print(f"    actual_contact_steps_first10: {actual_contact_steps}")
+        print(f"    actual_collision_count: {actual_collision_count:.0f}  actual_collision_rate: {actual_collision_rate:.3f}")
         print(f"    current_dist: {current_dist:.4f} m")
         print(f"    object_displacement: {exec_displacement:.4f} m")
 
@@ -660,6 +767,9 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
             "planned_contact_first_step": planned_contact_first_step,
             "planned_contact_rate": planned_contact_rate,
             "planned_contact_within_execute_steps": planned_contact_within_execute_steps,
+            "planned_collision_any": planned_collision_any,
+            "planned_collision_count": planned_collision_count,
+            "planned_collision_rate": planned_collision_rate,
             "planned_min_dist": planned_min_dist,
             "planned_final_dist": planned_final_dist,
             "planned_dist_after_execute_steps": planned_dist_after_execute_steps,
@@ -670,6 +780,9 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
             "planned_contact_steps_list": planned_contact_steps_list,
             "actual_contact_any": actual_contact_any,
             "actual_contact_steps": actual_contact_steps,
+            "actual_collision_any": actual_collision_any,
+            "actual_collision_count": actual_collision_count,
+            "actual_collision_rate": actual_collision_rate,
             "actual_current_dist": current_dist,
             "actual_object_displacement": exec_displacement,
         }
@@ -769,31 +882,12 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
     if disable_early_stop:
         success = bool(final_pos_error < success_dist_threshold)
 
-    # Multi-level position success criteria
-    success_pos_5cm = bool(final_pos_error < 0.05)
-    success_pos_3cm = bool(final_pos_error < 0.03)
-    success_pos_2cm = bool(final_pos_error < 0.02)
-    success_pos_1p5cm = bool(final_pos_error < 0.015)
-    success_pos_1cm = bool(final_pos_error < 0.01)
-    success_pos_0p5cm = bool(final_pos_error < 0.005)
+    # Unified pose success metrics (all thresholds use <=)
+    pose_metrics = compute_pose_success_metrics(final_pos_error, final_theta_error_deg)
 
-    # Multi-level pose success criteria
-    success_theta_15deg = bool(final_theta_error_deg < 15.0)
-    success_theta_10deg = bool(final_theta_error_deg < 10.0)
-    success_theta_5deg = bool(final_theta_error_deg < 5.0)
-    success_theta_3deg = bool(final_theta_error_deg < 3.0)
-    success_pose_5cm_15deg = bool(success_pos_5cm and success_theta_15deg)
-    success_pose_3cm_15deg = bool(success_pos_3cm and success_theta_15deg)
-    success_pose_2cm_15deg = bool(success_pos_2cm and success_theta_15deg)
-    success_pose_2cm_10deg = bool(success_pos_2cm and success_theta_10deg)
-    success_pose_1cm_15deg = bool(success_pos_1cm and success_theta_15deg)
-    success_pose_1p5cm_10deg = bool(success_pos_1p5cm and success_theta_10deg)
-    success_pose_1cm_10deg = bool(success_pos_1cm and success_theta_10deg)
-    success_pose_1cm_5deg = bool(success_pos_1cm and success_theta_5deg)
-    success_pose_0p5cm_5deg = bool(success_pos_0p5cm and success_theta_5deg)
-    # Strict pose: 1.5mm + 3deg
-    success_pos_0p15cm = bool(final_pos_error < 0.0015)
-    success_pose_0p15cm_3deg = bool(success_pos_0p15cm and success_theta_3deg)
+    # Paper primary success = success_pose_1cm_5deg
+    # success is now primary_success for all closed-loop modes
+    success = pose_metrics["primary_success"]
 
     # Calculate metrics
     total_object_displacement = float(
@@ -801,11 +895,14 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
     )
     dist_delta = float(initial_dist - best_dist)
     contact_rate = float(np.mean(contact_flags)) if contact_flags else 0.0
+    collision_rate = float(np.mean(collision_flags)) if collision_flags else 0.0
+    collision_count = float(np.sum(collision_flags)) if collision_flags else 0.0
+    collision_any = bool(collision_count > 0.5)
 
     # Print final summary
     print(f"\n{'='*80}")
     print(f"Template {template['reset_template_id']} completed:")
-    print(f"  Success: {success}  strict_pose_early_stop_triggered: {strict_pose_early_stop_triggered}")
+    print(f"  Success: {success} (primary=success_pose_1cm_5deg)  strict_pose_early_stop_triggered: {strict_pose_early_stop_triggered}")
     print(f"  Initial dist: {initial_dist:.4f} m → Final dist: {final_dist:.4f} m")
     print(f"  Best dist: {best_dist:.4f} m (delta: {dist_delta:.4f} m)")
     print(f"  Final pose errors:")
@@ -824,6 +921,7 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
     print(f"  Total executed steps: {total_executed_steps}")
     print(f"  Object displacement: {total_object_displacement:.4f} m")
     print(f"  Contact rate: {contact_rate:.3f}")
+    print(f"  Collision count: {collision_count:.0f}  Collision rate: {collision_rate:.3f}")
     print(f"{'='*80}\n")
 
     return {
@@ -840,6 +938,9 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
         "num_mpc_steps": num_mpc_steps,
         "total_executed_steps": total_executed_steps,
         "contact_rate": contact_rate,
+        "collision_rate": collision_rate,
+        "collision_count": collision_count,
+        "collision_any": collision_any,
         "success": success,
         "restored_ok": True,  # Not applicable for closed-loop
         "mpc_step_logs": mpc_step_logs,
@@ -849,25 +950,9 @@ def evaluate_one_template_mujoco_oracle_mpc_closed_loop(
         "final_pos_error": final_pos_error,
         "final_theta_error_rad": final_theta_error_rad,
         "final_theta_error_deg": final_theta_error_deg,
-        "success_pos_5cm": success_pos_5cm,
-        "success_pos_3cm": success_pos_3cm,
-        "success_pos_2cm": success_pos_2cm,
-        "success_pos_1p5cm": success_pos_1p5cm,
-        "success_pos_1cm": success_pos_1cm,
-        "success_pos_0p5cm": success_pos_0p5cm,
-        "success_theta_15deg": success_theta_15deg,
-        "success_theta_10deg": success_theta_10deg,
-        "success_pose_5cm_15deg": success_pose_5cm_15deg,
-        "success_pose_3cm_15deg": success_pose_3cm_15deg,
-        "success_pose_2cm_15deg": success_pose_2cm_15deg,
-        "success_pose_2cm_10deg": success_pose_2cm_10deg,
-        "success_pose_1cm_15deg": success_pose_1cm_15deg,
-        "success_pose_1p5cm_10deg": success_pose_1p5cm_10deg,
-        "success_pose_1cm_10deg": success_pose_1cm_10deg,
-        "success_pose_1cm_5deg": success_pose_1cm_5deg,
-        "success_pose_0p5cm_5deg": success_pose_0p5cm_5deg,
-        "success_pos_0p15cm": success_pos_0p15cm,
-        "success_pose_0p15cm_3deg": success_pose_0p15cm_3deg,
+        # Unified pose success metrics (from compute_pose_success_metrics)
+        **pose_metrics,
+        "success_definition": "success_pose_1cm_5deg",
         # Strict pose early stop tracking
         "strict_pose_early_stop_triggered": strict_pose_early_stop_triggered,
         "strict_pose_success": strict_pose_early_stop_triggered,
@@ -980,7 +1065,14 @@ def run_mujoco_oracle_mpc_closed_loop_capacity(
 
     summary = {
         "num_templates": num_templates,
+        # success_rate = primary_success_rate = success_pose_1cm_5deg_rate
         "success_rate": float(num_success / num_templates),
+        "success_rate_definition": "success_pose_1cm_5deg",
+        "primary_success_rate": float(sum(1 for r in results if r["primary_success"]) / num_templates),
+        "coarse_success_rate": float(sum(1 for r in results if r["coarse_success"]) / num_templates),
+        "precision_success_rate": float(sum(1 for r in results if r["precision_success"]) / num_templates),
+        "strict_completion_rate": float(sum(1 for r in results if r["strict_completion"]) / num_templates),
+        "legacy_pos_5cm_rate": float(sum(1 for r in results if r["legacy_pos_5cm"]) / num_templates),
         "mean_initial_dist": float(np.mean([r["initial_dist"] for r in results])),
         "mean_best_dist": float(np.mean([r["best_dist"] for r in results])),
         "mean_final_dist": float(np.mean([r["final_dist"] for r in results])),
@@ -989,6 +1081,8 @@ def run_mujoco_oracle_mpc_closed_loop_capacity(
             np.mean([r["total_object_displacement"] for r in results])
         ),
         "mean_contact_rate": float(np.mean([r["contact_rate"] for r in results])),
+        "mean_collision_rate": float(np.mean([r["collision_rate"] for r in results])),
+        "mean_collision_count": float(np.mean([r["collision_count"] for r in results])),
         # Pose-level summary metrics
         "mean_final_pos_error": float(np.mean([r["final_pos_error"] for r in results])),
         "median_final_pos_error": float(np.median([r["final_pos_error"] for r in results])),

@@ -1,0 +1,5 @@
+flowchart TB
+    OBS["z_obs_t + act_{t-1}"] --> UPDATE["Causal Transformer Update<br/>Query: State_{t-1}, KV: [z_obs_t, act_{t-1}]"]
+    S_PREV["State_{t-1}"] --> UPDATE
+    UPDATE --> S_NEW["State_t (single global vector)"]
+    S_NEW --> HEADS["Next-Latent | Dynamics | Subgoal"]

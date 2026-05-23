@@ -1,0 +1,50 @@
+flowchart TB
+    subgraph INPUT["Input: Raw Frames"]
+        F0["Frame_0"]
+        F1["Frame_1"]
+        F2["Frame_2"]
+        FT["Frame_t"]
+    end
+
+    subgraph ENCODE["1. Frame Encoding (像 word embedding)"]
+        ENC0["Encoder"] --> V0["v_0"]
+        ENC1["Encoder"] --> V1["v_1"]
+        ENC2["Encoder"] --> V2["v_2"]
+        ENCT["Encoder"] --> VT["v_t"]
+        NOTE1["每一帧 → 一个向量<br/>代表"这一帧是什么""]
+    end
+
+    subgraph SEQ["2. Sequence Processing (像 LLM)"]
+        POS["+ Position Encoding<br/>(时间步编码)"]
+        TRANS["Causal Transformer<br/>━━━━━━━━━━<br/>帧与帧交互<br/>v_0 attends to nothing<br/>v_1 attends to v_0<br/>v_t attends to all past<br/>━━━━━━━━━━<br/>输出: h_t"]
+    end
+
+    subgraph STATE["3. Global State (像 LLM hidden state)"]
+        S_t["State_t = h_t<br/>━━ 一个全局向量<br/>自包含 · 持久 · 可累积<br/>编码了 0:t 的全部世界信息"]
+    end
+
+    subgraph DOWNSTREAM["4. Downstream (可选解码)"]
+        PRED["Next-Frame Prediction<br/>State_t → v_{t+1}<br/>(训练主目标)"]
+        SLOTS["Slot Decoding (可选)<br/>State_t → [s_0, s_1, ..., s_K]<br/>(仅用于诊断/分析)"]
+        TASK["Task Heads (可选)<br/>State_t → dynamics/subgoal<br/>(对接 Planner)"]
+    end
+
+    F0 --> ENC0
+    F1 --> ENC1
+    F2 --> ENC2
+    FT --> ENCT
+    V0 --> POS
+    V1 --> POS
+    V2 --> POS
+    VT --> POS
+    POS --> TRANS
+    TRANS --> S_t
+    S_t --> PRED
+    S_t -.-> SLOTS
+    S_t -.-> TASK
+
+    style S_t fill:#ffe0b2,stroke:#ff9800,stroke-width:3px
+    style TRANS fill:#fff3e0
+    style PRED fill:#c8e6c9
+    style SLOTS fill:#e3f2fd,stroke-dasharray: 5 5
+    style TASK fill:#e3f2fd,stroke-dasharray: 5 5

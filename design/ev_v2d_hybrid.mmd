@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph INPUT["Raw Frames"]
+        F["Frame_0, Frame_1, ..., Frame_t"]
+    end
+
+    subgraph ENCODE["1. Frame Encoding (like word embedding)"]
+        V["Encoder → v_0, v_1, ..., v_t<br/>one vector per frame = frame essence"]
+    end
+
+    subgraph SEQ["2. Sequence Processing (like LLM)"]
+        POS["+ Position Encoding"]
+        TRANS["Causal Transformer<br/>frames interact across time"]
+        H["h_t"]
+    end
+
+    subgraph STATE["3. Global State"]
+        S["State_t = h_t<br/>ONE global vector<br/>self-contained · persistent"]
+    end
+
+    subgraph DOWN["4. Downstream"]
+        PRED["Next-Frame Prediction<br/>State_t → v_{t+1}"]
+        SLOTS["Slot Decoding (optional)<br/>State_t → [s_0, ..., s_K]<br/>(diagnostics only)"]
+    end
+
+    F --> V --> POS --> TRANS --> H --> S
+    S --> PRED
+    S -.-> SLOTS

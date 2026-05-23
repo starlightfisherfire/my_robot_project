@@ -1,0 +1,5 @@
+flowchart LR
+    ENC["Encoder → z_obs_t"] --> UPDATE["State Update"]
+    S_PREV["State_{t-1}"] --> UPDATE
+    UPDATE --> S_NEW["State_t"]
+    S_NEW --> PRED["Next-Latent Prediction<br/>State_t → z_obs_{t+1}"]

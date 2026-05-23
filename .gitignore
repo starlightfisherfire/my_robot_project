@@ -3,8 +3,15 @@ __pycache__/
 *.pyc
 .venv/
 .env
+node_modules/
 
-# Data
+# Data — raw episodes, sweeps, large datasets (manifest only in repo)
+data/sim/mppi_*/
+data/sim/layout_*/
+data/sim/_index/
+data/sim/episodes/
+data/sim/videos/
+data/sim/qc/
 data/**/*.npz
 data/**/*.mp4
 data/**/*.avi
@@ -23,6 +30,7 @@ runs/*
 # Logs
 *.log
 stdout.log
+MUJOCO_LOG.TXT
 
 # OS / editor
 .DS_Store
@@ -39,8 +47,27 @@ papers/**/*.blg
 papers/**/*.fls
 papers/**/*.fdb_latexmk
 papers/**/*.synctex.gz
+
+# Archives and misc
 artifacts/
 .aider*
 *.tar.gz
+*.zip
 test_*.py
 on
+setup_qr.png
+
+# OpenClaw workspace files (local only)
+.openclaw/
+AGENTS.md
+HEARTBEAT.md
+IDENTITY.md
+MEMORY.md
+SOUL.md
+TOOLS.md
+USER.md
+memory/
+
+# Temp / generated
+STAGE2B_PROMPT.txt
+小龙启动命令.txt

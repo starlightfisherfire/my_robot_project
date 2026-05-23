@@ -1,0 +1,88 @@
+# configs/train/rig_world_shared.yaml
+# Shared config for Paper 1 high-level representation training.
+# All three encoder variants (flat, object_centric, causality_aware)
+# must conform to these shared dimensions and interface contracts.
+
+version: "0.1"
+
+experiment:
+  seed: 42
+  purpose: "Paper 1 main training config"
+
+# === State Schema ===
+state:
+  shape: [6, 6, 16]           # [H, N, D] = [history_len, num_tokens, raw_token_dim]
+  history_len: 6
+  num_tokens: 6
+  raw_token_dim: 16
+  token_order:
+    0: end_effector
+    1: manipulated_object
+    2: goal
+    3: obstacle_1
+    4: obstacle_2
+    5: obstacle_3
+  # Token feature schema (D=16):
+  #   0  x
+  #   1  y
+  #   2  sin(theta)
+  #   3  cos(theta)
+  #   4  vx
+  #   5  vy
+  #   6  omega
+  #   7  size_x
+  #   8  size_y
+  #   9  shape_T
+  #  10  shape_L
+  #  11  shape_other
+  #  12  mass_norm
+  #  13  friction_norm
+  #  14  contact_flag
+  #  15  valid_flag
+  valid_flag_index: 15
+
+# === Action Schema ===
+action:
+  dim: 2
+  type: "planar_push_delta"
+  description: "[dx_ee, dy_ee] planar end-effector displacement"
+
+# === Model Interface Contract ===
+model:
+  z_dim: 256                  # encoder output dim, shared by all variants
+  gru_hidden: 256             # GRU hidden size
+  head_hidden_dim: 256        # dynamics/subgoal head hidden dim
+  action_emb_dim: 64          # not used in v0.1 (action concat directly)
+  dynamics_output_dim: 3      # [dx_obj, dy_obj, dtheta_obj]
+  subgoal_output_dim: 3       # [dx_goal, dy_goal, dtheta_goal]
+  frame_embed_dim: 128        # per-frame MLP embedding dim
+
+# === Normalizer ===
+normalizer:
+  enabled: true
+  fit_on: train_only
+  continuous_indices: [0, 1, 4, 5, 6, 7, 8, 12, 13]
+  valid_flag_index: 15
+
+# === Training ===
+train:
+  batch_size: 128
+  lr: 0.0003
+  weight_decay: 0.000001
+  grad_clip_norm: 1.0
+  device: cuda
+  num_workers: 0
+  epochs_smoke: 2
+  epochs_poc: 5
+  epochs_full: 50
+  w_dynamics: 1.0
+  w_subgoal: 0.2
+
+# === Eval ===
+eval:
+  metrics:
+    - dynamics_mse
+    - dynamics_rmse
+    - subgoal_mse
+    - subgoal_rmse
+  rollout_horizons: [1, 5, 10]

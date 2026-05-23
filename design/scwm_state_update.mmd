@@ -1,0 +1,33 @@
+flowchart LR
+    subgraph INPUT["Input at timestep t"]
+        OBS_t["z_obs_t<br/>current obs latent<br/>128 dim"]
+        ACT_t1["act_{t-1}<br/>previous action"]
+        S_t1["State_{t-1}<br/>prev world state<br/>256 dim"]
+    end
+
+    subgraph FUSE["Information Fusion"]
+        SEQ["Construct input sequence:<br/>[State_{t-1}, z_obs_t, act_{t-1}]<br/>3 tokens"]
+    end
+
+    subgraph TRANSFORMER["Causal Transformer (L layers)"]
+        SA1["Self-Attention Layer 1<br/>State_{t-1} attends to z_obs_t<br/>(What does new obs tell me?)"]
+        FFN1["FFN"]
+        SA2["Self-Attention Layer 2<br/>Fuse information<br/>(Abstract physical rules)"]
+        FFN2["FFN"]
+    end
+
+    subgraph OUTPUT["Output"]
+        S_t["State_t<br/>Extract output at State_{t-1} position<br/>256 dim<br/>Self-contained compressed<br/>world representation"]
+    end
+
+    OBS_t --> SEQ
+    ACT_t1 --> SEQ
+    S_t1 --> SEQ
+    SEQ --> SA1
+    SA1 --> FFN1
+    FFN1 --> SA2
+    SA2 --> FFN2
+    FFN2 --> S_t
+
+    style TRANSFORMER fill:#e3f2fd
+    style S_t fill:#ffe0b2,stroke:#ff9800,stroke-width:3px

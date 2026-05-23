@@ -1,0 +1,46 @@
+flowchart TB
+    subgraph WORLD["Real World"]
+        ENV["Physical Environment"]
+    end
+
+    subgraph BASE["Video Base Model: Understand the World"]
+        direction TB
+        
+        subgraph ENC["1. Frame Encoding"]
+            F["Frame_t → Encoder → v_t<br/>one vector = frame essence"]
+        end
+        
+        subgraph SEQ["2. Sequence Processing"]
+            S_IN["[v_0, v_1, ..., v_t] + PosEnc"]
+            TRANS["Causal Transformer"]
+            S_OUT["State_t = h_t<br/>ONE global vector<br/>self-contained · persistent"]
+        end
+        
+        subgraph PRED_BASE["3. Base Prediction (no action)"]
+            B_PRED["State_t → pred_v_{t+1}<br/>natural evolution of world"]
+            B_LOSS["L_base = MSE(pred_v_{t+1}, actual_v_{t+1})"]
+        end
+    end
+
+    subgraph ACTION["Action Head: Understand Own Actions"]
+        direction TB
+        
+        A_POLICY["State_t → a_t<br/>policy: what should I do?"]
+        A_PRED["(State_t, a_t) → pred_State_{t+1}<br/>action-conditioned prediction"]
+        A_LOSS["L_action = MSE(pred_State_{t+1}, State_{t+1})<br/>learn consequences of own actions"]
+    end
+
+    ENV --> F
+    F --> S_IN
+    S_IN --> TRANS
+    TRANS --> S_OUT
+    S_OUT --> B_PRED
+    S_OUT --> A_POLICY
+    A_POLICY --> A_PRED
+    B_PRED --> B_LOSS
+    A_PRED --> A_LOSS
+    A_POLICY --> ENV
+
+    style S_OUT fill:#ffe0b2,stroke:#ff9800,stroke-width:3px
+    style BASE fill:#e8f5e9
+    style ACTION fill:#e3f2fd

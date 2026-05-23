@@ -30,6 +30,12 @@ SPLIT_SPECS = [
         "shape_families": ["T_shape"],
     },
     {
+        "split": "test_sim_layout_ood_non_blocking",
+        "domain": "sim",
+        "layout_families": ["non_blocking"],
+        "shape_families": ["T_shape"],
+    },
+    {
         "split": "test_sim_layout_ood_blocking",
         "domain": "sim",
         "layout_families": ["blocking"],

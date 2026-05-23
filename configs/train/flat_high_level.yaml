@@ -1,0 +1,21 @@
+# configs/train/flat_high_level.yaml
+# Flat (non-causal) high-level encoder config.
+# Inherits shared dimensions from rig_world_shared.yaml.
+
+inherits: configs/train/rig_world_shared.yaml
+
+encoder:
+  type: flat
+  description: >
+    FlatEncoder: flatten all tokens per frame → MLP → GRU over history.
+    No object-centric structure, no causal decomposition.
+    Serves as lower-bound baseline.
+
+  # FlatEncoder-specific params
+  frame_embed_dim: 128
+  gru_hidden: 256
+
+# Output interface must match shared contract:
+#   z: [B, 256]
+#   pred_delta: [B, 3]
+#   pred_subgoal: [B, 3]

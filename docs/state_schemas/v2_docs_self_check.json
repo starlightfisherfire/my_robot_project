@@ -1,0 +1,47 @@
+{
+  "overall_status": "PASS",
+  "checks": {
+    "visual_structured_state_v2_design.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    },
+    "state_profile_ablation_plan.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    },
+    "visual_nuisance_protocol.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    },
+    "privileged_physics_policy.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    },
+    "v2_dataset_card.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    },
+    "v2_experiment_gates.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    },
+    "v2_transition_from_state16.md": {
+      "exists": true,
+      "has_content": true,
+      "missing_sections": [],
+      "status": "PASS"
+    }
+  }
+}

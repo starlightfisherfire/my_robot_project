@@ -1,0 +1,30 @@
+flowchart TB
+    subgraph INPUT["Input at timestep t"]
+        OBS["z_obs_t<br/>(object tokens from encoder)<br/>[z_robot, z_objA, z_objB, ...]"]
+        ACT["act_{t-1}"]
+    end
+
+    subgraph CORE["SCWM Core"]
+        S_PREV["State_{t-1} ∈ ℝ^256<br/>(single global vector)"]
+        
+        UPDATE["Causal Transformer Update<br/>━━━━━━━━━━<br/>Query: State_{t-1}<br/>KV: [z_obs_t, act_{t-1}]<br/>━━━━━━━━━━<br/>State_{t-1} asks: what changed?<br/>→ State_t"]
+        
+        S_NEW["State_t ∈ ℝ^256<br/>Self-contained world state<br/>Fuses: objects + relations<br/>+ physics + goal + uncertainty"]
+    end
+
+    subgraph HEADS["Training & Inference"]
+        L_PRED["L_pred: Next-Latent Prediction<br/>State_t → ẑ_obs_{t+1}<br/>(自监督主目标)"]
+        L_DYN["L_dyn: Dynamics Prediction<br/>(State_t, act) → Δpose<br/>(对接 Planner)"]
+        L_SUBG["L_subgoal: Subgoal Prediction<br/>State_t → subgoal_delta"]
+    end
+
+    OBS --> UPDATE
+    ACT --> UPDATE
+    S_PREV --> UPDATE
+    UPDATE --> S_NEW
+    S_NEW --> L_PRED
+    S_NEW --> L_DYN
+    S_NEW --> L_SUBG
+
+    style S_NEW fill:#ffe0b2,stroke:#ff9800,stroke-width:3px
+    style UPDATE fill:#fff3e0

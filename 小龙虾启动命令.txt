@@ -1,0 +1,27 @@
+========== OpenClaw 启动命令 ==========
+
+--- Gateway 服务管理 ---
+openclaw gateway start            # 启动（后台服务，开机自启）
+openclaw gateway stop             # 停止
+openclaw gateway restart          # 重启
+openclaw gateway status           # 查看状态，确认 enabled + running
+
+--- 打开聊天界面 ---
+openclaw tui                      # 终端聊天（SSH 进主机后直接用）
+
+# WebChat 网页聊天（笔记本执行以下两步）：
+ssh -N -L 18790:127.0.0.1:18789 brucewu@192.168.10.9
+# 第2步：浏览器打开 
+http://localhost:18790/
+Dashboard用这个
+http://localhost:18790/#token=378df10a5f8e7d8a7c57905600494346036bfb737ae15f8f
+
+--- 微信通道 ---
+openclaw channels status --probe  # 查看微信是否连接正常
+openclaw channels login --channel openclaw-weixin  # 重新扫码登录微信
+openclaw pairing list openclaw-weixin               # 查看待批准的微信请求
+openclaw pairing approve openclaw-weixin <CODE>     # 批准微信配对
+
+--- 查看日志 ---
+openclaw status                   # 总览状态
+cat /tmp/openclaw/openclaw-$(date +%F).log | tail -50  # 查看今天日志

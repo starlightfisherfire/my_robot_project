@@ -1,0 +1,113 @@
+# Experiment: layout_ood_state16_v0
+# Paper 1 — Layout OOD learned dynamics with 16-dim structured state
+#
+# Data collection: random templates + MPPI + action noise
+# Training: flat baseline, then object-centric
+# Evaluation: fixed templates from obstacle_10family for reproducible OOD gap
+
+experiment:
+  name: layout_ood_state16_v0
+  state_schema: state16_original
+  seed: 0
+  created: "2026-05-17"
+
+# --- Data collection ----------------------------------------------------------
+
+collect:
+  output_dir: data/sim/layout_ood_state16_v0
+  python: ~/miniconda3/envs/lerobot/bin/python
+
+  # Episodes to collect
+  train_episodes: 2000       # training: random blocking + passage + open
+  smoke_episodes: 10         # --smoke mode
+
+  # Family weights for random sampling
+  family_weights:
+    open: 0.15
+    blocking: 0.55
+    passage: 0.30
+
+  # Episode parameters
+  max_steps_per_episode: 250
+  control_dt: 0.1            # 10 Hz control
+
+  # MPPI planner parameters
+  mppi:
+    horizon: 15
+    num_samples: 512
+    num_iterations: 3
+    init_std: 0.5
+    temperature: 0.1
+    smoothing: 0.2
+
+  # Action noise for data diversity
+  noise:
+    zero_noise_prob: 0.5     # 50% episodes: pure MPPI
+    low_noise_prob: 0.3      # 30% episodes: MPPI + low noise (std=0.05)
+    high_noise_prob: 0.2     # 20% episodes: MPPI + high noise (std=0.15)
+
+  # Cost weights for MPPI
+  cost_weights:
+    w_pos: 10.0
+    w_theta: 2.0
+    w_reach: 5.0
+    w_no_contact: 2.0
+    w_push_alignment: 1.0
+    w_collision: 20.0
+    w_collision_step: 1.0
+    w_proximity: 5.0
+    w_action: 0.05
+    w_smooth: 0.1
+    w_subgoal: 0.0
+
+  # Save all episodes (success + failure)
+  save_failed_episodes: true
+
+# --- State normalization ------------------------------------------------------
+
+normalizer:
+  fit_on: train_only
+  output_path: data/sim/layout_ood_state16_v0/normalizer.json
+
+# --- Model training (next step) -----------------------------------------------
+
+train:
+  batch_size: 1024
+  epochs_smoke: 2
+  epochs_main: 30
+  lr: 0.0003
+  weight_decay: 0.000001
+  device: cuda
+
+  run_today:
+    - flat
+  optional_later:
+    - object_centric
+    - causality_aware
+
+# --- Evaluation (fixed templates) ---------------------------------------------
+
+eval:
+  template_file: data/sim/metadata/reset_templates_obstacle_10family_v0.json
+
+  eval_splits:
+    # Single-obstacle heldout (train on blocking random, test on fixed templates)
+    test_single_heldout:
+      blocking_easy: [7, 8, 9]
+      blocking_medium: [7, 8, 9]
+      blocking_hard: [7, 8, 9]
+
+    # Dual-obstacle OOD (compositional generalization)
+    test_dual_layout_ood:
+      passage_direct_wide: [0, 4, 8]
+      passage_direct_medium: [0, 4, 8]
+      passage_direct_narrow: [0, 4, 8]
+
+  rollout_horizons: [1, 5, 10]
+  metrics:
+    - object_pos_rmse
+    - object_theta_rmse
+    - contact_f1
+    - collision_f1
+    - multi_step_rollout_error
+    - ood_gap

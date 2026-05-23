@@ -100,6 +100,8 @@ def mujoco_oracle_rollout_cost(
     goal_pose: np.ndarray | None = None,
     weights: CostWeights | None = None,
     restore_state: bool = True,
+    obstacle_positions: np.ndarray | None = None,
+    obstacle_radii: np.ndarray | None = None,
 ) -> float:
     """
     Compute rollout cost using MuJoCo true dynamics.
@@ -128,4 +130,6 @@ def mujoco_oracle_rollout_cost(
         weights=weights,
         contact_flags=result.contact_flags,
         collision_flags=result.collision_flags,
+        obstacle_positions=obstacle_positions,
+        obstacle_radii=obstacle_radii,
     )

@@ -15,6 +15,11 @@ class CostWeights:
         reach / no_contact / push_alignment are shaping terms for sparse-contact pushing.
         subgoal cost is included but should remain disabled until the learned rollout path is stable.
 
+    Collision cost (v0.2):
+        collision_cost = w_collision * max(collision_flags) + w_collision_step * sum(collision_flags)
+        w_collision:    one-time penalty if ANY collision occurs (existence signal)
+        w_collision_step: per-timestep penalty for each collision step (severity signal)
+
     Later:
         Compare w_subgoal = 0.0 vs w_subgoal > 0.0 as a small ablation.
     """
@@ -25,6 +30,8 @@ class CostWeights:
     w_no_contact: float = 2.0
     w_push_alignment: float = 1.0
     w_collision: float = 20.0
+    w_collision_step: float = 1.0
+    w_proximity: float = 5.0
     w_action: float = 0.05
     w_smooth: float = 0.1
     w_subgoal: float = 0.0
@@ -249,6 +256,87 @@ def push_alignment_cost(
     return 1.0 - cos_sim
 
 
+def collision_cost(
+    collision_flags: np.ndarray | None,
+) -> tuple[float, float, float]:
+    """
+    Compute collision summary from per-timestep collision flags.
+
+    Args:
+        collision_flags:
+            Optional [T], 0/1 flags per timestep. 1 = collision.
+
+    Returns:
+        collision_any: 1.0 if any timestep has collision, else 0.0
+        collision_count: number of timesteps with collision
+        collision_rate: fraction of timesteps with collision
+    """
+    if collision_flags is None:
+        return 0.0, 0.0, 0.0
+
+    collision_flags = np.asarray(collision_flags, dtype=np.float64)
+
+    if not np.isfinite(collision_flags).all():
+        raise ValueError("collision_cost received non-finite collision_flags.")
+
+    t = len(collision_flags)
+    if t == 0:
+        return 0.0, 0.0, 0.0
+
+    collision_any = float(np.max(collision_flags))
+    collision_count = float(np.sum(collision_flags))
+    collision_rate = float(np.mean(collision_flags))
+
+    return collision_any, collision_count, collision_rate
+
+
+def obstacle_proximity_cost(
+    ee_positions: np.ndarray,
+    obstacle_positions: np.ndarray,
+    obstacle_radii: np.ndarray,
+    margin: float = 0.03,
+) -> float:
+    """
+    Smooth repulsive field around obstacles. Gives directional gradient signal
+    even when no collision occurs — guides CEM/MPPI samples away from obstacles.
+
+    Args:
+        ee_positions: [T, 2] end-effector trajectory.
+        obstacle_positions: [N, 2] obstacle centers.
+        obstacle_radii: [N] obstacle radii.
+        margin: extra clearance beyond obstacle radius.
+
+    Returns:
+        Sum of squared penetrations into the margin zone.
+    """
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    obstacle_positions = np.asarray(obstacle_positions, dtype=np.float64)
+    obstacle_radii = np.asarray(obstacle_radii, dtype=np.float64)
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected ee_positions [T,2], got {ee_positions.shape}")
+
+    if obstacle_positions.ndim != 2 or obstacle_positions.shape[-1] != 2:
+        raise ValueError(
+            f"Expected obstacle_positions [N,2], got {obstacle_positions.shape}"
+        )
+
+    n_obs = len(obstacle_positions)
+    if obstacle_radii.shape != (n_obs,):
+        raise ValueError(
+            f"Expected obstacle_radii [{n_obs}], got {obstacle_radii.shape}"
+        )
+
+    total = 0.0
+    for i in range(n_obs):
+        diff = ee_positions - obstacle_positions[i]
+        dist = np.linalg.norm(diff, axis=-1)
+        penetration = (obstacle_radii[i] + margin) - dist
+        total += float(np.sum(np.maximum(penetration, 0.0) ** 2))
+
+    return total
+
+
 def rollout_cost(
     predicted_object_poses: np.ndarray,
     ee_positions: np.ndarray,
@@ -259,6 +347,9 @@ def rollout_cost(
     collision_flags: np.ndarray | None = None,
     subgoal_pose: np.ndarray | None = None,
     subgoal_index: int | None = None,
+    obstacle_positions: np.ndarray | None = None,
+    obstacle_radii: np.ndarray | None = None,
+    proximity_margin: float = 0.03,
 ) -> float:
     """
     Compute planner cost for one rollout.
@@ -348,12 +439,17 @@ def rollout_cost(
     total += weights.w_smooth * action_smoothness_cost(action_sequence)
 
     if collision_flags is not None:
-        collision_flags = np.asarray(collision_flags, dtype=np.float64)
+        collision_any, collision_count, _ = collision_cost(collision_flags)
+        total += weights.w_collision * collision_any
+        total += weights.w_collision_step * collision_count
 
-        if not np.isfinite(collision_flags).all():
-            raise ValueError("collision_flags contains non-finite values.")
-
-        total += weights.w_collision * float(np.max(collision_flags))
+    if obstacle_positions is not None and obstacle_radii is not None and weights.w_proximity > 0.0:
+        total += weights.w_proximity * obstacle_proximity_cost(
+            ee_positions=ee_positions,
+            obstacle_positions=obstacle_positions,
+            obstacle_radii=obstacle_radii,
+            margin=proximity_margin,
+        )
 
     if subgoal_pose is not None and weights.w_subgoal > 0.0:
         subgoal_pose = np.asarray(subgoal_pose, dtype=np.float64)
