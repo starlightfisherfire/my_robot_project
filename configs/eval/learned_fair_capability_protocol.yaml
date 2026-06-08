@@ -1,0 +1,58 @@
+# learned_fair_capability_protocol.yaml — Fair A/B evaluation protocol for learned closed-loop runner.
+version: "1.0"
+purpose: "Fair A/B capability verification for learned world model closed-loop planning"
+
+cem_fair:
+  horizon: 100
+  num_samples: 512
+  num_elites: 64
+  num_iterations: 5
+  init_std: 0.3
+  execute_steps: 10
+  max_mpc_steps: 100
+  total_budget: 1000
+  early_stop: true
+  stop_pos_threshold: 0.002
+  stop_theta_threshold_deg: 10
+  max_speed_mps: 0.75
+  cost_mode: full_terminal
+  backend: CEM_BATCHED_LEARNED_ROLLOUT
+
+mppi_fair:
+  horizon: 100
+  num_samples: 1024
+  num_iterations: 5
+  temperature: 0.1
+  init_std: 0.5
+  execute_steps: 10
+  max_mpc_steps: 100
+  total_budget: 1000
+  early_stop: true
+  stop_pos_threshold: 0.002
+  stop_theta_threshold_deg: 10
+  max_speed_mps: 0.3
+  cost_mode: full_terminal
+  backend: MPPI_BATCHED_LEARNED_ROLLOUT
+
+forbidden:
+  - horizon < 80
+  - total_budget < 800
+  - early_stop: false
+  - cost_mode: simplified
+  - mppi_backend: oracle
+  - mppi_backend: CEM fallback
+
+topology_geometry:
+  mode: auxiliary
+  blocks_main_run: false
+  modifies_templates: false
+  used_as_model_input: false
+  template_source: data/sim/metadata/reset_templates_obstacle_10family_v0.json
+
+smoke:
+  model: flat
+  checkpoint_type: new_50epoch_nomass
+  planners: [CEM_FAIR, MPPI_FAIR]
+  families: [open]
+  max_per_family: 2
+  max_trials: 4

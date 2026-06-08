@@ -173,7 +173,10 @@ class CEMMPC:
 
             samples = np.clip(samples, low, high)
 
-            costs = np.asarray([cost_fn(seq) for seq in samples], dtype=np.float64)
+            if hasattr(cost_fn, 'evaluate_batch'):
+                costs = cost_fn.evaluate_batch(samples)
+            else:
+                costs = np.asarray([cost_fn(seq) for seq in samples], dtype=np.float64)
 
             if not np.isfinite(costs).all():
                 raise ValueError("CEM received non-finite costs.")

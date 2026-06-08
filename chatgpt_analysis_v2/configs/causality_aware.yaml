@@ -1,0 +1,33 @@
+# configs/train/causality_aware.yaml
+# Causality-aware object-level high-level encoder config.
+# Inherits shared dimensions from rig_world_shared.yaml.
+
+inherits: configs/train/rig_world_shared.yaml
+
+encoder:
+  type: causality_aware
+  description: >
+    CausalityAwareEncoder: per-token MLP + token-type embedding +
+    Transformer with causal slot decomposition: z_stable, z_dynamics,
+    z_affordance, z_nuisance. Slots are concatenated to form z.
+    The causal decomposition is the key research hypothesis of Paper 1.
+
+  d_model: 128
+  transformer_layers: 2
+  nhead: 4
+  ffn_dim: 256
+  gru_hidden: 256
+  slot_dim: 32
+  valid_flag_index: 15
+  dropout: 0.1
+
+# Output interface must match shared contract:
+#   z: [B, 256]  (concat of 4 slots × 64 or gru_hidden)
+#   pred_delta: [B, 3]
+#   pred_subgoal: [B, 3]
+#
+# Diagnostic outputs (when return_slots=True):
+#   z_stable:     [B, 32]
+#   z_dynamics:   [B, 32]
+#   z_affordance: [B, 32]
+#   z_nuisance:   [B, 32]

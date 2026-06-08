@@ -10,7 +10,7 @@ from src.models.encoders import (
     ObjectCentricEncoder,
     CausalityAwareEncoder,
 )
-from src.models.heads import DynamicsHead, SubgoalHead
+from src.models.heads import DynamicsHead, AdaLNDynamicsHead, SubgoalHead
 
 
 ModelType = Literal["flat", "object_centric", "causality_aware"]
@@ -68,6 +68,8 @@ class RIGWorldModel(nn.Module):
         slot_dim: int = 32,
         valid_flag_index: int = 15,
         dropout: float = 0.1,
+        use_action_embed: bool = True,
+        dynamics_head_type: str = "concat",  # "concat" or "adaln"
     ):
         super().__init__()
 
@@ -123,11 +125,22 @@ class RIGWorldModel(nn.Module):
                 "Expected one of: flat, object_centric, causality_aware."
             )
 
-        self.dynamics_head = DynamicsHead(
-            z_dim=gru_hidden,
-            action_dim=action_dim,
-            hidden_dim=head_hidden_dim,
-        )
+        self.dynamics_head_type = dynamics_head_type
+
+        if dynamics_head_type == "adaln":
+            self.dynamics_head = AdaLNDynamicsHead(
+                z_dim=gru_hidden,
+                action_dim=action_dim,
+                hidden_dim=head_hidden_dim,
+                use_action_embed=use_action_embed,
+            )
+        else:
+            self.dynamics_head = DynamicsHead(
+                z_dim=gru_hidden,
+                action_dim=action_dim,
+                hidden_dim=head_hidden_dim,
+                use_action_embed=use_action_embed,
+            )
 
         self.subgoal_head = SubgoalHead(
             z_dim=gru_hidden,

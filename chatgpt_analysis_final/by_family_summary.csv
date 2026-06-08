@@ -1,0 +1,7 @@
+family,count,mean_object_goal_distance,mean_goal_edge_distance,mean_blocking_score,mean_passage_width,mean_edge_goal_score,mean_approach_feasibility,mean_difficulty,invalid_count
+blocking,20,0.3234,0.1938,0.0000,inf,0.2249,0.8889,0.2613,0
+edge_goal,20,0.3653,0.1186,0.0000,inf,0.5255,0.8889,0.3465,0
+mild_offset,40,0.2543,0.1771,0.0000,inf,0.2917,0.8867,0.2336,0
+narrow_passage,20,0.3173,0.1866,0.0000,inf,0.2536,0.8889,0.2633,0
+non_blocking,20,0.2673,0.2133,0.0000,inf,0.1467,0.8889,0.2119,0
+open_space,40,0.2723,0.2156,0.0000,inf,0.1374,0.8889,0.2131,0

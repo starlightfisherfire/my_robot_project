@@ -1,0 +1,164 @@
+# configs/eval/learned_fair_capability_sweep.yaml
+# Fair capability sweep for learned models - matches Oracle/MPPI Stage2C best configs
+
+experiment:
+  name: learned_fair_capability_sweep
+  purpose: "Fair evaluation of learned model CEM/MPPI capability, matching historical Oracle best configs"
+  date: 2026-05-25
+  note: "This replaces all previous weak-config pilot runs as the standard eval protocol"
+
+# ── Success / Early Stop ────────────────────────────────────────────────
+success:
+  pos_threshold_m: 0.002      # 2mm (matching MPPI Stage2C best)
+  theta_threshold_deg: 10.0   # 10°
+  uses: final_dist             # final position, not best
+  ever_success_recorded: true  # track if ever reached goal
+
+early_stop:
+  enabled: true
+  stop_pos_threshold_m: 0.002
+  stop_theta_threshold_deg: 10.0
+
+# ── Action / Speed ──────────────────────────────────────────────────────
+action:
+  max_speed_mps: 0.3          # matching MPPI Stage2C best (NOT 0.75)
+  control_dt: 0.1
+  model_action_type: physical_velocity
+  env_action_type: normalized
+  convention: paper1_push_v1
+
+# ── Cost ────────────────────────────────────────────────────────────────
+cost:
+  mode: full                   # full 11-term cost from cost_functions.py
+  weights:
+    w_pos: 10.0
+    w_theta: 2.0
+    w_reach: 5.0
+    w_no_contact: 2.0
+    w_push_alignment: 1.0
+    w_collision: 20.0
+    w_collision_step: 1.0
+    w_proximity: 5.0
+    w_action: 0.05
+    w_smooth: 0.1
+    w_subgoal: 0.0
+
+# ── Environment ─────────────────────────────────────────────────────────
+env:
+  shape_type: T
+  pusher_radius: 0.015
+  object_size: [0.048, 0.048]
+  object_mass: 0.038           # from state16
+  object_friction: 0.8
+  obstacle_mass: 0.5
+  obstacle_friction: 0.8
+  mujoco_timestep: 0.005
+  substeps: 20
+
+# ── Planner Configs ─────────────────────────────────────────────────────
+planners:
+  # CEM configs
+  cem_fair_oracle_like:
+    type: cem
+    horizon: 100               # matching Oracle best
+    num_samples: 256
+    num_elites: 32
+    num_iterations: 5
+    init_std: 0.3
+    execute_steps: 1
+    max_steps: 1000            # 1000 total budget
+    cost_mode: full
+
+  cem_fair_medium:
+    type: cem
+    horizon: 50
+    num_samples: 128
+    num_elites: 16
+    num_iterations: 4
+    init_std: 0.3
+    execute_steps: 1
+    max_steps: 500
+    cost_mode: full
+
+  cem_fair_debug:
+    type: cem
+    horizon: 20
+    num_samples: 32
+    num_elites: 8
+    num_iterations: 3
+    init_std: 0.3
+    execute_steps: 1
+    max_steps: 100
+    cost_mode: full
+
+  # MPPI configs
+  mppi_stage2c_matched:
+    type: mppi
+    horizon: 100               # matching Stage2C best
+    num_samples: 1024
+    temperature: 0.1
+    init_std: 0.5
+    execute_steps: 10
+    max_mpc_steps: 100         # 1000 total budget
+    cost_mode: full
+
+  mppi_medium:
+    type: mppi
+    horizon: 60
+    num_samples: 512
+    temperature: 0.1
+    init_std: 0.5
+    execute_steps: 10
+    max_mpc_steps: 50
+    cost_mode: full
+
+  mppi_smoke:
+    type: mppi
+    horizon: 30
+    num_samples: 256
+    temperature: 0.1
+    init_std: 0.5
+    execute_steps: 5
+    max_mpc_steps: 20
+    cost_mode: full
+
+# ── Models ──────────────────────────────────────────────────────────────
+models:
+  - flat
+  - object_centric
+  - causality_aware
+
+# ── Templates ───────────────────────────────────────────────────────────
+templates:
+  source: data/sim/metadata/reset_templates_v0.json
+  families:
+    open_space: 10
+    blocking: 10
+    narrow_passage: 10
+    edge_goal: 10
+
+# ── Metrics ─────────────────────────────────────────────────────────────
+metrics:
+  - success                      # final_success (pos < 2mm + theta < 10°)
+  - ever_success_pos_only        # ever reached pos < 2mm
+  - ever_success_pose            # ever reached pos < 2mm + theta < 10°
+  - best_dist
+  - final_dist
+  - drift_after_best             # final_dist - best_dist
+  - best_step
+  - final_theta_error_deg
+  - contact_rate
+  - collision_rate
+  - early_stop_triggered
+  - early_stop_reason
+  - cost_breakdown
+  - runtime_sec
+  - failure_code
+
+# ── Budget ──────────────────────────────────────────────────────────────
+budget:
+  total_trials_estimate: 360     # 3 models × 6 configs × 20 templates
+  per_trial_timeout_sec: 1800    # 30 min max per trial
+  max_wall_time_hours: 10
+  parallel_workers: 8
+  cpu_cores_per_worker: 4

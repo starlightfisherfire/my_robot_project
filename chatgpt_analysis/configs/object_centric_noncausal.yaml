@@ -1,0 +1,26 @@
+# configs/train/object_centric_noncausal.yaml
+# Object-centric (non-causal) high-level encoder config.
+# Inherits shared dimensions from rig_world_shared.yaml.
+
+inherits: configs/train/rig_world_shared.yaml
+
+encoder:
+  type: object_centric
+  description: >
+    ObjectCentricEncoder: per-token MLP + token-type embedding +
+    Transformer over object tokens per frame + masked mean pooling +
+    GRU over history. Objects are treated independently, no causal
+    decomposition into stable/dynamics/affordance/nuisance slots.
+
+  d_model: 128
+  transformer_layers: 2
+  nhead: 4
+  ffn_dim: 256
+  gru_hidden: 256
+  valid_flag_index: 15
+  dropout: 0.1
+
+# Output interface must match shared contract:
+#   z: [B, 256]
+#   pred_delta: [B, 3]
+#   pred_subgoal: [B, 3]

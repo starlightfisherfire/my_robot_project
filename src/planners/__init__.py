@@ -5,6 +5,7 @@ from .obstacle_utils import extract_obstacle_geometry
 from .cost_functions import (
     CostWeights,
     rollout_cost,
+    staged_contact_obstacle_goal_cost,
     obstacle_proximity_cost,
     pose_error,
     wrap_angle,
@@ -42,6 +43,7 @@ __all__ = [
     "MultimodalCEMResult",
     "CostWeights",
     "rollout_cost",
+    "staged_contact_obstacle_goal_cost",
     "obstacle_proximity_cost",
     "extract_obstacle_geometry",
     "pose_error",

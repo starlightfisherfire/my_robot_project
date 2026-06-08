@@ -1,0 +1,43 @@
+{
+  "config": {
+    "horizon": 10,
+    "num_samples": 32,
+    "num_elites": 4,
+    "num_iterations": 2,
+    "init_std": 0.3
+  },
+  "convention": {
+    "name": "paper1_push_v1",
+    "action_dim": 2,
+    "max_speed_mps": 0.75,
+    "control_dt": 0.1,
+    "model_action_type": "physical_velocity",
+    "env_action_type": "normalized",
+    "model_action_range": "[-0.750, 0.750] m/s",
+    "env_action_range": "[-1.0, 1.0] (normalized)",
+    "displacement_per_step": "0.0750 m"
+  },
+  "models": {
+    "flat": {
+      "success": 0,
+      "improved": 2,
+      "total": 3,
+      "mean_best": 0.22361454783695764,
+      "mean_contact": 0.12222222222222222
+    },
+    "object_centric": {
+      "success": 0,
+      "improved": 2,
+      "total": 3,
+      "mean_best": 0.20706316222892718,
+      "mean_contact": 0.1111111111111111
+    },
+    "causality_aware": {
+      "success": 0,
+      "improved": 2,
+      "total": 3,
+      "mean_best": 0.19720619485809024,
+      "mean_contact": 0.17777777777777778
+    }
+  }
+}

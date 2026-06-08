@@ -1,0 +1,80 @@
+{
+  "config": {
+    "horizon": 10,
+    "num_samples": 32,
+    "num_elites": 4,
+    "num_iterations": 2,
+    "init_std": 0.3
+  },
+  "models": {
+    "flat": {
+      "blocking": {
+        "success": 0,
+        "improved": 3,
+        "total": 3,
+        "mean_best": 0.27921688586237403,
+        "mean_contact": 0.09999999999999999
+      },
+      "narrow_passage": {
+        "success": 0,
+        "improved": 2,
+        "total": 3,
+        "mean_best": 0.2527977591258704,
+        "mean_contact": 0.1111111111111111
+      },
+      "edge_goal": {
+        "success": 0,
+        "improved": 3,
+        "total": 3,
+        "mean_best": 0.3093242605867583,
+        "mean_contact": 0.15555555555555556
+      }
+    },
+    "object_centric": {
+      "blocking": {
+        "success": 0,
+        "improved": 1,
+        "total": 3,
+        "mean_best": 0.33120242503536707,
+        "mean_contact": 0.011111111111111112
+      },
+      "narrow_passage": {
+        "success": 0,
+        "improved": 1,
+        "total": 3,
+        "mean_best": 0.31016070120333866,
+        "mean_contact": 0.011111111111111112
+      },
+      "edge_goal": {
+        "success": 0,
+        "improved": 0,
+        "total": 3,
+        "mean_best": 0.37690430376647005,
+        "mean_contact": 0.022222222222222223
+      }
+    },
+    "causality_aware": {
+      "blocking": {
+        "success": 0,
+        "improved": 1,
+        "total": 3,
+        "mean_best": 0.33237661847990574,
+        "mean_contact": 0.011111111111111112
+      },
+      "narrow_passage": {
+        "success": 0,
+        "improved": 1,
+        "total": 3,
+        "mean_best": 0.3071016386603425,
+        "mean_contact": 0.05555555555555555
+      },
+      "edge_goal": {
+        "success": 0,
+        "improved": 1,
+        "total": 3,
+        "mean_best": 0.3624576992914537,
+        "mean_contact": 0.05555555555555555
+      }
+    }
+  }
+}

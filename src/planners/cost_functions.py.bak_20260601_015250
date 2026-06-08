@@ -1,0 +1,616 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+import numpy as np
+
+
+@dataclass
+class CostWeights:
+    """
+    Cost weights for Paper 1 planner.
+
+    v0.1:
+        final goal cost is the main objective.
+        reach / no_contact / push_alignment are shaping terms for sparse-contact pushing.
+        subgoal cost is included but should remain disabled until the learned rollout path is stable.
+
+    Collision cost (v0.2):
+        collision_cost = w_collision * max(collision_flags) + w_collision_step * sum(collision_flags)
+        w_collision:    one-time penalty if ANY collision occurs (existence signal)
+        w_collision_step: per-timestep penalty for each collision step (severity signal)
+
+    Later:
+        Compare w_subgoal = 0.0 vs w_subgoal > 0.0 as a small ablation.
+    """
+
+    w_pos: float = 10.0
+    w_theta: float = 2.0
+    w_reach: float = 5.0
+    w_no_contact: float = 2.0
+    w_push_alignment: float = 1.0
+    w_collision: float = 20.0
+    w_collision_step: float = 1.0
+    w_proximity: float = 5.0
+    w_early_contact: float = 3.0
+    w_persistent_contact: float = 2.0
+    w_action: float = 0.05
+    w_smooth: float = 0.1
+    w_subgoal: float = 0.0
+
+
+def wrap_angle(angle: np.ndarray | float) -> np.ndarray | float:
+    """
+    Wrap angle to [-pi, pi].
+    """
+    return np.arctan2(np.sin(angle), np.cos(angle))
+
+
+def pose_error(
+    pose: np.ndarray,
+    target_pose: np.ndarray,
+) -> tuple[float, float]:
+    """
+    Compute planar pose error for a single 2D pose.
+
+    Args:
+        pose:
+            Shape (3,), representing [x, y, theta].
+
+        target_pose:
+            Shape (3,), representing [x, y, theta].
+
+    Returns:
+        pos_error_sq:
+            Squared x-y position error.
+
+        theta_error_sq:
+            Squared wrapped theta error.
+
+    Note:
+        This function intentionally does not support batched input.
+        For rollout cost, pass one selected pose such as predicted_object_poses[-1].
+    """
+    pose = np.asarray(pose, dtype=np.float64)
+    target_pose = np.asarray(target_pose, dtype=np.float64)
+
+    if pose.shape != (3,) or target_pose.shape != (3,):
+        raise ValueError(
+            f"Expected pose and target_pose shape (3,), "
+            f"got {pose.shape}, {target_pose.shape}"
+        )
+
+    if not np.isfinite(pose).all() or not np.isfinite(target_pose).all():
+        raise ValueError("pose_error received non-finite pose values.")
+
+    dxy = pose[:2] - target_pose[:2]
+    dtheta = wrap_angle(pose[2] - target_pose[2])
+
+    pos_error_sq = float(np.sum(dxy ** 2))
+    theta_error_sq = float(dtheta ** 2)
+
+    return pos_error_sq, theta_error_sq
+
+
+def action_regularization_cost(action_sequence: np.ndarray) -> float:
+    """
+    Penalize large actions.
+
+    Args:
+        action_sequence:
+            [H, action_dim]
+    """
+    action_sequence = np.asarray(action_sequence, dtype=np.float64)
+
+    if action_sequence.ndim != 2:
+        raise ValueError(f"Expected action_sequence [H,A], got {action_sequence.shape}")
+
+    if not np.isfinite(action_sequence).all():
+        raise ValueError("action_sequence contains non-finite values.")
+
+    return float(np.mean(action_sequence ** 2))
+
+
+def action_smoothness_cost(action_sequence: np.ndarray) -> float:
+    """
+    Penalize action changes.
+
+    Args:
+        action_sequence:
+            [H, action_dim]
+    """
+    action_sequence = np.asarray(action_sequence, dtype=np.float64)
+
+    if action_sequence.ndim != 2:
+        raise ValueError(f"Expected action_sequence [H,A], got {action_sequence.shape}")
+
+    if not np.isfinite(action_sequence).all():
+        raise ValueError("action_sequence contains non-finite values.")
+
+    if action_sequence.shape[0] <= 1:
+        return 0.0
+
+    diff = action_sequence[1:] - action_sequence[:-1]
+    return float(np.mean(diff ** 2))
+
+
+def reach_cost(
+    ee_positions: np.ndarray,
+    object_positions: np.ndarray,
+) -> float:
+    """
+    Encourage end-effector to get close to the object.
+
+    Args:
+        ee_positions:
+            [T, 2]
+
+        object_positions:
+            [T, 2]
+
+    Returns:
+        minimum EE-object distance squared over the rollout.
+    """
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    object_positions = np.asarray(object_positions, dtype=np.float64)
+
+    if ee_positions.shape != object_positions.shape:
+        raise ValueError(
+            f"Expected ee_positions and object_positions with same shape, "
+            f"got {ee_positions.shape}, {object_positions.shape}"
+        )
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected positions [T,2], got {ee_positions.shape}")
+
+    if not np.isfinite(ee_positions).all() or not np.isfinite(object_positions).all():
+        raise ValueError("reach_cost received non-finite positions.")
+
+    d = ee_positions - object_positions
+    dist_sq = np.sum(d ** 2, axis=-1)
+
+    return float(np.min(dist_sq))
+
+
+def no_contact_cost(
+    contact_flags: np.ndarray | None = None,
+    ee_positions: np.ndarray | None = None,
+    object_positions: np.ndarray | None = None,
+    contact_distance_threshold: float = 0.035,
+) -> float:
+    """
+    Penalize no-contact rollouts.
+
+    If contact_flags is provided:
+        no_contact_cost = 1 - max(contact_flags)
+
+    Otherwise use distance proxy:
+        contact if min EE-object distance < threshold.
+    """
+    if contact_flags is not None:
+        contact_flags = np.asarray(contact_flags, dtype=np.float64)
+
+        if not np.isfinite(contact_flags).all():
+            raise ValueError("contact_flags contains non-finite values.")
+
+        has_contact = float(np.max(contact_flags) > 0.5)
+        return 1.0 - has_contact
+
+    if ee_positions is None or object_positions is None:
+        return 0.0
+
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    object_positions = np.asarray(object_positions, dtype=np.float64)
+
+    if ee_positions.shape != object_positions.shape:
+        raise ValueError(
+            f"Expected ee_positions and object_positions with same shape, "
+            f"got {ee_positions.shape}, {object_positions.shape}"
+        )
+
+    if not np.isfinite(ee_positions).all() or not np.isfinite(object_positions).all():
+        raise ValueError("no_contact_cost received non-finite positions.")
+
+    d = ee_positions - object_positions
+    min_dist = float(np.min(np.linalg.norm(d, axis=-1)))
+
+    has_contact = float(min_dist < contact_distance_threshold)
+    return 1.0 - has_contact
+
+
+def push_alignment_cost(
+    object_initial_pose: np.ndarray,
+    object_final_pose: np.ndarray,
+    goal_pose: np.ndarray,
+    eps: float = 1e-8,
+) -> float:
+    """
+    Encourage object motion direction to align with object→goal direction.
+
+    Returns:
+        0 when aligned;
+        around 1 when orthogonal;
+        around 2 when opposite.
+    """
+    object_initial_pose = np.asarray(object_initial_pose, dtype=np.float64)
+    object_final_pose = np.asarray(object_final_pose, dtype=np.float64)
+    goal_pose = np.asarray(goal_pose, dtype=np.float64)
+
+    if not (
+        np.isfinite(object_initial_pose).all()
+        and np.isfinite(object_final_pose).all()
+        and np.isfinite(goal_pose).all()
+    ):
+        raise ValueError("push_alignment_cost received non-finite poses.")
+
+    move_vec = object_final_pose[:2] - object_initial_pose[:2]
+    goal_vec = goal_pose[:2] - object_initial_pose[:2]
+
+    move_norm = float(np.linalg.norm(move_vec))
+    goal_norm = float(np.linalg.norm(goal_vec))
+
+    if move_norm < eps or goal_norm < eps:
+        return 1.0
+
+    cos_sim = float(np.dot(move_vec, goal_vec) / (move_norm * goal_norm + eps))
+    cos_sim = float(np.clip(cos_sim, -1.0, 1.0))
+
+    return 1.0 - cos_sim
+
+
+def first_contact_cost(
+    contact_flags: np.ndarray | None = None,
+    ee_positions: np.ndarray | None = None,
+    object_positions: np.ndarray | None = None,
+    contact_distance_threshold: float = 0.035,
+) -> float:
+    """
+    Penalize late first contact.  Earlier contact → lower cost.
+
+    Returns:
+        first_contact_timestep / T  if contact occurs,
+        1.0                          if no contact at all.
+
+    Range: [0, 1].
+    0   = contact at t=0 (immediate).
+    ~1  = no contact, or contact only at the final timestep.
+    """
+    if contact_flags is not None:
+        contact_flags = np.asarray(contact_flags, dtype=np.float64)
+
+        if not np.isfinite(contact_flags).all():
+            raise ValueError("contact_flags contains non-finite values.")
+
+        T = len(contact_flags)
+        if T == 0:
+            return 1.0
+
+        contact_indices = np.where(contact_flags > 0.5)[0]
+        if len(contact_indices) == 0:
+            return 1.0
+
+        first_t = int(contact_indices[0])
+        return float(first_t) / float(T)
+
+    # Distance-based proxy
+    if ee_positions is None or object_positions is None:
+        return 1.0
+
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    object_positions = np.asarray(object_positions, dtype=np.float64)
+
+    if ee_positions.shape != object_positions.shape:
+        raise ValueError(
+            f"Expected ee_positions and object_positions with same shape, "
+            f"got {ee_positions.shape} and {object_positions.shape}"
+        )
+
+    if not np.isfinite(ee_positions).all() or not np.isfinite(object_positions).all():
+        raise ValueError("first_contact_cost received non-finite positions.")
+
+    T = len(ee_positions)
+    if T == 0:
+        return 1.0
+
+    dists = np.linalg.norm(ee_positions - object_positions, axis=-1)
+    contact_indices = np.where(dists < contact_distance_threshold)[0]
+    if len(contact_indices) == 0:
+        return 1.0
+
+    first_t = int(contact_indices[0])
+    return float(first_t) / float(T)
+
+
+def collision_cost(
+    collision_flags: np.ndarray | None,
+) -> tuple[float, float, float]:
+    """
+    Compute collision summary from per-timestep collision flags.
+
+    Args:
+        collision_flags:
+            Optional [T], 0/1 flags per timestep. 1 = collision.
+
+    Returns:
+        collision_any: 1.0 if any timestep has collision, else 0.0
+        collision_count: number of timesteps with collision
+        collision_rate: fraction of timesteps with collision
+    """
+    if collision_flags is None:
+        return 0.0, 0.0, 0.0
+
+    collision_flags = np.asarray(collision_flags, dtype=np.float64)
+
+    if not np.isfinite(collision_flags).all():
+        raise ValueError("collision_cost received non-finite collision_flags.")
+
+    t = len(collision_flags)
+    if t == 0:
+        return 0.0, 0.0, 0.0
+
+    collision_any = float(np.max(collision_flags))
+    collision_count = float(np.sum(collision_flags))
+    collision_rate = float(np.mean(collision_flags))
+
+    return collision_any, collision_count, collision_rate
+
+
+def obstacle_proximity_cost(
+    ee_positions: np.ndarray,
+    obstacle_positions: np.ndarray,
+    obstacle_radii: np.ndarray,
+    margin: float = 0.03,
+) -> float:
+    """
+    Smooth repulsive field around obstacles. Gives directional gradient signal
+    even when no collision occurs — guides CEM/MPPI samples away from obstacles.
+
+    Args:
+        ee_positions: [T, 2] end-effector trajectory.
+        obstacle_positions: [N, 2] obstacle centers.
+        obstacle_radii: [N] obstacle radii.
+        margin: extra clearance beyond obstacle radius.
+
+    Returns:
+        Sum of squared penetrations into the margin zone.
+    """
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    obstacle_positions = np.asarray(obstacle_positions, dtype=np.float64)
+    obstacle_radii = np.asarray(obstacle_radii, dtype=np.float64)
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected ee_positions [T,2], got {ee_positions.shape}")
+
+    if obstacle_positions.ndim != 2 or obstacle_positions.shape[-1] != 2:
+        raise ValueError(
+            f"Expected obstacle_positions [N,2], got {obstacle_positions.shape}"
+        )
+
+    n_obs = len(obstacle_positions)
+    if obstacle_radii.shape != (n_obs,):
+        raise ValueError(
+            f"Expected obstacle_radii [{n_obs}], got {obstacle_radii.shape}"
+        )
+
+    total = 0.0
+    for i in range(n_obs):
+        diff = ee_positions - obstacle_positions[i]
+        dist = np.linalg.norm(diff, axis=-1)
+        penetration = (obstacle_radii[i] + margin) - dist
+        total += float(np.sum(np.maximum(penetration, 0.0) ** 2))
+
+    return total
+
+
+def persistent_contact_cost(
+    contact_flags: np.ndarray | None = None,
+    ee_positions: np.ndarray | None = None,
+    object_positions: np.ndarray | None = None,
+    contact_distance_threshold: float = 0.035,
+) -> float:
+    """
+    Encourage EE to maintain contact once it has been established.
+
+    Penalises timesteps with no contact *after* the first contact.
+    Before any contact has occurred, those timesteps are not penalised
+    (that is the job of first_contact_cost).
+
+    Returns:
+        (number of post-first-contact no-contact timesteps) / T
+        0.0 if contact is maintained after first touch, or if no contact at all.
+    """
+    if contact_flags is not None:
+        contact_flags = np.asarray(contact_flags, dtype=np.float64)
+
+        if not np.isfinite(contact_flags).all():
+            raise ValueError("contact_flags contains non-finite values.")
+
+        T = len(contact_flags)
+        if T == 0:
+            return 0.0
+
+        contact_indices = np.where(contact_flags > 0.5)[0]
+        if len(contact_indices) == 0:
+            return 0.0  # no contact at all — handled by no_contact_cost
+
+        first_t = int(contact_indices[0])
+        post_contact = contact_flags[first_t:]
+        n_lost = float(np.sum(post_contact < 0.5))
+        return n_lost / float(T)
+
+    # Distance-based proxy
+    if ee_positions is None or object_positions is None:
+        return 0.0
+
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    object_positions = np.asarray(object_positions, dtype=np.float64)
+
+    if ee_positions.shape != object_positions.shape:
+        raise ValueError(
+            f"Expected ee_positions and object_positions with same shape, "
+            f"got {ee_positions.shape} and {object_positions.shape}"
+        )
+
+    if not np.isfinite(ee_positions).all() or not np.isfinite(object_positions).all():
+        raise ValueError("persistent_contact_cost received non-finite positions.")
+
+    T = len(ee_positions)
+    if T == 0:
+        return 0.0
+
+    dists = np.linalg.norm(ee_positions - object_positions, axis=-1)
+    in_contact = dists < contact_distance_threshold
+    contact_indices = np.where(in_contact)[0]
+    if len(contact_indices) == 0:
+        return 0.0
+
+    first_t = int(contact_indices[0])
+    post_contact = in_contact[first_t:]
+    n_lost = float(np.sum(~post_contact))
+    return n_lost / float(T)
+
+
+def rollout_cost(
+    predicted_object_poses: np.ndarray,
+    ee_positions: np.ndarray,
+    action_sequence: np.ndarray,
+    goal_pose: np.ndarray,
+    weights: CostWeights | None = None,
+    contact_flags: np.ndarray | None = None,
+    collision_flags: np.ndarray | None = None,
+    subgoal_pose: np.ndarray | None = None,
+    subgoal_index: int | None = None,
+    obstacle_positions: np.ndarray | None = None,
+    obstacle_radii: np.ndarray | None = None,
+    proximity_margin: float = 0.03,
+) -> float:
+    """
+    Compute planner cost for one rollout.
+
+    Args:
+        predicted_object_poses:
+            [T, 3] object poses along the rollout.
+            predicted_object_poses[0] should be the current / initial object pose.
+            predicted_object_poses[-1] is used for final goal cost.
+
+        ee_positions:
+            [T, 2] predicted end-effector positions.
+
+        action_sequence:
+            [H, action_dim]
+
+        goal_pose:
+            [3]
+
+        contact_flags:
+            Optional [T], 1 means contact.
+
+        collision_flags:
+            Optional [T], 1 means collision.
+
+        subgoal_pose:
+            Optional [3]. Used only when weights.w_subgoal > 0.
+
+        subgoal_index:
+            Which predicted timestep to compare to subgoal.
+    """
+    if weights is None:
+        weights = CostWeights()
+
+    predicted_object_poses = np.asarray(predicted_object_poses, dtype=np.float64)
+    ee_positions = np.asarray(ee_positions, dtype=np.float64)
+    action_sequence = np.asarray(action_sequence, dtype=np.float64)
+    goal_pose = np.asarray(goal_pose, dtype=np.float64)
+
+    if predicted_object_poses.ndim != 2 or predicted_object_poses.shape[-1] != 3:
+        raise ValueError(
+            f"Expected predicted_object_poses [T,3], got {predicted_object_poses.shape}"
+        )
+
+    if ee_positions.ndim != 2 or ee_positions.shape[-1] != 2:
+        raise ValueError(f"Expected ee_positions [T,2], got {ee_positions.shape}")
+
+    if action_sequence.ndim != 2:
+        raise ValueError(f"Expected action_sequence [H,A], got {action_sequence.shape}")
+
+    if len(predicted_object_poses) != len(ee_positions):
+        raise ValueError(
+            f"Expected predicted_object_poses and ee_positions to have same T, "
+            f"got {len(predicted_object_poses)} and {len(ee_positions)}"
+        )
+
+    if not (
+        np.isfinite(predicted_object_poses).all()
+        and np.isfinite(ee_positions).all()
+        and np.isfinite(action_sequence).all()
+        and np.isfinite(goal_pose).all()
+    ):
+        raise ValueError("rollout_cost received non-finite inputs.")
+
+    object_initial_pose = predicted_object_poses[0]
+    object_final_pose = predicted_object_poses[-1]
+
+    pos_error_sq, theta_error_sq = pose_error(object_final_pose, goal_pose)
+
+    object_positions = predicted_object_poses[:, :2]
+
+    total = 0.0
+    total += weights.w_pos * pos_error_sq
+    total += weights.w_theta * theta_error_sq
+    total += weights.w_reach * reach_cost(ee_positions, object_positions)
+    total += weights.w_no_contact * no_contact_cost(
+        contact_flags=contact_flags,
+        ee_positions=ee_positions,
+        object_positions=object_positions,
+    )
+    total += weights.w_push_alignment * push_alignment_cost(
+        object_initial_pose=object_initial_pose,
+        object_final_pose=object_final_pose,
+        goal_pose=goal_pose,
+    )
+    total += weights.w_early_contact * first_contact_cost(
+        contact_flags=contact_flags,
+        ee_positions=ee_positions,
+        object_positions=object_positions,
+    )
+    total += weights.w_persistent_contact * persistent_contact_cost(
+        contact_flags=contact_flags,
+        ee_positions=ee_positions,
+        object_positions=object_positions,
+    )
+    total += weights.w_action * action_regularization_cost(action_sequence)
+    total += weights.w_smooth * action_smoothness_cost(action_sequence)
+
+    if collision_flags is not None:
+        collision_any, collision_count, _ = collision_cost(collision_flags)
+        total += weights.w_collision * collision_any
+        total += weights.w_collision_step * collision_count
+
+    if obstacle_positions is not None and obstacle_radii is not None and weights.w_proximity > 0.0:
+        total += weights.w_proximity * obstacle_proximity_cost(
+            ee_positions=ee_positions,
+            obstacle_positions=obstacle_positions,
+            obstacle_radii=obstacle_radii,
+            margin=proximity_margin,
+        )
+
+    if subgoal_pose is not None and weights.w_subgoal > 0.0:
+        subgoal_pose = np.asarray(subgoal_pose, dtype=np.float64)
+
+        if not np.isfinite(subgoal_pose).all():
+            raise ValueError("subgoal_pose contains non-finite values.")
+
+        if subgoal_index is None:
+            subgoal_index = max(0, len(predicted_object_poses) // 2)
+
+        subgoal_index = int(np.clip(subgoal_index, 0, len(predicted_object_poses) - 1))
+        sub_pos_error_sq, sub_theta_error_sq = pose_error(
+            predicted_object_poses[subgoal_index],
+            subgoal_pose,
+        )
+        total += weights.w_subgoal * (sub_pos_error_sq + 0.2 * sub_theta_error_sq)
+
+    if not np.isfinite(total):
+        raise ValueError(f"Non-finite rollout cost: {total}")
+
+    return float(total)

@@ -1,0 +1,264 @@
+{
+  "checks": [
+    [
+      "open_space_direct_path_not_blocked",
+      true
+    ],
+    [
+      "blocking_score_gt_open_space",
+      true
+    ],
+    [
+      "narrow_passage_width_finite",
+      true
+    ],
+    [
+      "edge_goal_small_edge_distance",
+      true
+    ],
+    [
+      "no_nan_inf",
+      true
+    ]
+  ],
+  "results": {
+    "open_space": {
+      "geometry": {
+        "object_pose": [
+          0.2,
+          0.2,
+          0.0
+        ],
+        "goal_pose": [
+          0.4,
+          0.3,
+          0.0
+        ],
+        "ee_pose": [
+          0.1,
+          0.2,
+          0.0
+        ],
+        "obstacle_count": 0,
+        "object_shape": "T"
+      },
+      "basic_metrics": {
+        "object_goal_distance": 0.22360679774997896,
+        "goal_edge_distance": 0.2,
+        "object_edge_distance": 0.2,
+        "min_object_obstacle_distance": Infinity,
+        "min_goal_obstacle_distance": Infinity,
+        "ee_to_object_distance": 0.1,
+        "ee_to_goal_distance": 0.31622776601683794,
+        "object_goal_angle": 0.463647609000806,
+        "obstacle_count": 0
+      },
+      "path_metrics": {
+        "direct_path_blocked": false,
+        "obstacle_between_object_goal": false,
+        "blocking_score": 0.0,
+        "passage_width_estimate": Infinity,
+        "min_clearance_to_obstacle": Infinity,
+        "edge_goal_score": 0.19999999999999996
+      },
+      "contact_metrics": {
+        "reachable_contact_sides": 4,
+        "best_contact_side": "right",
+        "approach_clearance": Infinity,
+        "approach_feasibility_score": 0.8888888888888888,
+        "ee_object_goal_alignment": 0.894427190999916
+      },
+      "classification": {
+        "difficulty_score": 0.19638630087220957,
+        "difficulty_level": "easy",
+        "dominant_geometric_challenge": "none",
+        "topology_family_pred": "open_space",
+        "warnings": []
+      },
+      "validation": {
+        "is_valid": true,
+        "invalid_reasons": [],
+        "warnings": []
+      }
+    },
+    "blocking": {
+      "geometry": {
+        "object_pose": [
+          0.2,
+          0.2,
+          0.0
+        ],
+        "goal_pose": [
+          0.5,
+          0.3,
+          0.0
+        ],
+        "ee_pose": [
+          0.1,
+          0.2,
+          0.0
+        ],
+        "obstacle_count": 1,
+        "object_shape": "T"
+      },
+      "basic_metrics": {
+        "object_goal_distance": 0.31622776601683794,
+        "goal_edge_distance": 0.19999999999999996,
+        "object_edge_distance": 0.2,
+        "min_object_obstacle_distance": 0.10811388300841891,
+        "min_goal_obstacle_distance": 0.10811388300841897,
+        "ee_to_object_distance": 0.1,
+        "ee_to_goal_distance": 0.4123105625617661,
+        "object_goal_angle": 0.32175055439664213,
+        "obstacle_count": 1
+      },
+      "path_metrics": {
+        "direct_path_blocked": true,
+        "obstacle_between_object_goal": true,
+        "blocking_score": 0.9999999999999993,
+        "passage_width_estimate": Infinity,
+        "min_clearance_to_obstacle": 0.0,
+        "edge_goal_score": 0.20000000000000018
+      },
+      "contact_metrics": {
+        "reachable_contact_sides": 4,
+        "best_contact_side": "right",
+        "approach_clearance": Infinity,
+        "approach_feasibility_score": 0.8888888888888888,
+        "ee_object_goal_alignment": 0.9486832980505138
+      },
+      "classification": {
+        "difficulty_score": 0.5519588818323248,
+        "difficulty_level": "medium",
+        "dominant_geometric_challenge": "blocking",
+        "topology_family_pred": "blocking",
+        "warnings": []
+      },
+      "validation": {
+        "is_valid": true,
+        "invalid_reasons": [],
+        "warnings": []
+      }
+    },
+    "narrow_passage": {
+      "geometry": {
+        "object_pose": [
+          0.15,
+          0.25,
+          0.0
+        ],
+        "goal_pose": [
+          0.55,
+          0.25,
+          0.0
+        ],
+        "ee_pose": [
+          0.05,
+          0.25,
+          0.0
+        ],
+        "obstacle_count": 2,
+        "object_shape": "T"
+      },
+      "basic_metrics": {
+        "object_goal_distance": 0.4,
+        "goal_edge_distance": 0.1499999999999999,
+        "object_edge_distance": 0.15,
+        "min_object_obstacle_distance": 0.14360679774997892,
+        "min_goal_obstacle_distance": 0.14360679774997903,
+        "ee_to_object_distance": 0.09999999999999999,
+        "ee_to_goal_distance": 0.5,
+        "object_goal_angle": 0.0,
+        "obstacle_count": 2
+      },
+      "path_metrics": {
+        "direct_path_blocked": false,
+        "obstacle_between_object_goal": false,
+        "blocking_score": 0.0,
+        "passage_width_estimate": 0.0,
+        "min_clearance_to_obstacle": 0.019999999999999976,
+        "edge_goal_score": 0.40000000000000036
+      },
+      "contact_metrics": {
+        "reachable_contact_sides": 4,
+        "best_contact_side": "right",
+        "approach_clearance": Infinity,
+        "approach_feasibility_score": 0.888888888888889,
+        "ee_object_goal_alignment": 1.0
+      },
+      "classification": {
+        "difficulty_score": 0.34222222222222226,
+        "difficulty_level": "medium",
+        "dominant_geometric_challenge": "none",
+        "topology_family_pred": "narrow_passage",
+        "warnings": []
+      },
+      "validation": {
+        "is_valid": true,
+        "invalid_reasons": [],
+        "warnings": []
+      }
+    },
+    "edge_goal": {
+      "geometry": {
+        "object_pose": [
+          0.3,
+          0.25,
+          0.0
+        ],
+        "goal_pose": [
+          0.68,
+          0.48,
+          0.0
+        ],
+        "ee_pose": [
+          0.2,
+          0.25,
+          0.0
+        ],
+        "obstacle_count": 0,
+        "object_shape": "T"
+      },
+      "basic_metrics": {
+        "object_goal_distance": 0.4441846462902563,
+        "goal_edge_distance": 0.019999999999999907,
+        "object_edge_distance": 0.25,
+        "min_object_obstacle_distance": Infinity,
+        "min_goal_obstacle_distance": Infinity,
+        "ee_to_object_distance": 0.09999999999999998,
+        "ee_to_goal_distance": 0.5322593352868507,
+        "object_goal_angle": 0.5442804849459798,
+        "obstacle_count": 0
+      },
+      "path_metrics": {
+        "direct_path_blocked": false,
+        "obstacle_between_object_goal": false,
+        "blocking_score": 0.0,
+        "passage_width_estimate": Infinity,
+        "min_clearance_to_obstacle": Infinity,
+        "edge_goal_score": 0.9200000000000004
+      },
+      "contact_metrics": {
+        "reachable_contact_sides": 4,
+        "best_contact_side": "right",
+        "approach_clearance": Infinity,
+        "approach_feasibility_score": 0.888888888888889,
+        "ee_object_goal_alignment": 0.8555000790182329
+      },
+      "classification": {
+        "difficulty_score": 0.4727330099963761,
+        "difficulty_level": "medium",
+        "dominant_geometric_challenge": "edge_goal",
+        "topology_family_pred": "edge_goal",
+        "warnings": [
+          "goal very close to boundary"
+        ]
+      },
+      "validation": {
+        "is_valid": true,
+        "invalid_reasons": [],
+        "warnings": []
+      }
+    }
+  }
+}

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from src.envs.mujoco_push_env import MujocoPushEnv, MujocoPushState
-from src.planners.cost_functions import CostWeights, rollout_cost
+from src.planners.cost_functions import CostWeights, rollout_cost, make_staged_cost_weights
 
 
 @dataclass
@@ -102,6 +102,7 @@ def mujoco_oracle_rollout_cost(
     restore_state: bool = True,
     obstacle_positions: np.ndarray | None = None,
     obstacle_radii: np.ndarray | None = None,
+    cost_mode: str = "current",
 ) -> float:
     """
     Compute rollout cost using MuJoCo true dynamics.
@@ -115,6 +116,10 @@ def mujoco_oracle_rollout_cost(
     """
     if goal_pose is None:
         goal_pose = env.get_goal_pose()
+
+    # Auto-select staged weights when cost_mode is staged and weights not provided
+    if weights is None and cost_mode == "staged_contact_obstacle_goal":
+        weights = make_staged_cost_weights()
 
     result = rollout_action_sequence_mujoco(
         env=env,
@@ -132,4 +137,5 @@ def mujoco_oracle_rollout_cost(
         collision_flags=result.collision_flags,
         obstacle_positions=obstacle_positions,
         obstacle_radii=obstacle_radii,
+        cost_mode=cost_mode,
     )

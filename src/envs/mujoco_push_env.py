@@ -437,6 +437,7 @@ class MujocoPushEnv:
         Runtime modification of geom_contype/conaffinity/geom_size does NOT
         update the collision broadphase.
         """
+        self._num_active_obstacles = len(obstacles) if obstacles else 0
         xml = _build_xml_with_shape(
             shape_type=self.shape_type,
             use_simple_box=self.use_simple_box_object,
